@@ -188,7 +188,7 @@ const StakePanel = () => {
         onClick={handleClaim}
         className="w-full bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition"
       >
-        {isAssociated ? 'Claim HRT Rewards' : 'Associate HTS & Claim'}
+        {isAssociated ? 'Claim HRT Rewards' : 'Associate HRT & Claim'}
       </button>
     </div>
   );
