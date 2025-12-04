@@ -76,8 +76,13 @@ const StakePanel = () => {
         functionName: 'userRewardDebt',
         args: [evmAddress],
       });
-      setClaimedReward(Number(userDebt) / 1e8);
-      setIsAssociated(true);
+      const claimed = Number(userDebt) / 1e8;
+      if(claimed > 0){
+        setIsAssociated(true);
+      }else{
+        setIsAssociated(false);
+      }
+      setClaimedReward(claimed);
     } catch (e) {
       setIsAssociated(false);
     }
