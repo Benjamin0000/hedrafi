@@ -278,7 +278,7 @@ const Homepage = () => {
               </div>
             </div>
             <div className="flex gap-6">
-              <a href="https://x.com/hedrafi" target='_blank' className="text-gray-400 hover:text-purple-400 transition-colors">Twitter/X</a>
+              <a href="#"  className="text-gray-400 hover:text-purple-400 transition-colors">Twitter/X</a>
               <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">LinkedIn</a>
               <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">Discord</a>
             </div>

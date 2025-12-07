@@ -100,7 +100,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex gap-6 text-gray-400">
-              <a href="https://x.com/hedrafi" target='_blank' className="hover:text-purple-400 transition-colors">Twitter</a>
+              <a href="#" className="hover:text-purple-400 transition-colors">Twitter</a>
               <a href="#" className="hover:text-purple-400 transition-colors">Discord</a>
               <a href="#" className="hover:text-purple-400 transition-colors">Docs</a>
             </div>
