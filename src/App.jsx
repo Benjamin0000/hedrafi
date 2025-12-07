@@ -1,65 +1,30 @@
-import WalletButton from './components/WalletButton';
-import WalletInfo from './components/WalletInfo';
-import StakePanel from './components/StakePanel';
-import StakingStats from './components/StakingStats';
-import logo from "./assets/logo.png"
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Homepage from './components/Homepage';
+import Dashboard from './components/Dashboard';
+
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-sans">
-      {/* Header */}
-      <header className="flex justify-between items-center p-6 border-b border-gray-800">
-        <div class="flex items-center gap-3">
-          <img src={logo} width={60}/> 
-          <span class="inline-block bg-red-500 text-white text-xs font-semibold px-3 py-1">
-            TestNet
-          </span> 
-        </div>
-        <WalletButton />
-      </header>
-
-      {/* Main dashboard */}
-      <main className="p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Wallet Info */}
-        <div className="md:col-span-1">
-          <WalletInfo />
-        </div>
-
-        {/* Staking Panel in center */}
-        <div className="md:col-span-3">
-          <div className="bg-gray-800 rounded-2xl p-6 shadow-xl">
-            <StakingStats />
-            <StakePanel />
-          </div>
-        </div>
-
-        {/* NFT / Marketplace placeholders */}
-        <div className="md:col-span-4 mt-6">
-          <div className="bg-gray-800 rounded-2xl p-6 shadow-xl">
-            <h2 className="text-xl font-semibold mb-4 text-indigo-400">NFT Dashboard</h2>
-            <p className="text-gray-400 mb-4">Coming Soon: Mint, collect, and trade NFTs.</p>
-            <button className="bg-indigo-500 text-white px-4 py-2 rounded-lg opacity-50 cursor-not-allowed" disabled>
-              Mint NFT
-            </button>
-          </div>
-        </div>
-
-        <div className="md:col-span-4 mt-6">
-          <div className="bg-gray-800 rounded-2xl p-6 shadow-xl">
-            <h2 className="text-xl font-semibold mb-4 text-indigo-400">Marketplace</h2>
-            <p className="text-gray-400 mb-4">Coming Soon: Trade NFTs with other users.</p>
-            <button className="bg-green-500 text-white px-4 py-2 rounded-lg opacity-50 cursor-not-allowed" disabled>
-              Open Marketplace
-            </button>
-          </div>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="text-center p-4 border-t border-gray-800 mt-6 text-gray-400">
-        &copy; 2025 HedraFi. All rights reserved.
-      </footer>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/staking" element={<Dashboard />} />
+        <Route path="/studio" element={<ComingSoon title="NFT Studio" />} />
+        <Route path="/marketplace" element={<ComingSoon title="Marketplace" />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
+
+// Coming Soon placeholder component
+const ComingSoon = ({ title }) => (
+  <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 text-white flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+        {title}
+      </h1>
+      <p className="text-xl text-gray-400">Coming Soon...</p>
+    </div>
+  </div>
+);
 
 export default App;

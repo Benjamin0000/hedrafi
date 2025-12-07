@@ -2,29 +2,23 @@ import { useWallet } from '@buidlerlabs/hashgraph-react-wallets';
 import { HashpackConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 
 const WalletButton = () => {
-  const { isConnected, connect, disconnect, isExtensionRequired, extensionReady } =
-    useWallet(HashpackConnector);
-
-  // if (isExtensionRequired && !extensionReady) {
-  //   return <span className="text-red-500">Extension not found. Install Hashpack!</span>;
-  // }
+  const { isConnected, connect, disconnect } = useWallet(HashpackConnector);
 
   return isConnected ? (
     <button
       onClick={disconnect}
-      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+      className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-red-500/30 hover:shadow-red-500/50 hover:scale-105"
     >
       Disconnect
     </button>
   ) : (
     <button
       onClick={connect}
-      className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition"
+      className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105"
     >
       Connect Wallet
     </button>
   );
 };
 
-
-export default WalletButton; 
+export default WalletButton;

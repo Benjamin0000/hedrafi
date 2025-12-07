@@ -65,28 +65,59 @@ const StakingStats = () => {
 
   useEffect(() => {
     fetchStats();
-    const interval = setInterval(fetchStats, 5000); // refresh every 5s
+    const interval = setInterval(fetchStats, 5000);
     return () => clearInterval(interval);
   }, []);
 
+  const statsData = [
+    { 
+      label: 'Total HBAR Locked', 
+      value: stats.totalStakedHBAR.toLocaleString(), 
+      icon: '🔒', 
+      color: 'from-blue-500/20 to-cyan-500/20', 
+      border: 'border-blue-500/30',
+      glow: 'shadow-blue-500/20'
+    },
+    { 
+      label: 'Total HRT Locked', 
+      value: stats.totalHRTLocked.toLocaleString(), 
+      icon: '💎', 
+      color: 'from-purple-500/20 to-pink-500/20', 
+      border: 'border-purple-500/30',
+      glow: 'shadow-purple-500/20'
+    },
+    { 
+      label: 'Total Reward Paid', 
+      value: stats.totalRewardPaid.toLocaleString(), 
+      icon: '💰', 
+      color: 'from-green-500/20 to-emerald-500/20', 
+      border: 'border-green-500/30',
+      glow: 'shadow-green-500/20'
+    },
+    { 
+      label: 'Total Users', 
+      value: stats.totalUsers.toString(), 
+      icon: '👥', 
+      color: 'from-orange-500/20 to-yellow-500/20', 
+      border: 'border-orange-500/30',
+      glow: 'shadow-orange-500/20'
+    }
+  ];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div className="bg-gray-700 p-4 rounded-xl text-center">
-        <p className="text-gray-400">Total HBAR Locked</p>
-        <p className="text-xl font-semibold">{stats.totalStakedHBAR.toLocaleString()} ℏ</p>
-      </div>
-      <div className="bg-gray-700 p-4 rounded-xl text-center">
-        <p className="text-gray-400">Total HRT Locked</p>
-        <p className="text-xl font-semibold">{stats.totalHRTLocked.toLocaleString()} HRT</p>
-      </div>
-      <div className="bg-gray-700 p-4 rounded-xl text-center">
-        <p className="text-gray-400">Total Reward Paid</p>
-        <p className="text-xl font-semibold">{stats.totalRewardPaid.toLocaleString()} HRT</p>
-      </div>
-      <div className="bg-gray-700 p-4 rounded-xl text-center">
-        <p className="text-gray-400">Total Users</p>
-        <p className="text-xl font-semibold">{stats.totalUsers}</p>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {statsData.map((stat, i) => (
+        <div 
+          key={i} 
+          className={`backdrop-blur-xl bg-gradient-to-br ${stat.color} rounded-2xl p-5 border ${stat.border} hover:scale-105 transition-all duration-300 shadow-xl ${stat.glow} group cursor-pointer`}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-xs text-gray-300 font-medium">{stat.label}</div>
+            <div className="text-2xl group-hover:scale-125 transition-transform duration-300">{stat.icon}</div>
+          </div>
+          <div className="text-2xl font-bold font-mono">{stat.value}</div>
+        </div>
+      ))}
     </div>
   );
 };

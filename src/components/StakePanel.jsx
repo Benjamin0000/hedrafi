@@ -1,4 +1,3 @@
-// src/components/StakePanel.js
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,6 +33,7 @@ const StakePanel = () => {
       await getUserClaimed();
       const associated = await checkTokenAssociation(accountId, REWARD_TOKEN_ID);
       setIsAssociated(associated);
+      
       // Pending reward
       const reward = await readContract({
         address: `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`,
@@ -98,7 +98,7 @@ const StakePanel = () => {
       });
       toast.success('Stake successful!');
       setStakeAmount('');
-      fetchUserData(); // Refresh stake & rewards immediately
+      fetchUserData();
     } catch (e) {
       console.error(e);
       toast.error('Staking failed');
@@ -129,7 +129,7 @@ const StakePanel = () => {
         metaArgs: { gas: 120_000 },
       });
       toast.success('Rewards claimed!');
-      await fetchUserData(); // Update stake, pending & claimed reward
+      await fetchUserData();
     } catch (e) {
       console.error(e);
       toast.error('Claim failed');
@@ -137,55 +137,66 @@ const StakePanel = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-gray-800 text-white p-6 rounded-2xl shadow-xl space-y-6">
-      <ToastContainer position="top-right" autoClose={3000} />
+    <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-4 sm:p-6 md:p-8 border border-purple-500/20 shadow-2xl shadow-purple-500/10">
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
 
-      <h2 className="text-2xl font-bold text-center text-indigo-400">HedraFi Yield Farm</h2>
-
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between bg-gray-700 p-3 rounded-lg">
-          <span>HBAR Balance:</span>
-          <span>{hbarBalance?.formatted || '0'}</span>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent mb-2">
+            Yield Farm
+          </h2>
+          <p className="text-sm sm:text-base text-gray-400">Stake HBAR • Earn HRT Rewards</p>
         </div>
-
-        <div className="flex justify-between bg-gray-700 p-3 rounded-lg">
-          <span>Your Staked HBAR:</span>
-          <span>{userStake?.toFixed(4) || '0'} HBAR</span>
-        </div>
-
-        <div className="flex justify-between bg-gray-700 p-3 rounded-lg">
-          <span>Pending HRT Reward:</span>
-          <span>{pendingReward?.toFixed(4) || '0'} HRT</span>
-        </div>
-
-        <div className="flex justify-between bg-gray-700 p-3 rounded-lg">
-          <span>Claimed HRT:</span>
-          <span>{claimedReward?.toFixed(4) || '0'} HRT</span>
+        <div className="text-left sm:text-right">
+          <div className="text-xs sm:text-sm text-gray-400">APY</div>
+          <div className="text-2xl sm:text-3xl font-bold text-green-400">24.5%</div>
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <input
-          type="number"
-          value={stakeAmount}
-          onChange={(e) => setStakeAmount(e.target.value)}
-          placeholder="Amount to stake"
-          className="flex-1 p-3 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white"
-        />
+      {/* User Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="bg-gray-900/50 p-3 sm:p-4 rounded-xl border border-purple-500/10 hover:border-purple-500/30 transition-colors">
+          <div className="text-xs text-gray-400 mb-1">Your Staked HBAR</div>
+          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{userStake?.toFixed(4) || '0'} ℏ</div>
+        </div>
+        
+        <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-3 sm:p-4 rounded-xl border border-green-500/30">
+          <div className="text-xs text-green-300 mb-1">Pending HRT Reward</div>
+          <div className="text-xl sm:text-2xl font-bold text-green-200 font-mono break-all">{pendingReward?.toFixed(4) || '0'}</div>
+        </div>
+        
+        <div className="bg-gray-900/50 p-3 sm:p-4 rounded-xl border border-purple-500/10 hover:border-purple-500/30 transition-colors">
+          <div className="text-xs text-gray-400 mb-1">Claimed HRT</div>
+          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{claimedReward?.toFixed(4) || '0'}</div>
+        </div>
+      </div>
+
+      {/* Stake Input */}
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="number"
+            value={stakeAmount}
+            onChange={(e) => setStakeAmount(e.target.value)}
+            placeholder="Amount to stake"
+            className="flex-1 bg-gray-900/50 border border-purple-500/20 rounded-xl px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all placeholder-gray-500"
+          />
+          <button
+            onClick={handleStake}
+            className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 active:scale-95 sm:hover:scale-105"
+          >
+            Stake
+          </button>
+        </div>
+
         <button
-          onClick={handleStake}
-          className="bg-indigo-500 hover:bg-indigo-600 px-5 py-3 rounded-lg font-semibold transition"
+          onClick={handleClaim}
+          className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 active:scale-95 sm:hover:scale-105"
         >
-          Stake
+          {isAssociated ? 'Claim HRT Rewards' : 'Associate HRT & Claim'}
         </button>
       </div>
-
-      <button
-        onClick={handleClaim}
-        className="w-full bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition"
-      >
-        {isAssociated ? 'Claim HRT Rewards' : 'Associate HRT & Claim'}
-      </button>
     </div>
   );
 };
