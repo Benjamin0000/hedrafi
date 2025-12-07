@@ -90,7 +90,7 @@ const StakingStats = () => {
     { 
       label: 'Total Reward Paid', 
       value: stats.totalRewardPaid.toLocaleString(), 
-      icon: '💰', 
+      icon: '💎', 
       color: 'from-green-500/20 to-emerald-500/20', 
       border: 'border-green-500/30',
       glow: 'shadow-green-500/20', 
