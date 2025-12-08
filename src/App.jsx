@@ -2,29 +2,38 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Homepage from './components/Homepage';
 import Dashboard from './components/Dashboard';
 
+// Studio Pages
+import StudioHome from './components/StudioHome';
+import MintNFT from './components/MintNFT';
+import StudioCollections from './components/StudioCollections';
+import StudioStorefront from './components/StudioStorefront';
+
+// Marketplace Pages
+import MarketplaceHome from './components/MarketplaceHome';
+import NFTDetail from './components/NFTDetail';
+import CollectionDetail from './components/CollectionDetail';
+
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Main Pages */}
         <Route path="/" element={<Homepage />} />
         <Route path="/staking" element={<Dashboard />} />
-        <Route path="/studio" element={<ComingSoon title="NFT Studio" />} />
-        <Route path="/marketplace" element={<ComingSoon title="Marketplace" />} />
+        
+        {/* Studio Routes */}
+        <Route path="/studio" element={<StudioHome />} />
+        <Route path="/studio/mint" element={<MintNFT />} />
+        <Route path="/studio/collections" element={<StudioCollections />} />
+        <Route path="/studio/storefront" element={<StudioStorefront />} />
+        
+        {/* Marketplace Routes */}
+        <Route path="/marketplace" element={<MarketplaceHome />} />
+        <Route path="/marketplace/nft/:id" element={<NFTDetail />} />
+        <Route path="/marketplace/collection/:id" element={<CollectionDetail />} />
       </Routes>
     </BrowserRouter>
   );
 };
-
-// Coming Soon placeholder component
-const ComingSoon = ({ title }) => (
-  <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 text-white flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-        {title}
-      </h1>
-      <p className="text-xl text-gray-400">Coming Soon...</p>
-    </div>
-  </div>
-);
 
 export default App;
