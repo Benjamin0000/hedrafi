@@ -225,7 +225,7 @@ const Homepage = () => {
         <ul className="text-sm text-gray-300 space-y-2">
           <li>• NFT Studio v1 (HTS minting)</li>
           <li>• Creator storefronts</li>
-          <li>• Marketplace (TestNet)</li>
+          <li>• Marketplace</li>
           <li>• Staking campaigns & HRT rewards</li>
         </ul>
       </div>
