@@ -212,7 +212,7 @@ const Homepage = () => {
         <h3 className="text-xl font-bold mb-4">Immediate Launch Phase</h3>
         <ul className="text-sm text-gray-300 space-y-2">
           <li>• New homepage & staking dashboard</li>
-          <li>• HRT token live on TestNet</li>
+          <li>• HRT token and staking contract live on TestNet</li>
           <li>• NFT Studio UI integrated (Coming Soon)</li>
           <li>• MainNet staking launch</li>
         </ul>
