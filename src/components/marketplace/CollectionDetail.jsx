@@ -1,6 +1,8 @@
+// src/components/CollectionDetail.jsx
+
 import { Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
-import NFTCard from './NFTCard';
+import logo from "../../assets/logo.png";
+import NFTCard from '../shared/NFTCard';
 
 // Mock collection data
 const mockCollection = {

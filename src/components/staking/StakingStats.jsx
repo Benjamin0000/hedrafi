@@ -1,7 +1,9 @@
+// src/components/StakingStats.jsx
+
 import { useState, useEffect } from 'react';
 import { useReadContract } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
-import CONTRACT_ABI from '../ABIs/stakingABI.json';
+import CONTRACT_ABI from '../../ABIs/stakingABI.json';
 import { ContractId } from '@hashgraph/sdk';
 
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;

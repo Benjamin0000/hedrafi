@@ -1,8 +1,10 @@
+// src/components/MarketplaceHome.jsx
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
-import NFTCard from './NFTCard';
-import CollectionCard from './CollectionCard';
+import logo from "../../assets/logo.png";
+import NFTCard from '../shared/NFTCard';
+import CollectionCard from '../shared/CollectionCard';
 
 // Mock data
 const mockNFTs = [

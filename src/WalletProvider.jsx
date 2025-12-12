@@ -1,3 +1,5 @@
+// src/WalletProvider.jsx
+
 import { HWBridgeProvider } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import { HederaTestnet } from '@buidlerlabs/hashgraph-react-wallets/chains';

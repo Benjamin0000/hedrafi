@@ -4,7 +4,6 @@ const NFTCard = ({ nft }) => {
   return (
     <Link to={`/marketplace/nft/${nft.id}`}>
       <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl border border-purple-500/20 overflow-hidden hover:border-purple-500/50 transition-all duration-300 hover:scale-105 shadow-xl group">
-        {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-gray-900/50">
           <img 
             src={nft.image} 
@@ -17,8 +16,6 @@ const NFTCard = ({ nft }) => {
             </span>
           )}
         </div>
-
-        {/* Content */}
         <div className="p-4">
           <div className="flex items-start justify-between mb-2">
             <div className="flex-1 min-w-0">
@@ -26,8 +23,6 @@ const NFTCard = ({ nft }) => {
               <p className="text-sm text-gray-400 truncate">{nft.collection}</p>
             </div>
           </div>
-
-          {/* Price */}
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-purple-500/20">
             <div>
               <div className="text-xs text-gray-400">Price</div>

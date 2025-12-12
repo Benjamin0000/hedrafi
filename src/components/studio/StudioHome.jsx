@@ -1,5 +1,7 @@
+// src/components/StudioHome.jsx
+
 import { Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 
 const StudioHome = () => {
   const stats = [

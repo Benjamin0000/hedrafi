@@ -1,5 +1,7 @@
+// src/components/Homepage.jsx
+
 import { Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 
 const Homepage = () => {
   return (

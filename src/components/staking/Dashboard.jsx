@@ -1,8 +1,10 @@
+// src/components/Dashboard.jsx
+
 import WalletButton from './WalletButton';
 import WalletInfo from './WalletInfo';
 import StakePanel from './StakePanel';
 import StakingStats from './StakingStats';
-import logo from "../assets/logo.png"
+import logo from "../../assets/logo.png";
 
 const Dashboard = () => {
   return (

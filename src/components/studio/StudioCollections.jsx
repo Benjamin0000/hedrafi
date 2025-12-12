@@ -1,8 +1,10 @@
+// src/components/StudioCollections.jsx
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from "../assets/logo.png";
-import Modal from './Modal';
-import EmptyState from './EmptyState';
+import logo from "../../assets/logo.png";
+import Modal from '../shared/Modal';
+import EmptyState from '../shared/EmptyState';
 
 // Mock data
 const mockCollections = [

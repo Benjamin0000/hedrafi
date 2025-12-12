@@ -1,11 +1,13 @@
+// src/components/StakePanel.jsx
+
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useWallet, useWriteContract, useReadContract, useAccountId, useBalance, useAssociateTokens, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
-import CONTRACT_ABI from '../ABIs/stakingABI.json';
+import CONTRACT_ABI from '../../ABIs/stakingABI.json';
 import { ContractId } from '@hashgraph/sdk';
-import { checkTokenAssociation } from '../helpers';
+import { checkTokenAssociation } from '../../helpers';
 
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const REWARD_TOKEN_ID = process.env.REACT_APP_HTS_REWARD_TOKEN;
