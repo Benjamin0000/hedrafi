@@ -7,13 +7,15 @@ import CONTRACT_ABI from '../../ABIs/stakingABI.json';
 import { ContractId } from '@hashgraph/sdk';
 import { checkTokenAssociation } from '../../helpers';
 
+import { stakingContract, rewardToken } from '../../lib/staking'
+
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const REWARD_TOKEN_ID = process.env.REACT_APP_HTS_REWARD_TOKEN;
 
 const StakePanel = () => {
   const { isConnected } = useWallet(HWCConnector);
   const { writeContract } = useWriteContract({ connector: HWCConnector });
-  const { readContract } = useReadContract({ connector: HWCConnector });
+  // const { readContract } = useReadContract({ connector: HWCConnector });
   const { data: accountId } = useAccountId({ autoFetch: isConnected });
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
   const { refetch: fetchHbarBalance } = useBalance({ autoFetch: isConnected });
@@ -34,24 +36,12 @@ const StakePanel = () => {
       await getUserClaimed();
       const associated = await checkTokenAssociation(accountId, REWARD_TOKEN_ID);
       setIsAssociated(associated);
-      
       // Pending reward
-      const reward = await readContract({
-        address: `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`,
-        abi: CONTRACT_ABI,
-        functionName: 'pendingReward',
-        args: [evmAddress],
-      });
-      setPendingReward(Number(reward) / 1e8);
-
+      const reward = await stakingContract.pendingReward(evmAddress)
+      setPendingReward( Number(reward) / 1e8);
       // User stake
-      const stake = await readContract({
-        address: `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`,
-        abi: CONTRACT_ABI,
-        functionName: 'userStake',
-        args: [evmAddress],
-      });
-      setUserStake(Number(stake) / 1e8);
+      const stake = await stakingContract.userStake(evmAddress)
+      setUserStake( Number(stake) / 1e8 );
 
     } catch (e) {
       console.error(e);
@@ -75,12 +65,7 @@ const StakePanel = () => {
   const getUserClaimed = async () => {
     if (!evmAddress) return;
     try {
-      const userDebt = await readContract({
-        address: `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`,
-        abi: CONTRACT_ABI,
-        functionName: 'userRewardDebt',
-        args: [evmAddress],
-      });
+      const userDebt = await stakingContract.userRewardDebt(evmAddress)
       const claimed = Number(userDebt) / 1e8;
       setClaimedReward(claimed);
     } catch (e) {}
@@ -185,17 +170,17 @@ const StakePanel = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="bg-gray-900/50 p-3 sm:p-4 rounded-xl border border-purple-500/10 hover:border-purple-500/30 transition-colors">
           <div className="text-xs text-gray-400 mb-1">Your Staked HBAR</div>
-          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{userStake?.toFixed(4) || '0'} ℏ</div>
+          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{userStake?.toFixed(4).toLocaleString() || '0'} ℏ</div>
         </div>
         
         <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-3 sm:p-4 rounded-xl border border-green-500/30">
           <div className="text-xs text-green-300 mb-1">Pending HRT Reward</div>
-          <div className="text-xl sm:text-2xl font-bold text-green-200 font-mono break-all">{pendingReward?.toFixed(4) || '0'}</div>
+          <div className="text-xl sm:text-2xl font-bold text-green-200 font-mono break-all">{pendingReward?.toFixed(4).toLocaleString() || '0'}</div>
         </div>
         
         <div className="bg-gray-900/50 p-3 sm:p-4 rounded-xl border border-purple-500/10 hover:border-purple-500/30 transition-colors">
           <div className="text-xs text-gray-400 mb-1">Claimed HRT</div>
-          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{claimedReward?.toFixed(4) || '0'}</div>
+          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{claimedReward?.toFixed(4).toLocaleString() || '0'}</div>
         </div>
       </div>
 

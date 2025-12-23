@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useReadContract } from '@buidlerlabs/hashgraph-react-wallets';
-import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
-import CONTRACT_ABI from '../../ABIs/stakingABI.json';
-import { ContractId } from '@hashgraph/sdk';
+import { stakingContract, rewardToken } from '../../lib/staking'
 
-const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
-const REWARD_TOKEN_ID = process.env.REACT_APP_HTS_REWARD_TOKEN;
+const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS_EVM;
 
 const StakingStats = () => {
-  const { readContract } = useReadContract({ connector: HWCConnector });
+
   const [stats, setStats] = useState({
     totalStakedHBAR: 0,
     totalHRTLocked: 0,
@@ -18,39 +14,17 @@ const StakingStats = () => {
 
   const fetchStats = async () => {
     try {
-      const [totalStakedHBAR, totalRewardPaid, totalUsers] = await Promise.all([
-        readContract({
-          address: `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`,
-          abi: CONTRACT_ABI,
-          functionName: 'totalStakedHBAR'
-        }),
-        readContract({
-          address: `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`,
-          abi: CONTRACT_ABI,
-          functionName: 'totalRewardPaid'
-        }),
-        readContract({
-          address: `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`,
-          abi: CONTRACT_ABI,
-          functionName: 'totalUsers'
-        })
+      const [
+        totalStakedHBAR,
+        totalRewardPaid,
+        totalUsers,
+        totalHRTLocked
+      ] = await Promise.all([
+        stakingContract.totalStakedHBAR(),
+        stakingContract.totalRewardPaid(),
+        stakingContract.totalUsers(),
+        rewardToken.balanceOf(CONTRACT_ADDRESS)
       ]);
-
-      // Fetch HRT balance of contract
-      const totalHRTLocked = await readContract({
-        address: `0x${ContractId.fromString(REWARD_TOKEN_ID).toEvmAddress()}`,
-        abi: [
-          {
-            inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
-            name: 'balanceOf',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function'
-          }
-        ],
-        functionName: 'balanceOf',
-        args: [`0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`]
-      });
 
       setStats({
         totalStakedHBAR: Number(totalStakedHBAR) / 1e8,
@@ -59,9 +33,10 @@ const StakingStats = () => {
         totalHRTLocked: Number(totalHRTLocked) / 1e8
       });
     } catch (e) {
-      console.error(e);
+      console.error('fetchStats error:', e);
     }
   };
+
 
   useEffect(() => {
     fetchStats();
