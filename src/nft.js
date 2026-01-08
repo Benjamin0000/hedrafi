@@ -2,6 +2,7 @@ import {
   Client,
   PrivateKey,
   AccountId, 
+  ContractId, 
   TokenCreateTransaction,
   TokenType,
   TokenSupplyType
@@ -9,10 +10,11 @@ import {
 import dotenv from "dotenv";
 dotenv.config();  
 
-const client = Client.forMainnet();
+const client = Client.forTestnet();
 
 const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
 const operatorKey = PrivateKey.fromStringECDSA(process.env.HEDERA_OPERATOR_KEY);
+const marketPlaceContract = ContractId.fromString(process.env.REACT_APP_MARKETPLACE_CONTRACT); 
 
 client.setOperator(operatorId, operatorKey);
 
@@ -23,7 +25,7 @@ const tx = await new TokenCreateTransaction()
   .setTokenType(TokenType.NonFungibleUnique)
   .setSupplyType(TokenSupplyType.Finite)
   .setMaxSupply(10**64)
-  .setSupplyKey()  //contract address
+  .setSupplyKey(marketPlaceContract)
   .freezeWith(client)
   .sign(operatorKey);
 
