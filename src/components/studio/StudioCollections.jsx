@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from "../../assets/logo.png";
 import Modal from '../shared/Modal';
 import EmptyState from '../shared/EmptyState';
+import Header from "../shared/Header"
 
 // Mock data
 const mockCollections = [
@@ -48,19 +48,7 @@ const StudioCollections = () => {
         <div className="absolute bottom-20 right-10 w-64 sm:w-96 h-64 sm:h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
       </div>
 
-      {/* Header */}
-      <header className="backdrop-blur-xl bg-gray-900/50 border-b border-purple-500/20 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2 sm:gap-3">
-            <img src={logo} width={50} className="sm:w-[60px]" alt="HedraFi Logo"/> 
-          </Link>
-          <nav className="flex gap-3 sm:gap-6 text-sm sm:text-base">
-            <Link to="/studio" className="text-purple-400 font-semibold">Studio</Link>
-            <Link to="/marketplace" className="text-gray-300 hover:text-purple-400 transition-colors">Marketplace</Link>
-            <Link to="/staking" className="text-gray-300 hover:text-purple-400 transition-colors">Staking</Link>
-          </nav>
-        </div>
-      </header>
+      <Header/>
 
       {/* Main Content */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">

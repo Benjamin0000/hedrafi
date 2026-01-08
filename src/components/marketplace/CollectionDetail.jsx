@@ -1,8 +1,9 @@
 // src/components/CollectionDetail.jsx
 
 import { Link } from 'react-router-dom';
-import logo from "../../assets/logo.png";
 import NFTCard from '../shared/NFTCard';
+import Header from "../shared/Header"
+import Footer from "../shared/Footer"
 
 // Mock collection data
 const mockCollection = {
@@ -42,19 +43,7 @@ const CollectionDetail = () => {
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
       </div>
 
-      {/* Header */}
-      <header className="backdrop-blur-xl bg-gray-900/50 border-b border-purple-500/20 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={logo} width={60} alt="HedraFi Logo"/> 
-          </Link>
-          <nav className="flex gap-6">
-            <Link to="/studio" className="text-gray-300 hover:text-purple-400 transition-colors">Studio</Link>
-            <Link to="/marketplace" className="text-purple-400 font-semibold">Marketplace</Link>
-            <Link to="/staking" className="text-gray-300 hover:text-purple-400 transition-colors">Staking</Link>
-          </nav>
-        </div>
-      </header>
+      <Header/>
 
       {/* Banner */}
       <div className="relative h-64 overflow-hidden">
@@ -160,30 +149,7 @@ const CollectionDetail = () => {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative backdrop-blur-xl bg-gray-900/50 border-t border-purple-500/20 py-8 mt-16">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <img src={logo} width={40} alt="HedraFi"/>
-              <div>
-                <div className="text-lg font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-                  HedraFi
-                </div>
-                <div className="text-xs text-gray-400">Hedera's NFT Marketplace</div>
-              </div>
-            </div>
-            <div className="flex gap-6 text-gray-400">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors">Twitter</a>
-              <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors">Discord</a>
-              <a href="https://docs.example.com" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition-colors">Docs</a>
-            </div>
-          </div>
-          <div className="text-center mt-6 text-gray-500 text-sm">
-            © 2025 HedraFi. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 };
