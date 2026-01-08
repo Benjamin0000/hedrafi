@@ -2,7 +2,7 @@
 
 HedraFi is a decentralized staking and rewards platform built on the **Hedera network**, allowing users to stake HBAR and earn HRT tokens. The platform integrates HTS, real-time reward calculation, and a user-friendly interface for managing staked assets and token rewards.  
 
-This project is being prepared for submission to the Hedera Builders Program, showcasing live TestNet deployment, staking, TVL tracking, and token reward mechanics..
+<!-- This project is being prepared for submission to the Hedera Builders Program, showcasing live TestNet deployment, staking, TVL tracking, and token reward mechanics.. -->
 
 ---
 
