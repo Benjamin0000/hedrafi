@@ -8,7 +8,7 @@ import {
   TokenSupplyType
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
-dotenv.config();  
+dotenv.config({ path: '.env.local' });  
 
 const client = Client.forTestnet();
 
@@ -20,11 +20,11 @@ client.setOperator(operatorId, operatorKey);
 
 const tx = await new TokenCreateTransaction()
   .setTokenName("Hedrafi Store Front")
-  .setTokenSymbol("HEDRAFI")
+  .setTokenSymbol("HSF")
   .setTreasuryAccountId(operatorId)
   .setTokenType(TokenType.NonFungibleUnique)
   .setSupplyType(TokenSupplyType.Finite)
-  .setMaxSupply(10**64)
+  .setMaxSupply(2**63-1)
   .setSupplyKey(marketPlaceContract)
   .freezeWith(client)
   .sign(operatorKey);
