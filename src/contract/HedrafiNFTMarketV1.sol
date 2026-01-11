@@ -15,9 +15,10 @@ contract HedraFiNFTMarketPlace {
 
     IHederaTokenService constant HTS = IHederaTokenService(address(0x167));
 
-    uint64 public constant ROYALTY_BPS = 1000; // 10% (1000 basis points)
+    uint256 public constant ROYALTY_BPS = 1000; // 10% (1000 basis points)
     address public admin;
     address public treasury;
+    address public tokenTreasury;
     address public hrtToken;
 
     uint256 public totalMintingFeesCollected;
@@ -34,6 +35,7 @@ contract HedraFiNFTMarketPlace {
     constructor(address _hrtToken) {
         admin = msg.sender;
         treasury = address(this);
+        tokenTreasury = msg.sender;
         hrtToken = _hrtToken;
     }
 
@@ -77,7 +79,7 @@ contract HedraFiNFTMarketPlace {
     }
 
     // ---------------- Minting ----------------
-    function mintNFTs(address token, string[] memory uris, address to, uint8 royaltyBP) external {
+    function mintNFTs(address token, string[] memory uris, uint256 royaltyBP) external {
         require(uris.length > 0, "Must provide at least one metadata URI");
         require(royaltyBP <= ROYALTY_BPS, "Max 10%");
 
@@ -104,8 +106,8 @@ contract HedraFiNFTMarketPlace {
         address[] memory senders = new address[](serialNumbers.length);
         address[] memory receivers = new address[](serialNumbers.length);
         for (uint i = 0; i < serialNumbers.length; i++) {
-            senders[i] = treasury;
-            receivers[i] = to;
+            senders[i] = tokenTreasury;
+            receivers[i] = msg.sender;
         }
 
         int transferResponse = HTS.transferNFTs(token, senders, receivers, serialNumbers);
@@ -116,7 +118,7 @@ contract HedraFiNFTMarketPlace {
             nftRoyalty[token][serialNumbers[i]] = royaltyBP;
         }
 
-        emit NFTMinted(token, serialNumbers, to);
+        emit NFTMinted(token, serialNumbers, msg.sender);
     }
 
     // ---------------- Listing ----------------
