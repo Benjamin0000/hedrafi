@@ -1,17 +1,35 @@
-// src/components/MintNFT.jsx
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from "../shared/Header"
+import { ContractId } from "@hashgraph/sdk";
+import { useWriteContract, useEvmAddress, useWallet } from "@buidlerlabs/hashgraph-react-wallets";
+import marketplaceABI from "../../ABIs/marketplaceABI.json";
+import { finalizeMint } from "../../lib/marketplace"
+
+const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
+const nftTokenContract = process.env.REACT_APP_NFT_CONTRACT_EVM; 
+const API_URL = process.env.REACT_APP_API_URL; 
 
 const MintNFT = () => {
+  const { isConnected } = useWallet()
+  const { writeContract } = useWriteContract();
+  // const { data: accountId } = useAccountId({ autoFetch: isConnected });
+  const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
+
+  const [attributes, setAttributes] = useState([
+    { trait_type: '', value: '' }
+  ]);
+  const [minting, setMinting] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     externalLink: '',
     supply: '1',
-    royalty: '10'
+    royalty: '10',
+    owner: evmAddress
   });
+
   const [uploadedFile, setUploadedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [errors, setErrors] = useState({});
@@ -38,6 +56,38 @@ const MintNFT = () => {
     }
   };
 
+  const addAttribute = () => {
+    setAttributes([...attributes, { trait_type: '', value: '' }]);
+  };
+
+  const removeAttribute = (index) => {
+    setAttributes(attributes.filter((_, i) => i !== index));
+  };
+
+  const updateAttribute = (index, field, value) => {
+    const updated = [...attributes];
+    updated[index][field] = value;
+    setAttributes(updated);
+  };
+
+  const mintOnChain = async (uris, metadata_url) => {
+    const txHash = await writeContract({
+      contractId: ContractId.fromString(marketplaceContract),
+      abi: marketplaceABI,
+      functionName: "mintNFTs",
+      args: [
+        nftTokenContract,
+        uris,
+        parseInt(formData.royalty) * 100
+      ],
+      metaArgs: { gas: 1_200_000 }
+    });
+
+    // tokenId, metadataUrl, owner
+    console.log("Mint tx:", txHash);
+    finalizeMint(txHash, metadata_url);
+  };
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Name is required';
@@ -50,12 +100,41 @@ const MintNFT = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleMint = () => {
-    if (validateForm()) {
-      // Coming Soon - will integrate with smart contract
-      alert('Minting functionality coming soon!');
+  const handleMint = async () => {
+    if (!validateForm()) return;
+
+    const form = new FormData();
+    form.append('name', formData.name);
+    form.append('description', formData.description);
+    form.append('external_link', formData.externalLink);
+    form.append('image', uploadedFile);
+    form.append('attributes', JSON.stringify(attributes));
+    form.append('owner', evmAddress);
+    form.append('royalty', formData.royalty);
+
+    try{
+      setMinting(true)
+      const res = await fetch(`${API_URL}/api/upload-metadata`, {
+        method: 'POST',
+        body: form
+      });
+
+      const { metadata_url } = await res.json();
+
+      // repeat url by supply
+      const uris = Array(parseInt(formData.supply)).fill(metadata_url);
+
+      console.log("the metadata url")
+      console.log(metadata_url)
+
+      await mintOnChain(uris, metadata_url);
+    }catch(e){
+      setMinting(false)
+    } finally{
+      setMinting(false)
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 text-white font-sans">
@@ -159,9 +238,46 @@ const MintNFT = () => {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-semibold mb-2">Attributes</label>
+
+                {attributes.map((attr, i) => (
+                  <div key={i} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      placeholder="Trait type"
+                      value={attr.trait_type}
+                      onChange={(e) => updateAttribute(i, 'trait_type', e.target.value)}
+                      className="w-1/2 bg-gray-900/50 border border-purple-500/20 rounded-lg px-3 py-2"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Value"
+                      value={attr.value}
+                      onChange={(e) => updateAttribute(i, 'value', e.target.value)}
+                      className="w-1/2 bg-gray-900/50 border border-purple-500/20 rounded-lg px-3 py-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeAttribute(i)}
+                      className="text-red-400 px-2"
+                    >✕</button>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addAttribute}
+                  className="text-purple-400 text-sm mt-2"
+                >
+                  + Add Attribute
+                </button>
+              </div>
+
+
               {/* Supply & Royalty */}
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                {/* <div>
                   <label className="block text-sm font-semibold mb-2">Supply *</label>
                   <input
                     type="number"
@@ -172,7 +288,7 @@ const MintNFT = () => {
                     className={`w-full bg-gray-900/50 border ${errors.supply ? 'border-red-500/50' : 'border-purple-500/20'} rounded-xl px-4 py-3 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all`}
                   />
                   {errors.supply && <p className="text-red-400 text-sm mt-1">{errors.supply}</p>}
-                </div>
+                </div> */}
                 <div>
                   <label className="block text-sm font-semibold mb-2">Royalty % *</label>
                   <input
@@ -211,10 +327,10 @@ const MintNFT = () => {
                   <h4 className="font-bold text-lg mb-1">{formData.name || 'NFT Name'}</h4>
                   <p className="text-sm text-gray-400 mb-3 line-clamp-2">{formData.description || 'NFT description will appear here...'}</p>
                   <div className="flex justify-between items-center text-sm">
-                    <div>
+                    {/* <div>
                       <div className="text-gray-400">Supply</div>
                       <div className="font-semibold">{formData.supply}</div>
-                    </div>
+                    </div> */}
                     <div>
                       <div className="text-gray-400">Royalty</div>
                       <div className="font-semibold">{formData.royalty}%</div>
@@ -226,12 +342,12 @@ const MintNFT = () => {
               {/* Mint Button */}
               <button
                 onClick={handleMint}
-                disabled
-                className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg opacity-50 cursor-not-allowed"
-              >
-                Mint NFT (Coming Soon)
+                disabled={minting}
+                className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg"
+              > 
+                { minting ? "Minting..." : "Mint NFT" }
               </button>
-              <p className="text-xs text-gray-500 text-center mt-3">Backend integration in progress</p>
+             
             </div>
           </div>
         </div>

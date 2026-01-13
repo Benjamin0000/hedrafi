@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { useWallet, useWriteContract, useReadContract, useAccountId, useBalance, useAssociateTokens, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import CONTRACT_ABI from '../../ABIs/stakingABI.json';
@@ -150,8 +149,6 @@ const StakePanel = () => {
 
   return (
     <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-4 sm:p-6 md:p-8 border border-purple-500/20 shadow-2xl shadow-purple-500/10">
-      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
         <div>
