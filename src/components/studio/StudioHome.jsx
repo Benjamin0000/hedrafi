@@ -19,15 +19,23 @@ const StudioHome = () => {
       link: '/studio/mint',
       color: 'from-purple-500/20 to-pink-500/20',
       border: 'border-purple-500/30'
-    },
+    }, 
     {
-      title: 'Manage Collections',
+      title: 'Manage NFTs',
       description: 'Organize your NFTs',
       icon: '📚',
-      link: '/studio/collections',
+      link: '/studio/mynfts',
       color: 'from-indigo-500/20 to-purple-500/20',
       border: 'border-indigo-500/30'
-    },
+    }, 
+    // {
+    //   title: 'Manage Collections',
+    //   description: 'Organize your NFTs',
+    //   icon: '📚',
+    //   link: '/studio/collections',
+    //   color: 'from-indigo-500/20 to-purple-500/20',
+    //   border: 'border-indigo-500/30'
+    // },
     {
       title: 'Setup Storefront',
       description: 'Customize your profile',

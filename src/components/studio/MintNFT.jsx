@@ -5,6 +5,7 @@ import { ContractId } from "@hashgraph/sdk";
 import { useWriteContract, useEvmAddress, useWallet } from "@buidlerlabs/hashgraph-react-wallets";
 import marketplaceABI from "../../ABIs/marketplaceABI.json";
 import { finalizeMint } from "../../lib/marketplace"
+import { toast } from 'react-toastify';
 
 const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
 const nftTokenContract = process.env.REACT_APP_NFT_CONTRACT_EVM; 
@@ -17,8 +18,11 @@ const MintNFT = () => {
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
 
   const [attributes, setAttributes] = useState([
-    { trait_type: '', value: '' }
+    { trait_type: "", value: "" }
   ]);
+
+
+
   const [minting, setMinting] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -57,11 +61,11 @@ const MintNFT = () => {
   };
 
   const addAttribute = () => {
-    setAttributes([...attributes, { trait_type: '', value: '' }]);
+    setAttributes(prev => [...prev, { trait_type: '', value: '' }]);
   };
 
   const removeAttribute = (index) => {
-    setAttributes(attributes.filter((_, i) => i !== index));
+    setAttributes(prev => prev.filter((_, i) => i !== index));
   };
 
   const updateAttribute = (index, field, value) => {
@@ -69,6 +73,17 @@ const MintNFT = () => {
     updated[index][field] = value;
     setAttributes(updated);
   };
+
+  const formatAttributes = () => {
+    return attributes
+      .filter(attr => attr.trait_type.trim() && attr.value.trim())
+      .map(attr => ({
+        trait_type: attr.trait_type.trim(),
+        value: attr.value.trim()
+      }));
+  };
+
+
 
   const mintOnChain = async (uris, metadata_url) => {
     const txHash = await writeContract({
@@ -108,7 +123,7 @@ const MintNFT = () => {
     form.append('description', formData.description);
     form.append('external_link', formData.externalLink);
     form.append('image', uploadedFile);
-    form.append('attributes', JSON.stringify(attributes));
+    form.append('attributes', JSON.stringify(formatAttributes()));
     form.append('owner', evmAddress);
     form.append('royalty', formData.royalty);
 
@@ -130,6 +145,7 @@ const MintNFT = () => {
       await mintOnChain(uris, metadata_url);
     }catch(e){
       setMinting(false)
+      toast.error("minting faild");
     } finally{
       setMinting(false)
     }

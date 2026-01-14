@@ -9,6 +9,7 @@ import StudioStorefront from './components/studio/StudioStorefront';
 import MarketplaceHome from './components/marketplace/MarketplaceHome';
 import NFTDetail from './components/marketplace/NFTDetail';
 import CollectionDetail from './components/marketplace/CollectionDetail';
+import MyNFTs from './components/studio/MyNFT'
 
 const App = () => {
   useEffect(() => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/staking" element={<Dashboard />} />
         <Route path="/studio" element={<StudioHome />} />
         <Route path="/studio/mint" element={<MintNFT />} />
+        <Route path='/studio/mynfts' element={<MyNFTs />}/>
         <Route path="/studio/collections" element={<StudioCollections />} />
         <Route path="/studio/storefront" element={<StudioStorefront />} />
         <Route path="/marketplace" element={<MarketplaceHome />} />
