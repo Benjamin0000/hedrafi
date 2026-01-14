@@ -1,5 +1,8 @@
+/* global BigInt */
+
 import { toast } from 'react-toastify';
 import axios from "axios";
+
 
 const API_URL = process.env.REACT_APP_API_URL;
 //this function is for testing purposes
@@ -19,11 +22,33 @@ export async function finalizeMint(txHash, metadataUrl) {
     console.log("the finalize final")
     if(success){
       toast.success('Minting successful!');
+      setTimeout(()=>{
+        window.location.href = "/studio/mynfts"; 
+      }, 2000)
     }
   }, 2000)
 
 }
 
+//testnet function 
+export async function finalizeBuy(id, buyer){
+    const res = await fetch(`${API_URL}/api/finalize-buy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id,
+        buyer
+      })
+    });
+    const { success } = await res.json();
+    console.log("the finalize final")
+    if(success){
+      toast.success('NFT bought successfully!');
+      setTimeout(()=>{
+        window.location.href = "/studio/mynfts";
+      }, 2000)
+    }
+}
 
 export function convertIpfsToPinata(ipfsUri) {
   if (!ipfsUri) return "";
@@ -55,3 +80,23 @@ export const checkNFTAllowanceMirrorNode = async (ownerId, tokenId, contractId) 
   }
 };
 
+
+
+export async function evmToHederaAccount(evmAddress) {
+  const res = await fetch(
+    `https://testnet.mirrornode.hedera.com/api/v1/accounts/${evmAddress}`
+  );
+
+  const data = await res.json();
+
+  if (!data.account) throw new Error("Account not found on Hedera");
+
+  return data.account; // e.g. "0.0.6987678"
+}
+
+export function evmContractToHederaId(evmAddress) {
+  if(!evmAddress) return ""; 
+  const clean = evmAddress.replace(/^0x0+/, '');
+  const num = BigInt('0x' + clean).toString(10);
+  return `0.0.${num}`;
+}

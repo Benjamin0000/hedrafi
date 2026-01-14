@@ -118,20 +118,38 @@ const MyNFTs = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {nfts.map((nft) => (
             <div
-              key={nft.serial_number}
-              className="bg-gray-900/60 border border-purple-500/20 rounded-xl overflow-hidden shadow-xl hover:scale-105 transition cursor-pointer"
-              onClick={() => openListModal(nft)}
-            >
-              <img
-                src={convertIpfsToPinata(nft.image_url)}
-                alt={nft.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-bold">{nft.name}</h3>
-                <p className="text-sm text-gray-400">Token #{nft.serial_number}</p>
-              </div>
-            </div>
+  key={nft.serial_number}
+  className="bg-gray-900/60 border border-purple-500/20 rounded-xl overflow-hidden shadow-xl hover:scale-105 transition cursor-pointer"
+  onClick={() => openListModal(nft)}
+>
+  <img
+    src={convertIpfsToPinata(nft.image_url)}
+    alt={nft.name}
+    className="w-full h-48 object-cover"
+  />
+
+  <div className="p-4 space-y-1">
+    <h3 className="font-bold text-white">{nft.name}</h3>
+    <p className="text-sm text-gray-400">Token #{nft.serial_number}</p>
+
+    {/* PRICE BADGE */}
+    {nft.price ? (
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-xs text-green-400 font-semibold">
+          Listed for sale
+        </span>
+        <span className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md text-sm font-semibold">
+          {Number(nft.price)} HRT
+        </span>
+      </div>
+    ) : (
+      <span className="mt-2 inline-block text-xs text-yellow-400">
+        Not listed
+      </span>
+    )}
+  </div>
+</div>
+
           ))}
         </div>
       </main>
@@ -165,6 +183,8 @@ const MyNFTs = () => {
               List NFT
               
             </button>
+
+            
           </div>
         )}
       </Modal>

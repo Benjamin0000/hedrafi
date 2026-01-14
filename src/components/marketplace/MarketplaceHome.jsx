@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from "../shared/Header"
 import Footer from "../shared/Footer"
@@ -7,25 +7,44 @@ import CollectionCard from '../shared/CollectionCard';
 
 
 
-// Mock data
-const mockNFTs = [
-  { id: 1, name: 'Cosmic Dragon #001', collection: 'Cosmic Dragons', price: '50', image: 'https://via.placeholder.com/400/6366f1/ffffff', isNew: true },
-  { id: 2, name: 'Dreamscape #042', collection: 'Digital Dreamscape', price: '35', image: 'https://via.placeholder.com/400/8b5cf6/ffffff', isNew: true },
-  { id: 3, name: 'Astral Journey #007', collection: 'Cosmic Dragons', price: '45', image: 'https://via.placeholder.com/400/a855f7/ffffff', isNew: false },
-  { id: 4, name: 'Neon City #123', collection: 'Urban Legends', price: '60', image: 'https://via.placeholder.com/400/c084fc/ffffff', isNew: false }
-];
 
-const mockCollections = [
-  { id: 1, name: 'Cosmic Dragons', description: 'Mythical dragons from across the cosmos', items: 50, owners: 32, floor: '45', logo: 'https://via.placeholder.com/200/8b5cf6/ffffff', banner: 'https://via.placeholder.com/800x200/6366f1/ffffff' },
-  { id: 2, name: 'Digital Dreamscape', description: 'Abstract digital reality', items: 25, owners: 18, floor: '30', logo: 'https://via.placeholder.com/200/a855f7/ffffff', banner: 'https://via.placeholder.com/800x200/8b5cf6/ffffff' }
-];
+// Mock data
+// const mockNFTs = [
+//   { id: 1, name: 'Cosmic Dragon #001', collection: 'Cosmic Dragons', price: '50', image: 'https://via.placeholder.com/400/6366f1/ffffff', isNew: true },
+//   { id: 2, name: 'Dreamscape #042', collection: 'Digital Dreamscape', price: '35', image: 'https://via.placeholder.com/400/8b5cf6/ffffff', isNew: true },
+//   { id: 3, name: 'Astral Journey #007', collection: 'Cosmic Dragons', price: '45', image: 'https://via.placeholder.com/400/a855f7/ffffff', isNew: false },
+//   { id: 4, name: 'Neon City #123', collection: 'Urban Legends', price: '60', image: 'https://via.placeholder.com/400/c084fc/ffffff', isNew: false }
+// ];
+
+// const mockCollections = [
+//   { id: 1, name: 'Cosmic Dragons', description: 'Mythical dragons from across the cosmos', items: 50, owners: 32, floor: '45', logo: 'https://via.placeholder.com/200/8b5cf6/ffffff', banner: 'https://via.placeholder.com/800x200/6366f1/ffffff' },
+//   { id: 2, name: 'Digital Dreamscape', description: 'Abstract digital reality', items: 25, owners: 18, floor: '30', logo: 'https://via.placeholder.com/200/a855f7/ffffff', banner: 'https://via.placeholder.com/800x200/8b5cf6/ffffff' }
+// ];
+
+  const categories = ['All', 'Art', 'Gaming', 'Music', 'Photography', 'Sports'];
+  const API_URL = process.env.REACT_APP_API_URL; 
 
 const MarketplaceHome = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [nfts, setNfts] = useState([]); 
 
-  const categories = ['All', 'Art', 'Gaming', 'Music', 'Photography', 'Sports'];
+
+
+
+    useEffect(() => {
+      const loadNFTs = async () => {
+          const res = await fetch(`${API_URL}/api/listings`);
+          const data = await res.json();
+          setNfts(data);
+          // const allowed = await checkNFTAllowanceMirrorNode(accountId, nftTokenContract, marketplaceContract); 
+          // setAllowed(allowed); 
+      };
+      loadNFTs();
+  
+    }, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 text-white font-sans">
@@ -87,8 +106,8 @@ const MarketplaceHome = () => {
         </div>
       </section>
 
-      {/* Trending Collections */}
-      <section className="relative py-8 sm:py-12 px-4 sm:px-6 bg-gray-900/30">
+    
+      {/* <section className="relative py-8 sm:py-12 px-4 sm:px-6 bg-gray-900/30">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-4 sm:mb-6">
             <h2 className="text-2xl sm:text-3xl font-bold">Trending Collections</h2>
@@ -101,15 +120,15 @@ const MarketplaceHome = () => {
               <CollectionCard key={collection.id} collection={collection} />
             ))}
             {/* Placeholder for more */}
-            <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl border border-purple-500/20 p-8 sm:p-12 flex items-center justify-center text-center">
+            {/* <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl border border-purple-500/20 p-8 sm:p-12 flex items-center justify-center text-center">
               <div>
                 <div className="text-3xl sm:text-4xl mb-3">🔜</div>
                 <p className="text-sm sm:text-base text-gray-400">More collections coming soon</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </div> */}
+      {/* </section>  */}
 
       {/* Latest NFTs */}
       <section className="relative py-8 sm:py-12 px-4 sm:px-6">
@@ -121,7 +140,7 @@ const MarketplaceHome = () => {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {mockNFTs.map((nft) => (
+            {nfts.map((nft) => (
               <NFTCard key={nft.id} nft={nft} />
             ))}
           </div>

@@ -1,5 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Header from '../shared/Header';
+import { ContractId } from "@hashgraph/sdk";
+import { useState, useEffect } from 'react';
+import { convertIpfsToPinata, evmContractToHederaId, evmToHederaAccount, finalizeBuy } from "../../lib/marketplace"
+import marketplaceABI from "../../ABIs/marketplaceABI.json";
+import { useWriteContract, useAssociateTokens, useAccountId,useEvmAddress, useWallet } from "@buidlerlabs/hashgraph-react-wallets";
+import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
+import { checkTokenAssociation } from '../../helpers';
+import { toast } from 'react-toastify';
+
+const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
+const nftTokenContract = process.env.REACT_APP_NFT_CONTRACT_EVM;
+const nftTokenContractH = process.env.REACT_APP_NFT_CONTRACT;  
+const API_URL = process.env.REACT_APP_API_URL; 
 
 // Mock NFT data
 const mockNFT = {
@@ -36,7 +49,97 @@ const mockNFT = {
 };
 
 const NFTDetail = () => {
-  /* const { id } = useParams(); */
+  const { isConnected } = useWallet(HWCConnector);
+  const { data: accountId } = useAccountId({ autoFetch: isConnected });
+  const { writeContract } = useWriteContract();
+  const { associateTokens } = useAssociateTokens();
+  const [isAssociated, setIsAssociated] = useState(true);
+  const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
+
+  const [nft, setNft] = useState({}); 
+  const [creator, setCreator] = useState(null);
+  const [owner, setOwner] = useState('owner');
+  const [loadingItem, setLoadingItem] = useState(true);  
+  const { id } = useParams();
+  
+
+
+  useEffect(() => {
+    if(!id) return; 
+    const loadNFT = async () => {
+        const res = await fetch(`${API_URL}/api/nft/${id}`);
+        const data = await res.json();
+        setNft(data);
+        // const allowed = await checkNFTAllowanceMirrorNode(accountId, nftTokenContract, marketplaceContract); 
+        // setAllowed(allowed); 
+    };
+    loadNFT();
+  }, [id]);
+
+  useEffect(()=>{
+
+    const fetchCreator = async () => {
+      if(nft && nft.creator){
+        const creatorID = await evmToHederaAccount(nft.creator); // await it
+        setCreator(creatorID);
+      }
+    }
+
+    const fetchOwner = async () => {
+      if(nft && nft.creator){
+        const ownerID = await evmToHederaAccount(nft.owner); // await it
+        setOwner(ownerID);
+      }
+    }
+
+    const CheckTokenAssoc = async () => {
+      if(!isAssociated){
+        const associated = await checkTokenAssociation(accountId, nftTokenContractH);
+        setIsAssociated(associated);
+      }
+    }
+
+    CheckTokenAssoc();
+    fetchOwner()
+    fetchCreator();
+
+    if(nft?.id){
+      setLoadingItem(false); 
+    }
+
+  }, [nft, isAssociated])
+
+  
+
+    const buyOnChain = async () => {
+
+      if (!isAssociated) {
+        try {
+          await associateTokens([nftTokenContractH]);
+          toast.success('NFT token associated!');
+          setIsAssociated(true);
+        } catch (e) {
+          console.error(e);
+          return toast.error('Failed to associate HTS token');
+        }
+      }
+
+      const txHash = await writeContract({
+        contractId: ContractId.fromString(marketplaceContract),
+        abi: marketplaceABI,
+        functionName: "buyNFT",
+        args: [
+          nftTokenContract,
+          nft.serial_number,
+        ],
+        metaArgs: { gas: 1_200_000 }
+      });
+      console.log("buy tx:", txHash);
+      finalizeBuy(nft.id, evmAddress);
+      
+    }
+
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 text-white font-sans">
@@ -45,8 +148,10 @@ const NFTDetail = () => {
         <div className="absolute top-20 left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
       </div>
-
+ 
       <Header/>
+
+      
 
       {/* Main Content */}
       <main className="relative max-w-7xl mx-auto px-6 py-8">
@@ -57,12 +162,14 @@ const NFTDetail = () => {
           Back to Marketplace
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  
+
+        { loadingItem ? <div>Getting NFT ...</div> : <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left: Image */}
           <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl border border-purple-500/20 overflow-hidden shadow-2xl sticky top-24 h-fit">
             <img 
-              src={mockNFT.image} 
-              alt={mockNFT.name}
+              src={convertIpfsToPinata(nft?.image_url)} 
+              alt={nft?.name}
               className="w-full aspect-square object-cover"
             />
           </div>
@@ -70,51 +177,52 @@ const NFTDetail = () => {
           {/* Right: Details */}
           <div className="space-y-6">
             {/* Collection */}
-            <Link to={`/marketplace/collection/${mockNFT.collection.id}`} className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300">
+            {/* <Link to={`/marketplace/collection/${mockNFT.collection.id}`} className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300">
               <img src={mockNFT.collection.logo} alt={mockNFT.collection.name} className="w-6 h-6 rounded" />
               <span className="font-semibold">{mockNFT.collection.name}</span>
-            </Link>
+            </Link> */}
 
             {/* Title */}
             <div>
-              <h1 className="text-4xl font-bold mb-2">{mockNFT.name}</h1>
+              <h1 className="text-4xl font-bold mb-2">{nft?.name}</h1>
               <div className="flex items-center gap-2">
                 <span className="text-gray-400">Owned by</span>
-                <span className="text-purple-300 font-semibold">{mockNFT.owner.name}</span>
+                <span className="text-purple-300 font-semibold">{owner}</span>
               </div>
             </div>
 
             {/* Description */}
             <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20">
               <h3 className="font-semibold mb-3">Description</h3>
-              <p className="text-gray-300 leading-relaxed">{mockNFT.description}</p>
+              <p className="text-gray-300 leading-relaxed">{nft?.description}</p>
             </div>
 
             {/* Price Section */}
             <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl p-6 border border-purple-500/30">
               <div className="mb-4">
                 <div className="text-sm text-gray-400 mb-1">Current Price</div>
-                <div className="text-3xl font-bold">Coming Soon</div>
+                <div className="text-3xl font-bold">{Number(nft.price).toFixed(2)} HRT</div>
               </div>
               <button
-                disabled
-                className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg opacity-50 cursor-not-allowed"
-              >
-                Buy Now (Coming Soon)
+                onClick={buyOnChain}
+                  className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg"
+                >
+                Buy Now
               </button>
             </div>
 
             {/* Attributes */}
             <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20">
               <h3 className="font-semibold mb-4">Attributes</h3>
+              {nft &&
               <div className="grid grid-cols-2 gap-3">
-                {mockNFT.attributes.map((attr, i) => (
+                {nft?.attributes?.map((attr, i) => (
                   <div key={i} className="bg-gray-900/50 p-3 rounded-xl border border-purple-500/10">
-                    <div className="text-xs text-gray-400 mb-1">{attr.trait}</div>
+                    <div className="text-xs text-gray-400 mb-1">{attr.trait_type}</div>
                     <div className="font-semibold">{attr.value}</div>
                   </div>
                 ))}
-              </div>
+              </div> }
             </div>
 
             {/* Creator Info */}
@@ -124,14 +232,14 @@ const NFTDetail = () => {
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full"></div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">{mockNFT.creator.name}</span>
-                    {mockNFT.creator.verified && (
+                    {/* <span className="font-semibold">{mockNFT.creator.name}</span> */}
+                    {/* {mockNFT.creator.verified && (
                       <svg className="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                    )}
+                    )} */}
                   </div>
-                  <div className="text-sm text-gray-400">{mockNFT.creator.address}</div>
+                  <div className="text-sm text-gray-400">{ creator }</div>
                 </div>
               </div>
             </div>
@@ -142,33 +250,33 @@ const NFTDetail = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Token ID</span>
-                  <span className="font-mono">{mockNFT.metadata.tokenId}</span>
+                  <span className="font-mono">{nft?.serial_number}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Standard</span>
-                  <span className="font-mono">{mockNFT.metadata.standard}</span>
+                  <span className="font-mono">HTS</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Network</span>
-                  <span className="font-mono">{mockNFT.metadata.network}</span>
+                  <span className="font-mono">Hedera</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Contract</span>
                   <span className="font-mono text-purple-400 hover:text-purple-300 cursor-pointer">
-                    {mockNFT.metadata.contract}
+                    {evmContractToHederaId(nft?.token_address)}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Activity (Coming Soon) */}
-            <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20 text-center">
+            {/* <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20 text-center">
               <div className="text-4xl mb-3">📊</div>
               <h3 className="font-semibold mb-2">Activity History</h3>
               <p className="text-gray-400 text-sm">Transaction history coming soon</p>
-            </div>
+            </div> */}
           </div>
-        </div>
+        </div> }
       </main>
     </div>
   );
