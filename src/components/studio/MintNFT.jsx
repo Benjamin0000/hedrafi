@@ -2,19 +2,22 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from "../shared/Header"
 import { ContractId } from "@hashgraph/sdk";
-import { useWriteContract, useEvmAddress, useWallet } from "@buidlerlabs/hashgraph-react-wallets";
+import { useWriteContract, useEvmAddress, useWallet, useAssociateTokens, useAccountId } from "@buidlerlabs/hashgraph-react-wallets";
 import marketplaceABI from "../../ABIs/marketplaceABI.json";
 import { finalizeMint } from "../../lib/marketplace"
 import { toast } from 'react-toastify';
+import { checkTokenAssociation } from '../../helpers';
 
 const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
 const nftTokenContract = process.env.REACT_APP_NFT_CONTRACT_EVM; 
+const nftTokenContractH = process.env.REACT_APP_NFT_CONTRACT;  
 const API_URL = process.env.REACT_APP_API_URL; 
 
 const MintNFT = () => {
   const { isConnected } = useWallet()
   const { writeContract } = useWriteContract();
-  // const { data: accountId } = useAccountId({ autoFetch: isConnected });
+  const { associateTokens } = useAssociateTokens();
+  const { data: accountId } = useAccountId({ autoFetch: isConnected });
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
 
   const [attributes, setAttributes] = useState([
@@ -86,6 +89,18 @@ const MintNFT = () => {
 
 
   const mintOnChain = async (uris, metadata_url) => {
+    const associated = await checkTokenAssociation(accountId, nftTokenContractH);
+
+    if (!associated) {
+      try {
+        await associateTokens([nftTokenContractH]);
+        toast.success('NFT token associated!');
+      } catch (e) {
+        console.error(e);
+        return toast.error('Failed to associate HTS token');
+      }
+    }
+
     const txHash = await writeContract({
       contractId: ContractId.fromString(marketplaceContract),
       abi: marketplaceABI,

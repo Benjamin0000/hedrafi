@@ -4,7 +4,7 @@ import { ContractId } from "@hashgraph/sdk";
 import { useState, useEffect } from 'react';
 import { convertIpfsToPinata, evmContractToHederaId, evmToHederaAccount, finalizeBuy } from "../../lib/marketplace"
 import marketplaceABI from "../../ABIs/marketplaceABI.json";
-import { useWriteContract, useAssociateTokens, useAccountId,useEvmAddress, useWallet } from "@buidlerlabs/hashgraph-react-wallets";
+import { useWriteContract, useAssociateTokens, useAccountId,useEvmAddress, useWallet, useApproveTokenAllowance } from "@buidlerlabs/hashgraph-react-wallets";
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import { checkTokenAssociation } from '../../helpers';
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT;
 const nftTokenContract = process.env.REACT_APP_NFT_CONTRACT_EVM;
 const nftTokenContractH = process.env.REACT_APP_NFT_CONTRACT;  
 const API_URL = process.env.REACT_APP_API_URL; 
+const hrtToken = process.env.REACT_APP_HTS_REWARD_TOKEN; 
 
 // Mock NFT data
 const mockNFT = {
@@ -55,6 +56,7 @@ const NFTDetail = () => {
   const { associateTokens } = useAssociateTokens();
   const [isAssociated, setIsAssociated] = useState(true);
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
+  const { approve } = useApproveTokenAllowance(); 
 
   const [nft, setNft] = useState({}); 
   const [creator, setCreator] = useState(null);
@@ -74,7 +76,7 @@ const NFTDetail = () => {
         // setAllowed(allowed); 
     };
     loadNFT();
-  }, [id]);
+  }, [id, evmAddress]);
 
   useEffect(()=>{
 
@@ -92,14 +94,14 @@ const NFTDetail = () => {
       }
     }
 
-    const CheckTokenAssoc = async () => {
-      if(!isAssociated){
-        const associated = await checkTokenAssociation(accountId, nftTokenContractH);
-        setIsAssociated(associated);
-      }
-    }
+    // const CheckTokenAssoc = async () => {
+    //   if(!isAssociated){
+       
+    //     setIsAssociated(associated);
+    //   }
+    // }
 
-    CheckTokenAssoc();
+    // CheckTokenAssoc();
     fetchOwner()
     fetchCreator();
 
@@ -107,21 +109,32 @@ const NFTDetail = () => {
       setLoadingItem(false); 
     }
 
-  }, [nft, isAssociated])
+  }, [nft, isAssociated, evmAddress])
 
   
 
     const buyOnChain = async () => {
+       const associated = await checkTokenAssociation(accountId, nftTokenContractH);
 
-      if (!isAssociated) {
+      if (!associated) {
         try {
           await associateTokens([nftTokenContractH]);
           toast.success('NFT token associated!');
-          setIsAssociated(true);
+          // setIsAssociated(true);
         } catch (e) {
           console.error(e);
           return toast.error('Failed to associate HTS token');
         }
+      }
+
+      const TOKENS = [{ tokenId: hrtToken, amount: nft.price * 10**8 }];
+      const SPENDER = marketplaceContract;
+      const transactionIdOrHash = await approve(TOKENS, SPENDER);
+
+      if(!transactionIdOrHash){
+          //check for failure
+          toast.error("approval faild")
+          return; 
       }
 
       const txHash = await writeContract({
@@ -203,12 +216,16 @@ const NFTDetail = () => {
                 <div className="text-sm text-gray-400 mb-1">Current Price</div>
                 <div className="text-3xl font-bold">{Number(nft.price).toFixed(2)} HRT</div>
               </div>
-              <button
-                onClick={buyOnChain}
-                  className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg"
-                >
-                Buy Now
-              </button>
+              { nft?.owner != evmAddress &&
+                <button
+
+                  onClick={buyOnChain}
+                    className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg"
+                  >
+                  Buy Now
+                </button>
+              }
+
             </div>
 
             {/* Attributes */}

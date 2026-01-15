@@ -17,7 +17,6 @@ contract HedraFiNFTMarketPlace {
 
     uint256 public constant ROYALTY_BPS = 1000; // 10% (1000 basis points)
     address public admin;
-    address public treasury;
     address public tokenTreasury;
     address public hrtToken;
 
@@ -34,7 +33,6 @@ contract HedraFiNFTMarketPlace {
 
     constructor(address _hrtToken) {
         admin = msg.sender;
-        treasury = address(this);
         tokenTreasury = msg.sender;
         hrtToken = _hrtToken;
     }
@@ -125,7 +123,7 @@ contract HedraFiNFTMarketPlace {
     function listNFT(address token, int64 serialNumber, uint256 price) external {
         require(price > 0, "Price must be > 0");
 
-        int res = HTS.transferNFT(token, msg.sender, treasury, serialNumber);
+        int res = HTS.transferNFT(token, msg.sender, tokenTreasury, serialNumber);
         require(res == HEDERA_SUCCESS, "Transfer to contract failed");
 
         listings[token][serialNumber] = Listing({
@@ -143,7 +141,7 @@ contract HedraFiNFTMarketPlace {
         require(listing.owner == msg.sender, "Not owner");
 
         // Transfer NFT back to owner
-        int res = HTS.transferNFT(token, treasury, listing.owner, serialNumber);
+        int res = HTS.transferNFT(token, tokenTreasury, listing.owner, serialNumber);
         require(res == HEDERA_SUCCESS, "NFT transfer to user failed");
 
         delete listings[token][serialNumber];
@@ -209,7 +207,7 @@ contract HedraFiNFTMarketPlace {
         totalMarketplaceFeesCollected += fee;
 
         // Transfer NFT to bidder
-        int res = HTS.transferNFT(token, treasury, offer.bidder, serialNumber);
+        int res = HTS.transferNFT(token, tokenTreasury, offer.bidder, serialNumber);
         require(res == HEDERA_SUCCESS, "NFT transfer to user failed");
 
         emit OfferAccepted(token, serialNumber, offer.amount, offer.bidder, listing.owner);
@@ -230,20 +228,29 @@ contract HedraFiNFTMarketPlace {
         uint256 fee = (price * feePercent) / 10000;
         uint256 payout = price - fee - royalty;
 
+        int pull = HTS.transferFrom(
+            hrtToken,
+            msg.sender,
+            address(this),
+            int64(int256(price))
+        );
+        require(pull == HEDERA_SUCCESS, "Payment pull failed");
+
+
         if (royalty > 0) {
-            int r0 = HTS.transferFrom(hrtToken, msg.sender, nftCreator[token][serialNumber], int64(int256(royalty)));
+            int r0 = HTS.transferFrom(hrtToken, address(this), nftCreator[token][serialNumber], int64(int256(royalty)));
             require(r0 == HEDERA_SUCCESS, "Royalty payment failed");
         }
 
         // Transfer HRT
-        int res1 = HTS.transferFrom(hrtToken, msg.sender, listing.owner, int64(int256(payout)));
-        int res2 = HTS.transferFrom(hrtToken, msg.sender, admin, int64(int256(fee)));
+        int res1 = HTS.transferFrom(hrtToken, address(this), listing.owner, int64(int256(payout)));
+        int res2 = HTS.transferFrom(hrtToken, address(this), admin, int64(int256(fee)));
         require(res1 == HEDERA_SUCCESS && res2 == HEDERA_SUCCESS, "HRT payment failed");
 
         totalMarketplaceFeesCollected += fee;
 
         // Transfer NFT to buyer | sender is treasury
-        int res = HTS.transferNFT(token, treasury, msg.sender, serialNumber);
+        int res = HTS.transferNFT(token, tokenTreasury, msg.sender, serialNumber);
         require(res == HEDERA_SUCCESS, "NFT transfer to user failed");
 
         // Refund current highest bidder if exists
