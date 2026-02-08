@@ -1,4 +1,4 @@
-import WalletButton from './WalletButton';
+import { Link } from 'react-router-dom';
 import WalletInfo from './WalletInfo';
 import StakePanel from './StakePanel';
 import StakingStats from './StakingStats';
@@ -14,18 +14,7 @@ const Dashboard = () => {
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
       </div>
 
-      {/* Header */}
-      <header className="backdrop-blur-xl bg-gray-900/50 border-b border-purple-500/20 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <a href='/'><img src={logo} width={60} alt="HedraFi Logo"/> </a>
-            <span className="inline-block bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg shadow-red-500/30">
-              TestNet
-            </span>
-          </div>
-          <WalletButton />
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="relative max-w-7xl mx-auto px-6 py-8">

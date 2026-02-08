@@ -18,6 +18,7 @@ const Header = () => {
                     <Link to="/studio" className="text-gray-300 hover:text-purple-400 transition-colors">Studio</Link>
                     <Link to="/marketplace" className="text-gray-300 hover:text-purple-400 transition-colors">Marketplace</Link>
                     <Link to="/staking" className="text-gray-300 hover:text-purple-400 transition-colors">Staking</Link>
+                    <Link to="/profit" className="text-gray-300 hover:text-purple-400 transition-colors">Profit</Link>
                 </nav>
                 <WalletButton />
             </div>

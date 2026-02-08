@@ -29,7 +29,7 @@ const StakePanel = () => {
 
   // Fetch pending rewards, user stake & debt
   const fetchUserData = async () => {
-    if (!isConnected || !evmAddress) return;
+    if (!isConnected || !evmAddress || !stakingContract) return;
     try {
       await fetchHbarBalance();
       await getUserClaimed();
@@ -72,6 +72,7 @@ const StakePanel = () => {
 
   const handleStake = async () => {
     if (!isConnected) return toast.error('Connect your wallet first');
+    if (!stakingContract) return toast.error('Contract not initialized');
     if (!stakeAmount || stakeAmount <= 0) return toast.error('Enter a valid amount');
 
     try {
@@ -93,6 +94,7 @@ const StakePanel = () => {
 
   const handleUnstake = async () => {
     if (!isConnected) return toast.error('Connect your wallet first');
+    if (!stakingContract) return toast.error('Contract not initialized');
     if (!unstakeAmount || unstakeAmount <= 0) return toast.error('Enter a valid amount');
     if (Number(unstakeAmount) > userStake) return toast.error('Amount exceeds your staked balance');
 

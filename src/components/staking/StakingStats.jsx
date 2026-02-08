@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { stakingContract, rewardToken } from '../../lib/staking'
 
-const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS_EVM;
+const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 
 const StakingStats = () => {
 
@@ -13,6 +13,7 @@ const StakingStats = () => {
   });
 
   const fetchStats = async () => {
+    if (!stakingContract || !rewardToken) return;
     try {
       const [
         totalStakedHBAR,
@@ -23,7 +24,7 @@ const StakingStats = () => {
         stakingContract.totalStakedHBAR(),
         stakingContract.totalRewardPaid(),
         stakingContract.totalUsers(),
-        rewardToken.balanceOf(CONTRACT_ADDRESS)
+        rewardToken.balanceOf(stakingContract.target)
       ]);
 
       setStats({
