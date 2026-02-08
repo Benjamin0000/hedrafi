@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useReadContract } from '@buidlerlabs/hashgraph-react-wallets';
+import { useReadContract, useWallet } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
-import { useWallet } from '@buidlerlabs/hashgraph-react-wallets';
 import { ContractId, AccountId } from '@hashgraph/sdk';
 import CONTRACT_ABI from '../../ABIs/stakingABI.json';
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
 import WalletButton from "../shared/WalletButton";
+import { TrendingUp, Coins, Leaf, Wallet, ShieldCheck, Lock, Activity, ArrowRight, Info, Zap } from 'lucide-react';
 
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 
 const Profit = () => {
-  // Safely destructure wallet hook with defaults
   const walletData = useWallet(HWCConnector) || {};
   const isConnected = walletData.isConnected || false;
   const account = walletData.account || null;
-  
   const { readContract } = useReadContract({ connector: HWCConnector }) || {};
   
   const [profitData, setProfitData] = useState({
@@ -24,7 +22,9 @@ const Profit = () => {
     pendingRewards: 0,
     claimedRewards: 0,
     stakedAmount: 0,
-    estimatedAPY: 24.5,
+    projectedDaily: 0,
+    projectedWeekly: 0,
+    projectedMonthly: 0
   });
 
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +33,6 @@ const Profit = () => {
     let isMounted = true;
     
     const fetchProfitData = async () => {
-      // Skip if not connected, no account, or no readContract function
       if (!isConnected || !account || !readContract || !CONTRACT_ADDRESS) {
         if (isMounted) setIsLoading(false);
         return;
@@ -44,7 +43,6 @@ const Profit = () => {
         const evmAddress = `0x${accountId.toEvmAddress()}`;
         const contractEvmAddress = `0x${ContractId.fromString(CONTRACT_ADDRESS).toEvmAddress()}`;
         
-        // Fetch each value separately with individual error handling
         let stakedAmount = 0n;
         let pendingRewards = 0n;
         let claimedRewards = 0n;
@@ -53,12 +51,10 @@ const Profit = () => {
           stakedAmount = await readContract({
             address: contractEvmAddress,
             abi: CONTRACT_ABI,
-            functionName: 'stakedBalance',
+            functionName: 'userStake',
             args: [evmAddress]
           }) || 0n;
-        } catch (e) {
-          console.warn('Could not fetch staked balance:', e);
-        }
+        } catch (e) { console.warn(e); }
 
         try {
           pendingRewards = await readContract({
@@ -67,31 +63,33 @@ const Profit = () => {
             functionName: 'pendingReward',
             args: [evmAddress]
           }) || 0n;
-        } catch (e) {
-          console.warn('Could not fetch pending rewards:', e);
-        }
+        } catch (e) { console.warn(e); }
 
         try {
           claimedRewards = await readContract({
             address: contractEvmAddress,
             abi: CONTRACT_ABI,
-            functionName: 'claimedRewards',
+            functionName: 'userClaimed',
             args: [evmAddress]
           }) || 0n;
-        } catch (e) {
-          // This function might not exist in the contract
-          console.warn('Could not fetch claimed rewards:', e);
-        }
+        } catch (e) { console.warn(e); }
 
-        const totalEarned = Number(pendingRewards) / 1e8 + Number(claimedRewards) / 1e8;
+        const pending = Number(pendingRewards) / 1e8;
+        const claimed = Number(claimedRewards) / 1e8;
+        const staked = Number(stakedAmount) / 1e8;
+        const total = pending + claimed;
+        const apy = 0.245; 
+        const daily = (staked * apy) / 365;
 
         if (isMounted) {
           setProfitData({
-            totalEarned,
-            pendingRewards: Number(pendingRewards) / 1e8,
-            claimedRewards: Number(claimedRewards) / 1e8,
-            stakedAmount: Number(stakedAmount) / 1e8,
-            estimatedAPY: 24.5,
+            totalEarned: total,
+            pendingRewards: pending,
+            claimedRewards: claimed,
+            stakedAmount: staked,
+            projectedDaily: daily,
+            projectedWeekly: daily * 7,
+            projectedMonthly: daily * 30
           });
         }
       } catch (e) {
@@ -102,212 +100,160 @@ const Profit = () => {
     };
 
     fetchProfitData();
-    const interval = setInterval(fetchProfitData, 10000);
-    
+    const interval = setInterval(fetchProfitData, 15000);
     return () => {
       isMounted = false;
       clearInterval(interval);
     };
   }, [isConnected, account, readContract]);
 
-  const profitCards = [
-    {
-      label: 'Total Earned',
-      value: profitData.totalEarned.toLocaleString(undefined, { maximumFractionDigits: 4 }),
-      suffix: 'HRT',
-      icon: '💰',
-      color: 'from-green-500/20 to-emerald-500/20',
-      border: 'border-green-500/30',
-      glow: 'shadow-green-500/20',
-      description: 'Lifetime earnings from staking'
-    },
-    {
-      label: 'Pending Rewards',
-      value: profitData.pendingRewards.toLocaleString(undefined, { maximumFractionDigits: 4 }),
-      suffix: 'HRT',
-      icon: '⏳',
-      color: 'from-yellow-500/20 to-orange-500/20',
-      border: 'border-yellow-500/30',
-      glow: 'shadow-yellow-500/20',
-      description: 'Available to claim now'
-    },
-    {
-      label: 'Claimed Rewards',
-      value: profitData.claimedRewards.toLocaleString(undefined, { maximumFractionDigits: 4 }),
-      suffix: 'HRT',
-      icon: '✅',
-      color: 'from-blue-500/20 to-cyan-500/20',
-      border: 'border-blue-500/30',
-      glow: 'shadow-blue-500/20',
-      description: 'Already withdrawn'
-    },
-    {
-      label: 'Staked Amount',
-      value: profitData.stakedAmount.toLocaleString(undefined, { maximumFractionDigits: 4 }),
-      suffix: 'ℏ',
-      icon: '🔒',
-      color: 'from-purple-500/20 to-pink-500/20',
-      border: 'border-purple-500/30',
-      glow: 'shadow-purple-500/20',
-      description: 'Your locked HBAR'
-    }
-  ];
-
-  const projectedEarnings = [
-    { period: 'Daily', value: (profitData.stakedAmount * (profitData.estimatedAPY / 100) / 365).toFixed(4) },
-    { period: 'Weekly', value: (profitData.stakedAmount * (profitData.estimatedAPY / 100) / 52).toFixed(4) },
-    { period: 'Monthly', value: (profitData.stakedAmount * (profitData.estimatedAPY / 100) / 12).toFixed(4) },
-    { period: 'Yearly', value: (profitData.stakedAmount * (profitData.estimatedAPY / 100)).toFixed(4) },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 text-white font-sans">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+    <div className="relative min-h-screen bg-[#040816] overflow-hidden text-slate-200">
+      {/* Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[20%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+        <div className="absolute bottom-[20%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse-slow" style={{animationDelay: '1s'}}></div>
       </div>
 
       <Header />
 
-      {/* Main Content */}
-      <main className="relative max-w-7xl mx-auto px-6 py-8">
-        {/* Page Title */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-            Your Profit Dashboard
-          </h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Track your staking earnings, view pending rewards, and monitor your projected profits.
-          </p>
-        </div>
-
-        {!isConnected ? (
-          /* Not Connected State */
-          <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500/10 to-indigo-500/10 rounded-3xl p-12 border border-purple-500/30 shadow-2xl text-center max-w-2xl mx-auto">
-            <div className="text-7xl mb-6">🔗</div>
-            <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
-            <p className="text-gray-300 mb-8">
-              Connect your wallet to view your staking profits and earnings.
-            </p>
-            <WalletButton />
-          </div>
-        ) : isLoading ? (
-          /* Loading State */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="backdrop-blur-xl bg-gray-800/30 rounded-2xl p-6 border border-gray-700/30 animate-pulse">
-                <div className="h-4 bg-gray-700/50 rounded w-1/2 mb-4"></div>
-                <div className="h-8 bg-gray-700/50 rounded w-3/4"></div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <>
-            {/* Profit Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {profitCards.map((card, i) => (
-                <div 
-                  key={i} 
-                  className={`backdrop-blur-xl bg-gradient-to-br ${card.color} rounded-2xl p-6 border ${card.border} hover:scale-105 transition-all duration-300 shadow-xl ${card.glow} group cursor-pointer`}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="text-sm text-gray-300 font-medium">{card.label}</div>
-                    <div className="text-3xl group-hover:scale-125 transition-transform duration-300">{card.icon}</div>
-                  </div>
-                  <div className="text-2xl font-bold font-mono mb-1">
-                    {card.value}{' '}
-                    <span className="text-lg font-normal text-gray-400">{card.suffix}</span>
-                  </div>
-                  <div className="text-xs text-gray-400">{card.description}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* APY & Projected Earnings Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              {/* Current APY */}
-              <div className="backdrop-blur-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl p-8 border border-indigo-500/30 shadow-xl">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl">
-                    📈
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">Current APY</h3>
-                    <p className="text-sm text-gray-400">Estimated annual yield</p>
-                  </div>
-                </div>
-                <div className="text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                  {profitData.estimatedAPY}%
-                </div>
-                <p className="text-sm text-gray-400 mt-4">
-                  Based on current staking rewards and pool performance
+      <main className="relative z-10 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="container-main">
+          <div className="flex flex-col gap-12 md:gap-16">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+              <div className="space-y-4 max-w-3xl">
+                <div className="w-12 h-1 bg-cyber-blue rounded-full mb-6"></div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white">
+                  Yield <span className="text-gradient">Analytics</span>
+                </h1>
+                <p className="text-slate-400 text-lg font-medium leading-relaxed">
+                  Analyze your staking performance, monitor projected yields, and optimize your portfolio growth with institutional-grade precision.
                 </p>
               </div>
-
-              {/* Projected Earnings */}
-              <div className="backdrop-blur-xl bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-8 border border-green-500/30 shadow-xl">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-3xl">
-                    🎯
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">Projected Earnings</h3>
-                    <p className="text-sm text-gray-400">Based on current stake</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {projectedEarnings.map((item, i) => (
-                    <div key={i} className="bg-gray-800/30 rounded-xl p-4">
-                      <div className="text-xs text-gray-400 mb-1">{item.period}</div>
-                      <div className="text-lg font-bold font-mono">
-                        {item.value} <span className="text-sm text-gray-400">HRT</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="glass-card px-8 py-5 rounded-3xl border-white/[0.05] flex items-center gap-5 shadow-xl">
+                 <div className="w-12 h-12 rounded-2xl bg-blue-600/5 flex items-center justify-center border border-white/5">
+                    <TrendingUp size={24} className="text-cyber-blue" />
+                 </div>
+                 <div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Target Yield</div>
+                    <div className="text-xl font-mono font-black text-white">24.50% APY</div>
+                 </div>
               </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Link to="/staking" className="block">
-                <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-purple-500/30 hover:border-purple-500/50 transition-all duration-300 shadow-xl group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                      💎
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">Claim Rewards</h3>
-                      <p className="text-sm text-gray-400">Go to staking dashboard to claim your HRT</p>
-                    </div>
-                    <div className="ml-auto text-2xl text-gray-500 group-hover:text-white group-hover:translate-x-2 transition-all">
-                      →
-                    </div>
-                  </div>
+            {!isConnected ? (
+              <div className="glass-card p-12 md:p-24 rounded-[4rem] border-white/[0.05] text-center space-y-10 mt-8 shadow-2xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-blue-600/[0.02] pointer-events-none"></div>
+                <div className="w-24 h-24 bg-blue-600/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
+                   <Lock size={40} className="text-blue-500" />
                 </div>
-              </Link>
+                <div className="space-y-4 relative z-10">
+                   <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">Access Restricted</h2>
+                   <p className="text-slate-400 text-lg max-w-md mx-auto font-medium">Link your Hedera Identity to unlock institutional grade analytics and real-time yield harvesting.</p>
+                </div>
+                <div className="pt-4 flex justify-center">
+                   <WalletButton />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-12 md:space-y-16">
+                {/* Core Stats */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                   {[
+                     { label: 'Cumulative Yield', value: profitData.totalEarned.toFixed(2), unit: 'HRT', icon: Coins, color: 'text-blue-400' },
+                     { label: 'Live Harvest', value: profitData.pendingRewards.toFixed(4), unit: 'HRT', icon: Leaf, color: 'text-green-400' },
+                     { label: 'Settled Rewards', value: profitData.claimedRewards.toFixed(2), unit: 'HRT', icon: Activity, color: 'text-indigo-400' },
+                     { label: 'Active Principal', value: profitData.stakedAmount.toFixed(2), unit: 'HBAR', icon: Wallet, color: 'text-cyber-blue' }
+                   ].map((stat, idx) => (
+                     <div key={idx} className="glass-card p-8 rounded-[2.5rem] border-white/[0.05] group hover:bg-[#0E1529] transition-all duration-500 shadow-xl overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-blue-600/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="flex justify-between items-start mb-8 relative z-10">
+                           <div className="w-12 h-12 bg-blue-600/5 rounded-2xl flex items-center justify-center border border-white/5 group-hover:border-blue-500/30 transition-colors">
+                              <stat.icon className="text-cyber-blue" size={20} />
+                           </div>
+                           <div className="text-[10px] font-black uppercase tracking-widest text-slate-600 bg-white/5 px-2.5 py-1 rounded-lg">Real-time</div>
+                        </div>
+                        <div className="space-y-2 relative z-10">
+                           <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{stat.label}</div>
+                           <div className={`text-2xl md:text-3xl font-mono font-black tracking-tighter ${stat.color}`}>
+                              {stat.value} <span className="text-[10px] text-slate-600 uppercase font-black ml-1">{stat.unit}</span>
+                           </div>
+                        </div>
+                     </div>
+                   ))}
+                </div>
 
-              <Link to="/staking" className="block">
-                <div className="backdrop-blur-xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-2xl p-6 border border-blue-500/30 hover:border-blue-500/50 transition-all duration-300 shadow-xl group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                      🔒
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">Stake More HBAR</h3>
-                      <p className="text-sm text-gray-400">Increase your stake to earn more rewards</p>
-                    </div>
-                    <div className="ml-auto text-2xl text-gray-500 group-hover:text-white group-hover:translate-x-2 transition-all">
-                      →
-                    </div>
-                  </div>
+                {/* Projections & Mastery Card */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+                   {/* Yield Mastery Glass Card */}
+                   <div className="lg:col-span-8 glass-card p-10 md:p-16 rounded-[3.5rem] border-white/[0.05] relative overflow-hidden group min-h-[450px] shadow-2xl">
+                      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] -mr-40 -mt-20 group-hover:bg-blue-600/10 transition-colors duration-1000"></div>
+                      <div className="relative z-10 h-full flex flex-col justify-between">
+                         <div className="space-y-8">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/5 border border-blue-500/10 text-cyber-blue text-[10px] font-black uppercase tracking-[0.2em] backdrop-blur-md">
+                               <ShieldCheck size={12} className="text-cyber-blue" />
+                               Protocol Efficiency Verified
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-black leading-tight text-white tracking-tight">Sustainable <br /><span className="text-gradient">Wealth Generation</span></h2>
+                            <p className="text-slate-400 max-w-lg leading-relaxed font-medium text-lg">Your stake of {profitData.stakedAmount.toLocaleString()} HBAR is processed through our high-fidelity consensus protocol for maximum uptime.</p>
+                         </div>
+                         
+                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 pt-16 border-t border-white/5">
+                            <div className="space-y-2">
+                               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                  Daily Yield
+                               </div>
+                               <div className="text-2xl font-mono font-black text-white">+{profitData.projectedDaily.toFixed(2)} <span className="text-xs text-slate-600 uppercase">HRT</span></div>
+                            </div>
+                            <div className="space-y-2">
+                               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+                                  Weekly Forecast
+                               </div>
+                               <div className="text-2xl font-mono font-black text-white">+{profitData.projectedWeekly.toFixed(2)} <span className="text-xs text-slate-600 uppercase">HRT</span></div>
+                            </div>
+                            <div className="space-y-2">
+                               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-cyber-blue"></div>
+                                  Monthly Target
+                               </div>
+                               <div className="text-2xl font-mono font-black text-white">+{profitData.projectedMonthly.toFixed(2)} <span className="text-xs text-slate-600 uppercase">HRT</span></div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+
+                   {/* Quick Actions Side */}
+                   <div className="lg:col-span-4 space-y-8">
+                      <div className="glass-card p-10 rounded-[3rem] border-white/[0.05] h-full flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                         <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 blur-3xl"></div>
+                         <div className="space-y-6 relative z-10">
+                            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5">
+                               <Zap size={24} className="text-indigo-400" />
+                            </div>
+                            <h3 className="text-2xl font-black text-white tracking-tight">Strategic Scaling</h3>
+                            <p className="text-slate-400 font-medium leading-relaxed">Increase your principal position to accelerate reward accumulation and improve ecosystem tiering.</p>
+                         </div>
+                         <div className="space-y-4 pt-10 relative z-10">
+                            <Link to="/staking" className="block group">
+                               <button className="btn-primary w-full flex items-center justify-center gap-3 !py-5 text-lg group-hover:shadow-blue-500/30 transition-all">
+                                  Optimize Principal <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </Link>
+                            <div className="bg-[#040A1A] p-5 rounded-2xl border border-white/5 text-center">
+                               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 mb-1">Coming Next</div>
+                               <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Yield Compounding Engine V2</div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
                 </div>
-              </Link>
-            </div>
-          </>
-        )}
+              </div>
+            )}
+          </div>
+        </div>
       </main>
 
       <Footer />

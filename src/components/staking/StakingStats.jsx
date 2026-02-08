@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { stakingContract, rewardToken } from '../../lib/staking'
+import { Lock, Diamond, Banknote, Users } from 'lucide-react';
 
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 
@@ -49,52 +50,52 @@ const StakingStats = () => {
     { 
       label: 'Total HBAR Locked', 
       value: stats.totalStakedHBAR.toLocaleString() + ' ℏ', 
-      icon: '🔒', 
-      color: 'from-blue-500/20 to-cyan-500/20', 
-      border: 'border-blue-500/30',
-      glow: 'shadow-blue-500/20'
+      icon: Lock, 
+      color: 'bg-blue-500/5 text-blue-500',
+      border: 'border-blue-500/10'
     },
     { 
-      label: 'Total HRT Locked', 
+      label: 'Total HRT Distributed', 
       value: stats.totalHRTLocked.toLocaleString(), 
-      icon: '💎', 
-      color: 'from-purple-500/20 to-pink-500/20', 
-      border: 'border-purple-500/30',
-      glow: 'shadow-purple-500/20',
-      suffix: 'HRT',
+      icon: Diamond, 
+      color: 'bg-indigo-500/5 text-indigo-400',
+      border: 'border-indigo-500/10'
     },
     { 
-      label: 'Total Reward Paid', 
-      value: stats.totalRewardPaid.toLocaleString(), 
-      icon: '💎', 
-      color: 'from-green-500/20 to-emerald-500/20', 
-      border: 'border-green-500/30',
-      glow: 'shadow-green-500/20', 
-      suffix: 'HRT',
+      label: 'Platform Earnings', 
+      value: stats.totalRewardPaid.toLocaleString() + ' ℏ', 
+      icon: Banknote, 
+      color: 'bg-cyber-blue/5 text-cyber-blue',
+      border: 'border-cyber-blue/10'
     },
     { 
-      label: 'Total Users', 
-      value: stats.totalUsers.toString(), 
-      icon: '👥', 
-      color: 'from-orange-500/20 to-yellow-500/20', 
-      border: 'border-orange-500/30',
-      glow: 'shadow-orange-500/20'
-    }
+      label: 'Total Participants', 
+      value: stats.totalUsers.toLocaleString(), 
+      icon: Users, 
+      color: 'bg-white/5 text-slate-400',
+      border: 'border-white/5'
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {statsData.map((stat, i) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+      {statsData.map((stat, index) => (
         <div 
-          key={i} 
-          className={`backdrop-blur-xl bg-gradient-to-br ${stat.color} rounded-2xl p-4 border ${stat.border} hover:scale-105 transition-all duration-300  ${stat.glow} group cursor-pointer`}
+          key={index} 
+          className={`glass-card p-8 rounded-[2.5rem] border-white/[0.05] relative overflow-hidden group hover:bg-[#0E1529] transition-all duration-700 shadow-xl`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-xs text-gray-300 font-medium">{stat.label}</div>
-            <div className="text-2xl group-hover:scale-125 transition-transform duration-300">{stat.icon}</div>
-          </div>
-          <div className="text-xl font-bold font-mono">{stat.value}{' '}
-           {stat.suffix && <sub className="text-lg font-normal text-sm">{stat.suffix}</sub>}
+          {/* Advanced Glow Layer */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+          
+          <div className="relative z-10 space-y-6">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${stat.color} border ${stat.border} group-hover:border-blue-500/30 transition-all duration-500 shadow-inner`}>
+              <stat.icon size={24} className="group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 leading-none">{stat.label}</div>
+              <div className="text-3xl font-mono font-black text-white tracking-tighter">{stat.value}</div>
+            </div>
           </div>
         </div>
       ))}

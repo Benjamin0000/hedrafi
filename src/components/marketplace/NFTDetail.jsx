@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import Header from '../shared/Header';
+import Footer from '../shared/Footer';
 import { ContractId } from "@hashgraph/sdk";
 import { useState, useEffect } from 'react';
 import { convertIpfsToPinata, evmContractToHederaId, evmToHederaAccount, finalizeBuy } from "../../lib/marketplace"
@@ -8,6 +9,7 @@ import { useWriteContract, useAssociateTokens, useAccountId,useEvmAddress, useWa
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import { checkTokenAssociation } from '../../helpers';
 import { toast } from 'react-toastify';
+import { ArrowLeft, FileText, Sparkles, ShieldCheck, Activity, Info, Layers, Tag, Wallet, CheckCircle } from 'lucide-react';
 
 const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
 const nftTokenContract = process.env.REACT_APP_NFT_CONTRACT_EVM;
@@ -15,286 +17,246 @@ const nftTokenContractH = process.env.REACT_APP_NFT_CONTRACT;
 const API_URL = process.env.REACT_APP_API_URL; 
 const hrtToken = process.env.REACT_APP_HTS_REWARD_TOKEN; 
 
-// Mock NFT data
-const mockNFT = {
-  id: 1,
-  name: 'Cosmic Dragon #001',
-  description: 'A legendary dragon from the depths of space, wielding cosmic powers beyond imagination. This rare piece is the first in the Cosmic Dragons collection.',
-  image: 'https://via.placeholder.com/800/6366f1/ffffff',
-  collection: {
-    id: 1,
-    name: 'Cosmic Dragons',
-    logo: 'https://via.placeholder.com/100/8b5cf6/ffffff'
-  },
-  creator: {
-    name: 'SpaceArtist',
-    address: '0.0.123456',
-    verified: true
-  },
-  owner: {
-    name: 'CollectorDAO',
-    address: '0.0.789012'
-  },
-  metadata: {
-    tokenId: 'NFT001',
-    standard: 'HTS',
-    network: 'Hedera',
-    contract: '0.0.654321'
-  },
-  attributes: [
-    { trait: 'Rarity', value: 'Legendary' },
-    { trait: 'Element', value: 'Cosmic' },
-    { trait: 'Power Level', value: '9500' },
-    { trait: 'Wings', value: 'Nebula' }
-  ]
-};
-
 const NFTDetail = () => {
   const { isConnected } = useWallet(HWCConnector);
   const { data: accountId } = useAccountId({ autoFetch: isConnected });
   const { writeContract } = useWriteContract();
   const { associateTokens } = useAssociateTokens();
-  const [isAssociated, setIsAssociated] = useState(true);
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
   const { approve } = useApproveTokenAllowance(); 
 
   const [nft, setNft] = useState({}); 
   const [creator, setCreator] = useState(null);
-  const [owner, setOwner] = useState('owner');
+  const [owner, setOwner] = useState('---');
   const [loadingItem, setLoadingItem] = useState(true);  
   const { id } = useParams();
-  
-
 
   useEffect(() => {
     if(!id) return; 
     const loadNFT = async () => {
+      try {
         const res = await fetch(`${API_URL}/api/nft/${id}`);
         const data = await res.json();
         setNft(data);
-        // const allowed = await checkNFTAllowanceMirrorNode(accountId, nftTokenContract, marketplaceContract); 
-        // setAllowed(allowed); 
+      } catch (e) {
+        console.error(e);
+      }
     };
     loadNFT();
-  }, [id, evmAddress]);
+  }, [id, API_URL]);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     const fetchCreator = async () => {
       if(nft && nft.creator){
-        const creatorID = await evmToHederaAccount(nft.creator); // await it
+        const creatorID = await evmToHederaAccount(nft.creator);
         setCreator(creatorID);
       }
-    }
+    };
 
     const fetchOwner = async () => {
-      if(nft && nft.creator){
-        const ownerID = await evmToHederaAccount(nft.owner); // await it
+      if(nft && nft.owner){
+        const ownerID = await evmToHederaAccount(nft.owner);
         setOwner(ownerID);
       }
-    }
+    };
 
-    // const CheckTokenAssoc = async () => {
-    //   if(!isAssociated){
-       
-    //     setIsAssociated(associated);
-    //   }
-    // }
-
-    // CheckTokenAssoc();
-    fetchOwner()
+    fetchOwner();
     fetchCreator();
 
     if(nft?.id){
       setLoadingItem(false); 
     }
+  }, [nft]);
 
-  }, [nft, isAssociated, evmAddress])
+  const buyOnChain = async () => {
+    const associated = await checkTokenAssociation(accountId, nftTokenContractH);
 
-  
-
-    const buyOnChain = async () => {
-       const associated = await checkTokenAssociation(accountId, nftTokenContractH);
-
-      if (!associated) {
-        try {
-          await associateTokens([nftTokenContractH]);
-          toast.success('NFT token associated!');
-          // setIsAssociated(true);
-        } catch (e) {
-          console.error(e);
-          return toast.error('Failed to associate HTS token');
-        }
+    if (!associated) {
+      try {
+        await associateTokens([nftTokenContractH]);
+        toast.success('NFT token associated!');
+      } catch (e) {
+        console.error(e);
+        return toast.error('Failed to associate HTS token');
       }
-
-      const TOKENS = [{ tokenId: hrtToken, amount: nft.price * 10**8 }];
-      const SPENDER = marketplaceContract;
-      const transactionIdOrHash = await approve(TOKENS, SPENDER);
-
-      if(!transactionIdOrHash){
-          //check for failure
-          toast.error("approval faild")
-          return; 
-      }
-
-      const txHash = await writeContract({
-        contractId: ContractId.fromString(marketplaceContract),
-        abi: marketplaceABI,
-        functionName: "buyNFT",
-        args: [
-          nftTokenContract,
-          nft.serial_number,
-        ],
-        metaArgs: { gas: 1_200_000 }
-      });
-      console.log("buy tx:", txHash);
-      finalizeBuy(nft.id, evmAddress);
-      
     }
 
- 
+    const TOKENS = [{ tokenId: hrtToken, amount: nft.price * 10**8 }];
+    const SPENDER = marketplaceContract;
+    const transactionIdOrHash = await approve(TOKENS, SPENDER);
+
+    if(!transactionIdOrHash){
+        toast.error("Approval failed");
+        return; 
+    }
+
+    const txHash = await writeContract({
+      contractId: ContractId.fromString(marketplaceContract),
+      abi: marketplaceABI,
+      functionName: "buyNFT",
+      args: [
+        nftTokenContract,
+        nft.serial_number,
+      ],
+      metaArgs: { gas: 1_200_000 }
+    });
+    console.log("buy tx:", txHash);
+    finalizeBuy(nft.id, evmAddress);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 text-white font-sans">
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+    <div className="relative min-h-screen bg-[#040816] overflow-hidden text-slate-200">
+      {/* Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/5 rounded-full blur-[120px] animate-pulse-slow"></div>
+        <div className="absolute bottom-[20%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse-slow" style={{animationDelay: '1s'}}></div>
       </div>
- 
-      <Header/>
 
-      
+      <Header />
 
-      {/* Main Content */}
-      <main className="relative max-w-7xl mx-auto px-6 py-8">
-        <Link to="/marketplace" className="text-purple-400 hover:text-purple-300 inline-flex items-center gap-2 mb-6">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Marketplace
-        </Link>
-
-  
-
-        { loadingItem ? <div>Getting NFT ...</div> : <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left: Image */}
-          <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl border border-purple-500/20 overflow-hidden shadow-2xl sticky top-24 h-fit">
-            <img 
-              src={convertIpfsToPinata(nft?.image_url)} 
-              alt={nft?.name}
-              className="w-full aspect-square object-cover"
-            />
-          </div>
-
-          {/* Right: Details */}
-          <div className="space-y-6">
-            {/* Collection */}
-            {/* <Link to={`/marketplace/collection/${mockNFT.collection.id}`} className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300">
-              <img src={mockNFT.collection.logo} alt={mockNFT.collection.name} className="w-6 h-6 rounded" />
-              <span className="font-semibold">{mockNFT.collection.name}</span>
-            </Link> */}
-
-            {/* Title */}
-            <div>
-              <h1 className="text-4xl font-bold mb-2">{nft?.name}</h1>
-              <div className="flex items-center gap-2">
-                <span className="text-gray-400">Owned by</span>
-                <span className="text-purple-300 font-semibold">{owner}</span>
-              </div>
+      <main className="relative z-10 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="container-main">
+          <Link to="/marketplace" className="inline-flex items-center gap-3 text-slate-500 hover:text-white mb-12 group transition-all">
+            <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-blue-600/20 group-hover:text-cyber-blue transition-all border border-white/5">
+               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Back to Gallery</span>
+          </Link>
 
-            {/* Description */}
-            <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20">
-              <h3 className="font-semibold mb-3">Description</h3>
-              <p className="text-gray-300 leading-relaxed">{nft?.description}</p>
+          {loadingItem ? (
+            <div className="flex flex-col items-center justify-center py-40 space-y-8">
+               <div className="w-20 h-20 border-4 border-blue-600/20 border-t-cyber-blue rounded-full animate-spin shadow-[0_0_20px_rgba(0,240,255,0.2)]"></div>
+               <div className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 animate-pulse">Retrieving Metadata</div>
             </div>
-
-            {/* Price Section */}
-            <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl p-6 border border-purple-500/30">
-              <div className="mb-4">
-                <div className="text-sm text-gray-400 mb-1">Current Price</div>
-                <div className="text-3xl font-bold">{Number(nft.price).toFixed(2)} HRT</div>
-              </div>
-              { nft?.owner != evmAddress &&
-                <button
-
-                  onClick={buyOnChain}
-                    className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg"
-                  >
-                  Buy Now
-                </button>
-              }
-
-            </div>
-
-            {/* Attributes */}
-            <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20">
-              <h3 className="font-semibold mb-4">Attributes</h3>
-              {nft &&
-              <div className="grid grid-cols-2 gap-3">
-                {nft?.attributes?.map((attr, i) => (
-                  <div key={i} className="bg-gray-900/50 p-3 rounded-xl border border-purple-500/10">
-                    <div className="text-xs text-gray-400 mb-1">{attr.trait_type}</div>
-                    <div className="font-semibold">{attr.value}</div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+              {/* Left: Premium Preview */}
+              <div className="lg:col-span-7 space-y-12">
+                <div className="glass-card rounded-[3.5rem] border-white/[0.05] overflow-hidden shadow-2xl relative group bg-[#02050E]">
+                  <div className="absolute inset-0 bg-blue-600/[0.02] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                  <img 
+                    src={convertIpfsToPinata(nft?.image_url)} 
+                    alt={nft?.name}
+                    className="w-full aspect-square object-cover transition-transform duration-[2s] group-hover:scale-105"
+                  />
+                  <div className="absolute top-8 left-8">
+                     <div className="bg-brand-base/80 backdrop-blur-xl border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-3 shadow-2xl">
+                        <Layers size={16} className="text-cyber-blue" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">GENESIS_TOKEN_HTS</span>
+                     </div>
                   </div>
-                ))}
-              </div> }
-            </div>
+                </div>
 
-            {/* Creator Info */}
-            <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20">
-              <h3 className="font-semibold mb-4">Creator</h3>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full"></div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    {/* <span className="font-semibold">{mockNFT.creator.name}</span> */}
-                    {/* {mockNFT.creator.verified && (
-                      <svg className="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    )} */}
+                {/* Description Glass Card */}
+                <div className="glass-card p-10 md:p-14 rounded-[3.5rem] border-white/[0.05] space-y-8 bg-[#040A1A] shadow-2xl">
+                   <div className="flex items-center gap-5 border-b border-white/5 pb-8">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-600/5 flex items-center justify-center border border-white/5">
+                         <FileText size={24} className="text-blue-500" />
+                      </div>
+                      <h3 className="text-2xl font-black text-white tracking-tight">Provenance & Technical Insight</h3>
+                   </div>
+                   <p className="text-slate-400 text-lg leading-relaxed font-medium">
+                      {nft?.description || "Institutional-grade digital medium with cryptographic provenance secured on the Hedera hashgraph."}
+                   </p>
+                </div>
+              </div>
+
+              {/* Right: Technical Specifications & Actions */}
+              <div className="lg:col-span-5 space-y-10">
+                <div className="space-y-4">
+                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">
+                      <ShieldCheck size={14} /> Certified Asset
+                   </div>
+                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                      {nft?.name}
+                   </h1>
+                   <div className="flex items-center gap-4 pt-2">
+                      <div className="bg-blue-500/10 border border-blue-500/20 px-4 py-1.5 rounded-full flex items-center gap-2">
+                         <div className="w-2 h-2 rounded-full bg-cyber-blue animate-pulse"></div>
+                         <span className="text-[10px] text-cyber-blue font-black uppercase tracking-widest leading-none">Serial #{nft.serial_number}</span>
+                      </div>
+                      <div className="text-[10px] text-slate-600 font-black uppercase tracking-widest py-1.5 px-3 border border-slate-800 rounded-full">Mirror_Node: {nft.id?.substring(0, 10)}...</div>
+                   </div>
+                </div>
+
+                {/* Price & Purchase Logic */}
+                <div className="glass-card p-12 rounded-[3.5rem] border-white/[0.05] relative overflow-hidden group shadow-2xl bg-[#02050E]">
+                   <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/[0.03] blur-3xl rounded-full"></div>
+                   <div className="relative z-10 space-y-10">
+                      <div className="flex justify-between items-center">
+                         <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 flex items-center gap-2">
+                            <Tag size={14} /> Valuation Output
+                         </div>
+                         <div className="text-[10px] font-mono font-bold text-slate-600 bg-white/5 px-3 py-1 rounded-lg">HTS_NATIVE</div>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <div className="text-6xl font-mono font-black text-white tracking-tighter">
+                           {Number(nft.price).toFixed(2)}
+                        </div>
+                        <div className="text-lg text-slate-600 font-black uppercase tracking-[0.3em] flex items-center gap-2">
+                           HRT REWARD TOKEN <Info size={14} />
+                        </div>
+                      </div>
+
+                      {nft?.owner?.toLowerCase() !== evmAddress?.toLowerCase() ? (
+                        <button
+                          onClick={buyOnChain}
+                          className="btn-primary w-full !py-7 text-xl group relative overflow-hidden shadow-blue-500/20 shadow-xl"
+                        >
+                          <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                          <span className="relative z-10 flex items-center justify-center gap-3 font-black tracking-tight">
+                             Acquire Artifact <Sparkles size={24} className="group-hover:rotate-12 transition-transform" />
+                          </span>
+                        </button>
+                      ) : (
+                        <div className="w-full py-7 rounded-[2rem] bg-green-500/5 border border-green-500/20 flex items-center justify-center gap-3">
+                           <CheckCircle size={20} className="text-green-500" />
+                           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-green-500">Asset In Your Custody</span>
+                        </div>
+                      )}
+                   </div>
+                </div>
+
+                {/* Metadata Grid */}
+                <div className="grid grid-cols-2 gap-5">
+                   {[
+                     { label: 'Network', value: 'Hedera Mainnet', icon: Activity, color: 'text-white' },
+                     { label: 'Protocol', value: 'HTS Standard', icon: Layers, color: 'text-white' },
+                     { label: 'Custody', value: owner?.substring(0, 10) + '...', icon: Wallet, color: 'text-blue-400', mono: true },
+                     { label: 'Trust', value: 'Verified Contract', icon: ShieldCheck, color: 'text-green-400' }
+                   ].map((item, idx) => (
+                     <div key={idx} className="glass-card p-6 rounded-3xl border-white/[0.05] space-y-3 bg-[#040A1A] hover:border-white/10 transition-colors shadow-lg">
+                        <div className="flex items-center gap-2">
+                           <item.icon size={12} className="text-slate-600" />
+                           <div className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500">{item.label}</div>
+                        </div>
+                        <div className={`text-xs font-black truncate ${item.color} ${item.mono ? 'font-mono' : ''}`}>{item.value}</div>
+                     </div>
+                   ))}
+                </div>
+
+                {/* Attributes Section */}
+                {nft?.attributes && nft.attributes.length > 0 && (
+                  <div className="glass-card p-10 rounded-[3.5rem] border-white/[0.05] space-y-8 bg-[#040A1A] shadow-2xl">
+                     <div className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 flex items-center gap-2">
+                        <Sparkles size={14} className="text-indigo-500" /> Coded Attributes
+                     </div>
+                     <div className="grid grid-cols-2 gap-4">
+                        {nft.attributes.map((attr, idx) => (
+                          <div key={idx} className="bg-[#030712] border border-white/5 p-5 rounded-2xl space-y-2 hover:bg-[#060B1C] hover:border-blue-500/20 transition-all shadow-inner group/attr">
+                             <div className="text-slate-600 text-[8px] font-black uppercase tracking-[0.2em] leading-none group-hover/attr:text-blue-500 transition-colors">{attr.trait_type}</div>
+                             <div className="text-white text-sm font-black truncate tracking-tight">{attr.value}</div>
+                          </div>
+                        ))}
+                     </div>
                   </div>
-                  <div className="text-sm text-gray-400">{ creator }</div>
-                </div>
+                )}
               </div>
             </div>
-
-            {/* Metadata */}
-            <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20">
-              <h3 className="font-semibold mb-4">Details</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Token ID</span>
-                  <span className="font-mono">{nft?.serial_number}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Standard</span>
-                  <span className="font-mono">HTS</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Network</span>
-                  <span className="font-mono">Hedera</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Contract</span>
-                  <span className="font-mono text-purple-400 hover:text-purple-300 cursor-pointer">
-                    {evmContractToHederaId(nft?.token_address)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Activity (Coming Soon) */}
-            {/* <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-6 border border-purple-500/20 text-center">
-              <div className="text-4xl mb-3">📊</div>
-              <h3 className="font-semibold mb-2">Activity History</h3>
-              <p className="text-gray-400 text-sm">Transaction history coming soon</p>
-            </div> */}
-          </div>
-        </div> }
+          )}
+        </div>
       </main>
+      <Footer />
     </div>
   );
 };

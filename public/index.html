@@ -30,42 +30,72 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="startup-loader" style="
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: #020617;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: #fff;
-  font-family: sans-serif;
-  z-index: 999999;
-">
-<img src="/logo.png" alt="" width="70">
-<br>
-  <div style="
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(255, 255, 255, 0.2);
-    border-top-color: #00aef0;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  "></div>
-  
-  <h2 style="margin-top: 20px;">Loading HedraFi…</h2>
-  <p>Initializing the HedraFi ecosystem…</p>
-</div>
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #040816;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 999999;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    ">
+      <!-- Atmospheric Background Layers -->
+      <div style="position: absolute; top: -10%; right: -10%; width: 50%; height: 50%; background: rgba(0, 102, 255, 0.1); border-radius: 50%; filter: blur(120px); animation: pulseOrb 8s ease-in-out infinite;"></div>
+      <div style="position: absolute; bottom: -10%; left: -10%; width: 50%; height: 50%; background: rgba(0, 240, 255, 0.05); border-radius: 50%; filter: blur(120px); animation: pulseOrb 8s ease-in-out infinite; animation-delay: -4s;"></div>
 
-<div id="root"></div>
+      <div style="
+        position: relative;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        padding: 60px;
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        max-width: 90%;
+      ">
+        <div style="position: relative; margin-bottom: 40px;">
+          <img src="/logo.png" alt="HedraFi" width="80" style="position: relative; z-index: 2; filter: drop-shadow(0 0 20px rgba(0, 174, 240, 0.4));">
+          <div style="position: absolute; inset: -20px; background: radial-gradient(circle, rgba(0, 174, 240, 0.2) 0%, transparent 70%); animation: logoGlow 3s ease-in-out infinite;"></div>
+        </div>
 
-<style>
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-</style>
+        <div style="width: 180px; height: 2px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; position: relative;">
+          <div style="position: absolute; top: 0; left: 0; height: 100%; width: 60px; background: linear-gradient(90deg, transparent, #00aef0, transparent); animation: scanline 1.5s ease-in-out infinite;"></div>
+        </div>
+
+        <div style="margin-top: 35px; text-align: center;">
+          <h2 style="color: #fff; margin: 0; font-weight: 900; letter-spacing: -0.02em; font-size: 24px;">HEDRA<span style="color: #00aef0;">FI</span></h2>
+          <div style="margin-top: 10px; color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; opacity: 0.8;">
+            Initializing Protocol
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div id="root"></div>
+
+    <style>
+      @keyframes pulseOrb {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.2); opacity: 0.8; }
+      }
+      @keyframes logoGlow {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.4); opacity: 1; }
+      }
+      @keyframes scanline {
+        0% { left: -60px; }
+        100% { left: 180px; }
+      }
+      body { margin: 0; background: #040816; overflow-x: hidden; }
+    </style>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

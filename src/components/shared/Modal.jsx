@@ -9,26 +9,29 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12 overflow-hidden">
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-brand-base/80 backdrop-blur-md animate-fade-in"
         onClick={onClose}
       ></div>
-      <div className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-gradient-to-br from-gray-800/95 to-gray-900/95 rounded-2xl border border-purple-500/30 shadow-2xl`}>
-        <div className="sticky top-0 backdrop-blur-xl bg-gray-900/80 border-b border-purple-500/20 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+      <div className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden glass rounded-[3rem] border-white/10 shadow-[0_0_100px_rgba(0,100,255,0.1)] flex flex-col animate-scale-in`}>
+        {/* Modal Header */}
+        <div className="px-10 py-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+          <h2 className="text-3xl font-black tracking-tight text-gradient">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-700/50 rounded-lg"
+            className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
-        <div className="p-6">
+
+        {/* Modal Content */}
+        <div className="p-10 overflow-y-auto custom-scrollbar">
           {children}
         </div>
       </div>

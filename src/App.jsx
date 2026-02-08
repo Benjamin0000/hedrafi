@@ -16,6 +16,19 @@ const App = () => {
   useEffect(() => {
     const loader = document.getElementById("startup-loader");
     if (loader) loader.style.display = "none";
+
+    const handleRejection = (event) => {
+      console.error("Unhandle Promise Rejection:", {
+        reason: event.reason,
+        promise: event.promise,
+        message: event.reason?.message || "No message",
+        stack: event.reason?.stack || "No stack trace"
+      });
+      // Prevent the default browser handling if needed, or just log
+    };
+
+    window.addEventListener('unhandledrejection', handleRejection);
+    return () => window.removeEventListener('unhandledrejection', handleRejection);
   }, []);
 
   return (

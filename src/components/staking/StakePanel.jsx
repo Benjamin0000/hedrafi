@@ -5,6 +5,7 @@ import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import CONTRACT_ABI from '../../ABIs/stakingABI.json';
 import { ContractId } from '@hashgraph/sdk';
 import { checkTokenAssociation } from '../../helpers';
+import { Lock, Unlock, History, Sparkles, AlertCircle, Info, ChevronRight, Wallet } from 'lucide-react';
 
 import { stakingContract, rewardToken } from '../../lib/staking'
 
@@ -17,16 +18,23 @@ const StakePanel = () => {
   // const { readContract } = useReadContract({ connector: HWCConnector });
   const { data: accountId } = useAccountId({ autoFetch: isConnected });
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
-  const { refetch: fetchHbarBalance } = useBalance({ autoFetch: isConnected });
+  const { data: balance, refetch: fetchHbarBalance } = useBalance({ autoFetch: isConnected });
+  const hbarBalance = balance ? balance.hbars : 0;
   const { associateTokens } = useAssociateTokens({ connector: HWCConnector });
 
+  const [activeTab, setActiveTab] = useState('stake');
   const [stakeAmount, setStakeAmount] = useState('');
   const [unstakeAmount, setUnstakeAmount] = useState('');
   const [pendingReward, setPendingReward] = useState(0);
   const [claimedReward, setClaimedReward] = useState(0);
   const [userStake, setUserStake] = useState(0);
   const [isAssociated, setIsAssociated] = useState(true);
-
+  
+  const [staking, setStaking] = useState(false);
+  const [unstaking, setUnstaking] = useState(false);
+  const [claiming, setClaiming] = useState(false);
+  // ... rest of the functions same ... (I will keep them as they are in the actual replacement)
+  
   // Fetch pending rewards, user stake & debt
   const fetchUserData = async () => {
     if (!isConnected || !evmAddress || !stakingContract) return;
@@ -50,17 +58,6 @@ const StakePanel = () => {
     }
   };
 
-  // Periodically update user data
-  useEffect(() => {
-    let interval;
-    if (accountId && isConnected && evmAddress) {
-      fetchUserData();
-      interval = setInterval(() => fetchUserData(), 10000);
-    }
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountId, isConnected, evmAddress]);
-
   const getUserClaimed = async () => {
     if (!evmAddress) return;
     try {
@@ -76,6 +73,7 @@ const StakePanel = () => {
     if (!stakeAmount || stakeAmount <= 0) return toast.error('Enter a valid amount');
 
     try {
+      setStaking(true);
       await writeContract({
         contractId: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
@@ -89,6 +87,8 @@ const StakePanel = () => {
     } catch (e) {
       console.error(e);
       toast.error('Staking failed');
+    } finally {
+      setStaking(false);
     }
   };
 
@@ -99,7 +99,7 @@ const StakePanel = () => {
     if (Number(unstakeAmount) > userStake) return toast.error('Amount exceeds your staked balance');
 
     try {
-      // Convert to tinybar (multiply by 1e8)
+      setUnstaking(true);
       const amountInTinybar = Math.floor(Number(unstakeAmount) * 1e8);
       
       await writeContract({
@@ -115,25 +115,25 @@ const StakePanel = () => {
     } catch (e) {
       console.error(e);
       toast.error('Unstaking failed');
+    } finally {
+      setUnstaking(false);
     }
   };
 
   const handleClaim = async () => {
     if (!isConnected) return toast.error('Connect your wallet first');
-
     if (!isAssociated) {
       try {
         await associateTokens([REWARD_TOKEN_ID]);
-        toast.success('HTS token associated! You can now claim rewards.');
+        toast.success('HTS token associated!');
         setIsAssociated(true);
         return;
       } catch (e) {
-        console.error(e);
         return toast.error('Failed to associate HTS token');
       }
     }
-
     try {
+      setClaiming(true);
       await writeContract({
         contractId: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
@@ -146,85 +146,192 @@ const StakePanel = () => {
     } catch (e) {
       console.error(e);
       toast.error('Claim failed');
+    } finally {
+      setClaiming(false);
     }
   };
 
+  useEffect(() => {
+    let interval;
+    if (accountId && isConnected && evmAddress) {
+      fetchUserData();
+      interval = setInterval(() => fetchUserData(), 10000);
+    }
+    return () => clearInterval(interval);
+  }, [accountId, isConnected, evmAddress]);
+
   return (
-    <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl p-4 sm:p-6 md:p-8 border border-purple-500/20 shadow-2xl shadow-purple-500/10">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent mb-2">
-            Yield Farm
-          </h2>
-          <p className="text-sm sm:text-base text-gray-400">Stake HBAR • Earn HRT Rewards</p>
-        </div>
-        <div className="text-left sm:text-right">
-          <div className="text-xs sm:text-sm text-gray-400">APY</div>
-          <div className="text-2xl sm:text-3xl font-bold text-green-400">24.5%</div>
-        </div>
+    <div className="w-full space-y-6 md:space-y-8 animate-fade-in-up">
+      {/* Tabs Layout */}
+      <div className="glass p-1.5 rounded-[2rem] border-white/5 flex gap-1.5">
+        {['stake', 'unstake'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 py-4 md:py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-500 flex items-center justify-center gap-2 ${
+              activeTab === tab 
+              ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' 
+              : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.03]'
+            }`}
+          >
+            {tab === 'stake' ? <Lock size={14} /> : <Unlock size={14} />}
+            {tab} HBAR
+          </button>
+        ))}
       </div>
 
-      {/* User Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div className="bg-gray-900/50 p-3 sm:p-4 rounded-xl border border-purple-500/10 hover:border-purple-500/30 transition-colors">
-          <div className="text-xs text-gray-400 mb-1">Your Staked HBAR</div>
-          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{userStake?.toFixed(4).toLocaleString() || '0'} ℏ</div>
-        </div>
-        
-        <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-3 sm:p-4 rounded-xl border border-green-500/30">
-          <div className="text-xs text-green-300 mb-1">Pending HRT Reward</div>
-          <div className="text-xl sm:text-2xl font-bold text-green-200 font-mono break-all">{pendingReward?.toFixed(4).toLocaleString() || '0'}</div>
-        </div>
-        
-        <div className="bg-gray-900/50 p-3 sm:p-4 rounded-xl border border-purple-500/10 hover:border-purple-500/30 transition-colors">
-          <div className="text-xs text-gray-400 mb-1">Claimed HRT</div>
-          <div className="text-xl sm:text-2xl font-bold font-mono break-all">{claimedReward?.toFixed(4).toLocaleString() || '0'}</div>
-        </div>
-      </div>
+      {activeTab === 'stake' ? (
+        <div className="glass-card p-6 md:p-10 rounded-[2.5rem] space-y-8 border-white/[0.05] relative overflow-hidden group">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] -mr-32 -mt-32"></div>
+           
+           <div className="space-y-6">
+              <div className="flex justify-between items-end">
+                 <div className="space-y-1.5">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-cyber-blue">Staking Amount</div>
+                    <div className="text-sm font-bold text-slate-500">Inventory Liquidity</div>
+                 </div>
+                 <div className="text-right">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-1">Available ℏ</div>
+                    <div className="text-lg font-mono font-black text-white">{Number(hbarBalance).toFixed(2)}</div>
+                 </div>
+              </div>
 
-      {/* Stake Input */}
-      <div className="space-y-3 sm:space-y-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="number"
-            value={stakeAmount}
-            onChange={(e) => setStakeAmount(e.target.value)}
-            placeholder="Amount to stake"
-            className="flex-1 bg-gray-900/50 border border-purple-500/20 rounded-xl px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all placeholder-gray-500"
-          />
-          <button
-            onClick={handleStake}
-            className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 active:scale-95 sm:hover:scale-105"
-          >
-            Stake
-          </button>
-        </div>
+              <div className="relative group/input">
+                 <input
+                   type="number"
+                   value={stakeAmount}
+                   onChange={(e) => setStakeAmount(e.target.value)}
+                   className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-blue-500/40 focus:border-blue-500 p-6 md:p-8 rounded-3xl text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-800"
+                   placeholder="0.00"
+                 />
+                 <button 
+                   onClick={() => setStakeAmount(hbarBalance)}
+                   className="absolute right-4 top-1/2 -translate-y-1/2 px-4 py-2 bg-blue-500/10 text-cyber-blue rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all shadow-lg"
+                 >
+                    MAX
+                 </button>
+              </div>
+           </div>
 
-        {/* Unstake Input */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="number"
-            value={unstakeAmount}
-            onChange={(e) => setUnstakeAmount(e.target.value)}
-            placeholder="Amount to unstake"
-            max={userStake}
-            className="flex-1 bg-gray-900/50 border border-red-500/20 rounded-xl px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all placeholder-gray-500"
-          />
-          <button
-            onClick={handleUnstake}
-            className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-red-500/30 hover:shadow-red-500/50 active:scale-95 sm:hover:scale-105"
-          >
-            Unstake
-          </button>
+           <div className="space-y-4 pt-4">
+              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                 <div className="flex items-center gap-2">
+                   <Sparkles size={14} className="text-cyber-blue" />
+                   <span className="text-slate-400">Yield APR</span>
+                 </div>
+                 <span className="text-white">24.5% Fixed</span>
+              </div>
+              
+              <button 
+                onClick={handleStake}
+                disabled={staking}
+                className="btn-primary w-full !py-6 text-xl group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {staking ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Processing...
+                    </>
+                  ) : <><Lock size={20} /> Stake Assets</>}
+                </span>
+              </button>
+           </div>
         </div>
+      ) : (
+        <div className="glass-card p-6 md:p-10 rounded-[2.5rem] space-y-8 border-white/[0.05] relative overflow-hidden group">
+           <div className="absolute bottom-0 left-0 w-64 h-64 bg-red-600/5 blur-[100px] -ml-32 -mb-32"></div>
 
-        <button
-          onClick={handleClaim}
-          className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 active:scale-95 sm:hover:scale-105"
-        >
-          {isAssociated ? 'Claim HRT Rewards' : 'Associate HRT & Claim'}
-        </button>
+           <div className="space-y-6">
+              <div className="flex justify-between items-end">
+                 <div className="space-y-1.5">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-red-500">Withdraw Amount</div>
+                    <div className="text-sm font-bold text-slate-500">Release Liquidity</div>
+                 </div>
+                 <div className="text-right">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-1">Your Stake ℏ</div>
+                    <div className="text-lg font-mono font-black text-white">{userStake.toFixed(2)}</div>
+                 </div>
+              </div>
+
+              <div className="relative group/input">
+                 <input
+                   type="number"
+                   value={unstakeAmount}
+                   onChange={(e) => setUnstakeAmount(e.target.value)}
+                   className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-red-500/40 focus:border-red-500 p-6 md:p-8 rounded-3xl text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-800"
+                   placeholder="0.00"
+                 />
+                 <button 
+                   onClick={() => setUnstakeAmount(userStake)}
+                   className="absolute right-4 top-1/2 -translate-y-1/2 px-4 py-2 bg-red-500/10 text-red-500 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-500/20 hover:bg-red-500 hover:text-white transition-all shadow-lg"
+                 >
+                    MAX
+                 </button>
+              </div>
+           </div>
+
+           <div className="space-y-4 pt-4">
+              <button 
+                onClick={handleUnstake}
+                disabled={unstaking}
+                className="w-full py-6 rounded-3xl bg-white/[0.03] border border-white/10 text-xl font-black text-white hover:bg-red-500/20 hover:border-red-500 transition-all flex items-center justify-center gap-2"
+              >
+                {unstaking ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Withdrawing...
+                  </>
+                ) : <><Unlock size={20} /> Unstake Assets</>}
+              </button>
+           </div>
+        </div>
+      )}
+
+      {/* Rewards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+         <div className="glass-card p-8 rounded-[2.5rem] border-white/5 group overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-cyber-blue/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative z-10 space-y-8">
+               <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={16} className="text-cyber-blue" />
+                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Unclaimed Rewards</div>
+                  </div>
+                  <div className="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-[8px] font-black uppercase tracking-[0.3em] border border-green-500/20">Accruing</div>
+               </div>
+               <div className="text-4xl md:text-5xl font-mono font-black text-white tracking-tighter">
+                  {pendingReward.toFixed(4)} <span className="text-xs text-slate-600 uppercase font-black">HRT</span>
+               </div>
+               <button 
+                 onClick={handleClaim}
+                 disabled={claiming}
+                 className="w-full btn-glass !py-5 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-blue-600 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/20 transition-all"
+               >
+                 {claiming ? 'Transmitting...' : (isAssociated ? 'Harvest Yield' : 'Associate & Harvest')}
+               </button>
+            </div>
+         </div>
+
+         <div className="glass-card p-8 rounded-[2.5rem] border-white/5 group overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative z-10 space-y-8">
+               <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <History size={16} className="text-indigo-400" />
+                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Lifetime Earnings</div>
+                  </div>
+               </div>
+               <div className="text-4xl md:text-5xl font-mono font-black text-white tracking-tighter">
+                  {claimedReward.toFixed(2)} <span className="text-xs text-slate-600 uppercase font-black">HRT</span>
+               </div>
+               <div className="flex items-center gap-3 text-[10px] font-black text-slate-600 pt-2 uppercase tracking-widest">
+                  <Info size={14} className="text-indigo-500" />
+                  Total assets harvested to date
+               </div>
+            </div>
+         </div>
       </div>
     </div>
   );

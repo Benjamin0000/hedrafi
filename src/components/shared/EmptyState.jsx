@@ -1,17 +1,32 @@
-const EmptyState = ({ icon = '📭', title, description, action }) => {
+import { Inbox } from 'lucide-react';
+
+const EmptyState = ({ icon: Icon = Inbox, title, description, action }) => {
   return (
-    <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl border border-purple-500/20 p-12 text-center">
-      <div className="text-6xl mb-4">{icon}</div>
-      <h3 className="text-2xl font-bold mb-2 text-gray-300">{title}</h3>
-      <p className="text-gray-400 mb-6 max-w-md mx-auto">{description}</p>
-      {action && (
-        <button 
-          onClick={action.onClick}
-          className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-purple-500/30 hover:scale-105"
-        >
-          {action.label}
-        </button>
-      )}
+    <div className="glass-card p-12 md:p-20 rounded-[4rem] border-white/5 text-center space-y-8 bg-[#02050E] relative overflow-hidden group">
+      {/* Visual Depth */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-blue-600/5 blur-[100px] pointer-events-none"></div>
+      
+      <div className="relative z-10 space-y-8">
+        <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/5 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
+           <Icon size={40} className="text-slate-600 group-hover:text-blue-500 transition-colors" />
+        </div>
+        
+        <div className="space-y-3">
+          <h3 className="text-3xl font-black text-white tracking-tight">{title}</h3>
+          <p className="text-slate-500 max-w-sm mx-auto font-medium leading-relaxed">{description}</p>
+        </div>
+
+        {action && (
+          <div className="pt-4">
+            <button 
+              onClick={action.onClick}
+              className="btn-primary !px-10 !py-5 text-lg group-hover:shadow-[0_0_30px_rgba(0,102,255,0.3)] transition-all"
+            >
+              {action.label}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

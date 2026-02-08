@@ -3,38 +3,40 @@ import { convertIpfsToPinata } from "../../lib/marketplace"
 
 const NFTCard = ({ nft }) => {
   return (
-    <Link to={`/marketplace/nft/${nft.id}`}>
-      <div className="backdrop-blur-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl border border-purple-500/20 overflow-hidden hover:border-purple-500/50 transition-all duration-300 hover:scale-105 shadow-xl group">
-        <div className="relative aspect-square overflow-hidden bg-gray-900/50">
+    <Link to={`/marketplace/nft/${nft.id}`} className="group block">
+      <div className="glass rounded-[2rem] border-white/5 overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:bg-white/[0.03] hover:border-blue-500/30 shadow-2xl relative">
+        {/* Hover Glow Effect */}
+        <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+        
+        <div className="relative aspect-square overflow-hidden">
           <img 
             src={convertIpfsToPinata(nft.image_url)} 
             alt={nft.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
           />
-          <span className="absolute top-3 right-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-              NEW
-          </span>
-          {/* {nft.isNew && (
-            <span className="absolute top-3 right-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-              NEW
-            </span>
-          )} */}
-        </div>
-        <div className="p-4">
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold truncate">{nft.name}</h3>
-              {/* <p className="text-sm text-gray-400 truncate">{nft.collection}</p> */}
-            </div>
+          <div className="absolute top-4 right-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500">
+             <span className="bg-blue-600/20 backdrop-blur-md border border-blue-500/30 text-cyber-blue text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(0,240,255,0.2)]">
+                New Drop
+             </span>
           </div>
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-purple-500/20">
+        </div>
+
+        <div className="p-6 space-y-4">
+          <div className="space-y-1">
+             <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 leading-none">Serial #{(nft.id % 999).toString().padStart(3, '0')}</div>
+             <h3 className="text-xl font-bold text-white truncate leading-tight group-hover:text-cyber-blue transition-colors">{nft.name}</h3>
+          </div>
+
+          <div className="flex items-center justify-between pt-4 border-t border-white/5">
             <div>
-              <div className="text-xs text-gray-400">Price</div>
-              <div className="font-bold text-purple-300">{Number(nft.price).toFixed(2)} HRT</div>
+              <div className="text-[10px] text-gray-600 font-black uppercase tracking-widest mb-1">List Price</div>
+              <div className="text-lg font-mono font-black text-cyber-blue">
+                 {Number(nft.price).toFixed(2)} <span className="text-[10px] text-gray-500 font-bold">HRT</span>
+              </div>
             </div>
-            <button className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 shadow-lg shadow-purple-500/30">
-              View
-            </button>
+            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-gray-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition-all">
+               →
+            </div>
           </div>
         </div>
       </div>
