@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from "react";
 import Homepage from './components/home/Homepage';
 import Dashboard from './components/staking/Dashboard';
+import Profit from './components/profit/Profit';
 import StudioHome from './components/studio/StudioHome';
 import MintNFT from './components/studio/MintNFT';
 import StudioCollections from './components/studio/StudioCollections';
@@ -22,6 +23,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/staking" element={<Dashboard />} />
+        <Route path="/profit" element={<Profit />} />
         <Route path="/studio" element={<StudioHome />} />
         <Route path="/studio/mint" element={<MintNFT />} />
         <Route path='/studio/mynfts' element={<MyNFTs />}/>
