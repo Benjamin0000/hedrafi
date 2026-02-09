@@ -47,16 +47,24 @@ const NFTDetail = () => {
 
   useEffect(() => {
     const fetchCreator = async () => {
-      if(nft && nft.creator){
-        const creatorID = await evmToHederaAccount(nft.creator);
-        setCreator(creatorID);
+      try {
+        if(nft && nft.creator){
+          const creatorID = await evmToHederaAccount(nft.creator);
+          setCreator(creatorID);
+        }
+      } catch (e) {
+        console.warn("Creator not found:", e);
       }
     };
 
     const fetchOwner = async () => {
-      if(nft && nft.owner){
-        const ownerID = await evmToHederaAccount(nft.owner);
-        setOwner(ownerID);
+      try {
+        if(nft && nft.owner){
+          const ownerID = await evmToHederaAccount(nft.owner);
+          setOwner(ownerID);
+        }
+      } catch (e) {
+        console.warn("Owner not found:", e);
       }
     };
 

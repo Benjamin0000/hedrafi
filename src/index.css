@@ -27,7 +27,7 @@
   }
 
   .glass-card {
-    @apply backdrop-blur-3xl bg-[#0A0F1E]/60 border border-white/[0.08] shadow-2xl;
+    @apply backdrop-blur-3xl bg-[#0A0F1E]/40 border border-white/[0.05] shadow-[0_20px_50px_rgba(0,0,0,0.5)];
   }
 
   .text-gradient {
@@ -42,13 +42,13 @@
   }
 
   .btn-glass {
-    @apply backdrop-blur-md bg-white/[0.03] border border-white/10 hover:bg-white/[0.08] hover:border-white/20
+    @apply backdrop-blur-md bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] hover:border-white/10
            text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300
            flex items-center justify-center gap-2 active:scale-[0.98];
   }
 
   .container-main {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-6 sm:px-8 lg:px-12;
   }
 }
 
@@ -63,20 +63,53 @@
   }
 
   .animate-float-slow {
-    animation: float 6s ease-in-out infinite;
+    animation: float 8s ease-in-out infinite;
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(2deg); }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+  }
+
+  .animate-reveal {
+    animation: reveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  }
+
+  @keyframes reveal {
+    0% { transform: translateY(100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  @keyframes slideUp {
+    0% { transform: translateY(30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
   }
 
   .glow-blue {
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+  }
+
+  .mask-radial-faded {
+    mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
   }
 
   .active-nav-link {
-    @apply text-white relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-cyber-blue after:rounded-full after:shadow-[0_0_8px_#00F0FF];
+    @apply text-white relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-blue-500 after:rounded-full after:shadow-[0_0_10px_#3b82f6];
   }
 }
 

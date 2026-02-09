@@ -10,21 +10,25 @@ export async function finalizeMint(txHash, metadataUrl) {
   // Persist to Laravel
 
   setTimeout(async ()=>{
-    const res = await fetch(`${API_URL}/api/finalize-nft`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tx_id: txHash,
-        metadata_url: metadataUrl,
-      })
-    });
-    const { success } = await res.json();
-    console.log("the finalize final")
-    if(success){
-      toast.success('Minting successful!');
-      setTimeout(()=>{
-        window.location.href = "/studio/mynfts"; 
-      }, 2000)
+    try {
+      const res = await fetch(`${API_URL}/api/finalize-nft`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tx_id: txHash,
+          metadata_url: metadataUrl,
+        })
+      });
+      const { success } = await res.json();
+      console.log("the finalize final")
+      if(success){
+        toast.success('Minting successful!');
+        setTimeout(()=>{
+          window.location.href = "/studio/mynfts"; 
+        }, 2000)
+      }
+    } catch (error) {
+      console.error("Finalize mint error:", error);
     }
   }, 2000)
 
@@ -32,22 +36,28 @@ export async function finalizeMint(txHash, metadataUrl) {
 
 //testnet function 
 export async function finalizeBuy(id, buyer){
-    const res = await fetch(`${API_URL}/api/finalize-buy`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id,
-        buyer
-      })
-    });
-    const { success } = await res.json();
-    console.log("the finalize final")
-    if(success){
-      toast.success('NFT bought successfully!');
-      setTimeout(()=>{
-        window.location.href = "/studio/mynfts";
-      }, 2000)
-    }
+    setTimeout(async ()=>{
+      try {
+        const res = await fetch(`${API_URL}/api/finalize-buy`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id,
+            buyer
+          })
+        });
+        const { success } = await res.json();
+        console.log("the finalize final")
+        if(success){
+          toast.success('NFT bought successfully!');
+          setTimeout(()=>{
+            window.location.href = "/studio/mynfts";
+          }, 2000)
+        }
+      } catch (error) {
+        console.error("Finalize buy error:", error);
+      }
+    }, 2000)
 }
 
 export function convertIpfsToPinata(ipfsUri) {

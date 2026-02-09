@@ -29,9 +29,15 @@ const MyNFTs = () => {
   useEffect(() => {
     if(!evmAddress) return;
     const loadNFTs = async () => {
-        const res = await fetch(`${API_URL}/api/my-nfts/${evmAddress}`);
-        const data = await res.json();
-        setNfts(data);
+        try {
+            const res = await fetch(`${API_URL}/api/my-nfts/${evmAddress}`);
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            const data = await res.json();
+            setNfts(data);
+        } catch (error) {
+            console.error("Failed to load NFTs:", error);
+            toast.error("Failed to load inventory");
+        }
     };
     loadNFTs();
   }, [evmAddress, API_URL]);

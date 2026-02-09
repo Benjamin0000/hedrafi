@@ -18,13 +18,16 @@ const App = () => {
     if (loader) loader.style.display = "none";
 
     const handleRejection = (event) => {
-      console.error("Unhandle Promise Rejection:", {
-        reason: event.reason,
-        promise: event.promise,
-        message: event.reason?.message || "No message",
-        stack: event.reason?.stack || "No stack trace"
+      // Prevents the CRA error overlay from popping up for unhandled rejections
+      event.preventDefault();
+      
+      const reason = event.reason;
+      console.warn("Caught Unhandled Promise Rejection:", {
+        reason: reason,
+        message: reason?.message || "No message provided",
+        stack: reason?.stack || "No stack trace",
+        promise: event.promise
       });
-      // Prevent the default browser handling if needed, or just log
     };
 
     window.addEventListener('unhandledrejection', handleRejection);
