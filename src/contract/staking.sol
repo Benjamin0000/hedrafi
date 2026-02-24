@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Simple Hedera Token Service interface
 interface IHederaTokenService {
     function transferToken(
         address token,
@@ -15,146 +14,204 @@ interface IHederaTokenService {
 
 int constant HEDERA_SUCCESS = 22;
 
-contract HedraFiYieldFarm{ 
+contract HedraFiYieldFarm {
+
     IHederaTokenService constant HTS = IHederaTokenService(address(0x167));
 
-    address public admin;                  // Admin address
-    address public rewardToken;            // HTS token address
-    uint256 public totalStakedHBAR;        // Total HBAR staked
-    uint256 public rewardRatePerSecond;    // Fixed HTS tokens per HBAR per second
-    uint256 public totalRewardPaid;        // Total HTS distributed
-    uint256 public totalUsers;             // Total unique stakers
+    uint256 constant INT64_MAX = 9223372036854775807;
+    uint256 constant PRECISION = 1e18;
 
-    uint256 constant INT64_MAX = 9223372036854775807; // 2^63 - 1
+    address public immutable admin;
+    address public immutable rewardToken;
+
+    uint256 public immutable startTime;
+    uint256 public immutable endTime;
+    uint256 public immutable totalRewardPool;
+
+    uint256 public rewardPerSecond;
+    uint256 public lastRewardTime;
+    uint256 public accRewardPerShare;
+
+    uint256 public totalStakedHBAR;
+    uint256 public totalRewardDistributed;
+    uint256 public totalUsers;
+    bool private locked;
+
+    mapping(address => uint256) public pendingWithdrawals;
 
     struct UserInfo {
-        uint256 stakedAmount;      // HBAR staked
-        uint256 rewardDebt;        // HTS already claimed
-        uint256 lastUpdate;        // Last timestamp rewards were calculated
+        uint256 amount;      
+        uint256 rewardDebt;  
     }
 
     mapping(address => UserInfo) public users;
 
     event Staked(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
-    event RewardClaimed(address indexed user, uint256 amount);
+    event Claimed(address indexed user, uint256 amount);
 
-    modifier onlyAdmin() {
-        require(msg.sender == admin, "Only admin");
+    modifier farmStarted() {
+        require(block.timestamp >= startTime, "Farm not started");
         _;
     }
 
-    constructor(address _rewardToken, uint256 _rewardRatePerSecond) {
-        require(_rewardToken != address(0), "Invalid reward token");
-        admin = msg.sender;
-        rewardToken = _rewardToken;
-        rewardRatePerSecond = _rewardRatePerSecond;
+    modifier nonReentrant() {
+        require(!locked, "No reentrancy"); 
+        locked = true; 
+        _; 
+        locked = false; 
     }
 
-    // Stake HBAR
-    function stake() external payable {
-        require(msg.value > 0, "Must stake positive amount");
+    constructor(
+        address _rewardToken,
+        uint256 _startTime,
+        uint256 _endTime,
+        uint256 _totalRewardPool
+    ) {
+        require(_rewardToken != address(0), "Invalid token");
+        require(_endTime > _startTime, "Invalid time");
+        require(_totalRewardPool > 0, "Invalid reward pool");
+
+        admin = msg.sender;
+        rewardToken = _rewardToken;
+        startTime = _startTime;
+        endTime = _endTime;
+        totalRewardPool = _totalRewardPool;
+
+        rewardPerSecond = _totalRewardPool / (_endTime - _startTime);
+        lastRewardTime = _startTime;
+    }
+
+    function updatePool() internal {
+        if (block.timestamp <= lastRewardTime) return;
+
+        if (totalStakedHBAR == 0) {
+            lastRewardTime = block.timestamp;
+            return;
+        }
+
+        uint256 currentTime = block.timestamp > endTime ? endTime : block.timestamp;
+
+        if (currentTime <= lastRewardTime) return;
+
+        uint256 timeElapsed = currentTime - lastRewardTime;
+        uint256 reward = timeElapsed * rewardPerSecond;
+
+        if (totalRewardDistributed + reward > totalRewardPool) {
+            reward = totalRewardPool - totalRewardDistributed;
+        }
+
+        totalRewardDistributed += reward;
+        accRewardPerShare += (reward * PRECISION) / totalStakedHBAR;
+
+        lastRewardTime = currentTime;
+    }
+
+    function stake() external payable farmStarted {
+        require(msg.value > 0, "Zero stake");
+
+        updatePool();
 
         UserInfo storage user = users[msg.sender];
 
-        // Calculate and transfer pending rewards
-        uint256 pending = pendingReward(msg.sender);
-        if (pending > 0) {
-            _safeRewardTransfer(msg.sender, pending);
-            totalRewardPaid += pending;
-            user.rewardDebt += pending;
+        if (user.amount > 0) {
+            uint256 pending = (user.amount * accRewardPerShare) / PRECISION - user.rewardDebt;
+            if (pending > 0) {
+                _safeRewardTransfer(msg.sender, pending);
+                emit Claimed(msg.sender, pending);
+            }
+        } else {
+            totalUsers++;
         }
 
-        // Update user stake
-        if (user.stakedAmount == 0) {
-            totalUsers += 1;
-        }
-
-        user.stakedAmount += msg.value;
-        user.lastUpdate = block.timestamp;
+        user.amount += msg.value;
         totalStakedHBAR += msg.value;
+
+        user.rewardDebt = (user.amount * accRewardPerShare) / PRECISION;
 
         emit Staked(msg.sender, msg.value);
     }
 
-    // Unstake HBAR
-    function unstake(uint256 amount) external {
+    function unstake(uint256 amount) external nonReentrant {
         UserInfo storage user = users[msg.sender];
-        require(user.stakedAmount >= amount, "Not enough staked");
+        require(user.amount >= amount, "Insufficient stake");
 
-        // Update rewards
-        uint256 pending = pendingReward(msg.sender);
+        updatePool();
+
+        uint256 pending = (user.amount * accRewardPerShare) / PRECISION - user.rewardDebt;
         if (pending > 0) {
             _safeRewardTransfer(msg.sender, pending);
-            totalRewardPaid += pending;
-            user.rewardDebt += pending;
+            emit Claimed(msg.sender, pending);
         }
 
-        user.stakedAmount -= amount;
-        user.lastUpdate = block.timestamp;
+        user.amount -= amount;
         totalStakedHBAR -= amount;
 
-        // Transfer HBAR back to user
-        payable(msg.sender).transfer(amount);
+        user.rewardDebt = (user.amount * accRewardPerShare) / PRECISION;
+
+        (bool s, ) = payable(msg.sender).call{value: amount}("");
+        if (!s) {
+            pendingWithdrawals[msg.sender] += amount;
+        }
 
         emit Unstaked(msg.sender, amount);
     }
 
-    // Claim HTS rewards without unstaking
-    function claimReward() external {
-        uint256 pending = pendingReward(msg.sender);
-        require(pending > 0, "No rewards to claim");
+    function claim() external {
+        updatePool();
 
-        users[msg.sender].lastUpdate = block.timestamp;
-        users[msg.sender].rewardDebt += pending;
-        totalRewardPaid += pending;
+        UserInfo storage user = users[msg.sender];
+
+        uint256 pending = (user.amount * accRewardPerShare) / PRECISION - user.rewardDebt;
+        require(pending > 0, "No rewards");
+
+        user.rewardDebt = (user.amount * accRewardPerShare) / PRECISION;
 
         _safeRewardTransfer(msg.sender, pending);
 
-        emit RewardClaimed(msg.sender, pending);
+        emit Claimed(msg.sender, pending);
     }
 
-    // View pending HTS reward
-    function pendingReward(address userAddr) public view returns (uint256) {
-        UserInfo storage user = users[userAddr];
-        if (user.stakedAmount == 0 || totalStakedHBAR == 0) return 0;
+    function pendingReward(address _user) external view returns (uint256) {
+        UserInfo storage user = users[_user];
+        uint256 tempAcc = accRewardPerShare;
 
-        uint256 elapsed = block.timestamp - user.lastUpdate;
-        uint256 reward = (user.stakedAmount * rewardRatePerSecond * elapsed) / 1e18;
-        return reward;
+        if (block.timestamp > lastRewardTime && totalStakedHBAR != 0) {
+            uint256 currentTime = block.timestamp > endTime ? endTime : block.timestamp;
+            uint256 timeElapsed = currentTime - lastRewardTime;
+            uint256 reward = timeElapsed * rewardPerSecond;
+
+            if (totalRewardDistributed + reward > totalRewardPool) {
+                reward = totalRewardPool - totalRewardDistributed;
+            }
+
+            tempAcc += (reward * PRECISION) / totalStakedHBAR;
+        }
+
+        return (user.amount * tempAcc) / PRECISION - user.rewardDebt;
     }
 
-    // Admin can update reward rate
-    function setRewardRate(uint256 _rewardRatePerSecond) external onlyAdmin {
-        rewardRatePerSecond = _rewardRatePerSecond;
-    }
-
-    // Admin can withdraw extra HBAR (not user stakes)
-    function adminWithdrawHBAR(uint256 amount) external onlyAdmin {
-        payable(admin).transfer(amount);
-    }
-
-    // Internal function to safely transfer HTS rewards
     function _safeRewardTransfer(address to, uint256 amount) internal {
-        require(amount <= INT64_MAX, "Amount exceeds int64 max");
-        int64 amt = int64(int256(amount)); 
+        require(amount <= INT64_MAX, "Overflow");
+        int64 amt = int64(int256(amount));
         int response = HTS.transferToken(rewardToken, address(this), to, amt);
         require(response == HEDERA_SUCCESS, "HTS transfer failed");
     }
 
-    // Frontend-friendly getters
-    function userStake(address userAddr) external view returns (uint256) {
-        return users[userAddr].stakedAmount;
+    function associateSelf(address token) external returns (int) {
+        require(msg.sender == admin, "Only admin");
+        int response = HTS.associateToken(address(this), token);
+        require(response == HEDERA_SUCCESS, "Association failed");
+        return response;
     }
 
-    function userRewardDebt(address userAddr) external view returns (uint256) {
-        return users[userAddr].rewardDebt;
+    function withdrawFunds() external {
+        uint256 amount = pendingWithdrawals[msg.sender];
+        require(amount > 0, "Nothing to withdraw");
+
+        pendingWithdrawals[msg.sender] = 0;
+
+        (bool s, ) = payable(msg.sender).call{value: amount}("");
+        require(s, "Withdrawal failed");
     }
- 
-    
-    function associateSelf(address token) external onlyAdmin returns (int) {
-        int response = HTS.associateToken(address(this), token); 
-        require(response == 22, "Association failed");
-        return response;
-    } 
 }
