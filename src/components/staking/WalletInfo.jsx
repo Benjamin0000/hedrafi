@@ -3,7 +3,7 @@ import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import WalletButton from '../shared/WalletButton';
 import { Copy } from 'lucide-react';
 
-const HRT_TOKEN_ID = process.env.REACT_APP_HTS_REWARD_TOKEN;
+const HRT_TOKEN_ID = process.env.REACT_APP_REWARD_TOKEN;
 
 const WalletInfo = () => {
   const { isConnected } = useWallet(HWCConnector);
@@ -14,7 +14,7 @@ const WalletInfo = () => {
     tokens: [HRT_TOKEN_ID],
     autoFetch: isConnected
   });
-
+ 
   const hrtBalance = tokensBalance?.find(t => t.token_id === HRT_TOKEN_ID)?.balance ?? 0;
   const hbarBalance = balanceData?.formatted || '0.00';
 
@@ -64,7 +64,7 @@ const WalletInfo = () => {
         <div className="space-y-1.5 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10">
           <div className="text-[10px] font-black uppercase tracking-widest text-blue-400">Yield Token (HRT)</div>
           <div className="text-xl font-mono font-bold text-blue-200">
-            {(Number(hrtBalance) / 1e8).toFixed(4)} <span className="text-[10px] text-blue-500 font-black">HRT</span>
+            {(Number(hrtBalance) / 1e8).toFixed(4).toLocaleString()} <span className="text-[10px] text-blue-500 font-black">HRT</span>
           </div>
         </div>
 

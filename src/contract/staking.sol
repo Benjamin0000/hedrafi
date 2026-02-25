@@ -29,7 +29,7 @@ contract HedraFiYieldFarm {
     uint256 public immutable totalRewardPool;
 
     uint256 public rewardPerSecond;
-    uint256 public lastRewardTime;
+    uint256 public lastRewardTime; 
     uint256 public accRewardPerShare;
 
     uint256 public totalStakedHBAR;
@@ -38,6 +38,7 @@ contract HedraFiYieldFarm {
     bool private locked;
 
     mapping(address => uint256) public pendingWithdrawals;
+    mapping(address => uint256) public claimedReward; 
 
     struct UserInfo {
         uint256 amount;      
@@ -196,6 +197,7 @@ contract HedraFiYieldFarm {
         int64 amt = int64(int256(amount));
         int response = HTS.transferToken(rewardToken, address(this), to, amt);
         require(response == HEDERA_SUCCESS, "HTS transfer failed");
+        claimedReward[to] += amount; 
     }
 
     function associateSelf(address token) external returns (int) {

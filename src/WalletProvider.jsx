@@ -8,7 +8,7 @@ import DAppLogo from './assets/logo.png';
 
 const metadata = {
   name: 'HedraFi',
-  description: 'Hedera yield farming dApp',
+  description: 'Hedera yield farming dHedrafi | Staking & NFT platform on hederaApp',
   icons: [DAppLogo],
   url: window.location.href,
 };

@@ -31,7 +31,7 @@ const NFTCard = ({ nft }) => {
             <div>
               <div className="text-[10px] text-gray-600 font-black uppercase tracking-widest mb-1">List Price</div>
               <div className="text-lg font-mono font-black text-cyber-blue">
-                 {Number(nft.price).toFixed(2)} <span className="text-[10px] text-gray-500 font-bold">HRT</span>
+                 {Number(nft.price).toFixed(2)} <span className="text-[10px] text-gray-500 font-bold">ℏ</span>
               </div>
             </div>
             <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-gray-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition-all">

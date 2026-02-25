@@ -9,17 +9,16 @@ import { Lock, Unlock, History, Sparkles, AlertCircle, Info, ChevronRight, Walle
 
 import { stakingContract, rewardToken } from '../../lib/staking'
 
-const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
-const REWARD_TOKEN_ID = process.env.REACT_APP_HTS_REWARD_TOKEN;
+const CONTRACT_ADDRESS = process.env.REACT_APP_STAKING_ADDRESS;
+const REWARD_TOKEN_ID = process.env.REACT_APP_REWARD_TOKEN;
 
 const StakePanel = () => {
   const { isConnected } = useWallet(HWCConnector);
   const { writeContract } = useWriteContract({ connector: HWCConnector });
-  // const { readContract } = useReadContract({ connector: HWCConnector });
   const { data: accountId } = useAccountId({ autoFetch: isConnected });
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
   const { data: balance, refetch: fetchHbarBalance } = useBalance({ autoFetch: isConnected });
-  const hbarBalance = balance ? balance.hbars : 0;
+  const hbarBalance = balance?.formatted || 0;
   const { associateTokens } = useAssociateTokens({ connector: HWCConnector });
 
   const [activeTab, setActiveTab] = useState('stake');
@@ -47,8 +46,9 @@ const StakePanel = () => {
       const reward = await stakingContract.pendingReward(evmAddress)
       setPendingReward( Number(reward) / 1e8);
       // User stake
-      const stake = await stakingContract.userStake(evmAddress)
-      setUserStake( Number(stake) / 1e8 );
+      const stake = await stakingContract.users(evmAddress);
+      setUserStake( Number(stake[0]) / 1e8 );
+
 
     } catch (e) {
       console.error(e);
@@ -61,7 +61,7 @@ const StakePanel = () => {
   const getUserClaimed = async () => {
     if (!evmAddress) return;
     try {
-      const userDebt = await stakingContract.userRewardDebt(evmAddress)
+      const userDebt = await stakingContract.claimedReward(evmAddress)
       const claimed = Number(userDebt) / 1e8;
       setClaimedReward(claimed);
     } catch (e) {}
@@ -137,9 +137,9 @@ const StakePanel = () => {
       await writeContract({
         contractId: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
-        functionName: 'claimReward',
+        functionName: 'claim',
         args: [],
-        metaArgs: { gas: 120_000 },
+        metaArgs: { gas: 320_000 },
       });
       toast.success('Rewards claimed!');
       await fetchUserData();
@@ -192,13 +192,13 @@ const StakePanel = () => {
                  </div>
                  <div className="text-right">
                     <div className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-1">Available ℏ</div>
-                    <div className="text-lg font-mono font-black text-white">{Number(hbarBalance).toFixed(2)}</div>
+                    <div className="text-lg font-mono font-black text-white">{ hbarBalance }</div>
                  </div>
               </div>
 
               <div className="relative group/input">
                  <input
-                   type="number"
+                  //  type="number"
                    value={stakeAmount}
                    onChange={(e) => setStakeAmount(e.target.value)}
                    className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-blue-500/40 focus:border-blue-500 p-6 md:p-8 rounded-3xl text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-800"
@@ -214,13 +214,7 @@ const StakePanel = () => {
            </div>
 
            <div className="space-y-4 pt-4">
-              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest bg-white/[0.02] p-4 rounded-2xl border border-white/5">
-                 <div className="flex items-center gap-2">
-                   <Sparkles size={14} className="text-cyber-blue" />
-                   <span className="text-slate-400">Yield APR</span>
-                 </div>
-                 <span className="text-white">24.5% Fixed</span>
-              </div>
+        
               
               <button 
                 onClick={handleStake}

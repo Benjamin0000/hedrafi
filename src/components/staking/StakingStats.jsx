@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { stakingContract, rewardToken } from '../../lib/staking'
 import { Lock, Diamond, Banknote, Users } from 'lucide-react';
 
-const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
-
 const StakingStats = () => {
 
   const [stats, setStats] = useState({
@@ -23,7 +21,7 @@ const StakingStats = () => {
         totalHRTLocked
       ] = await Promise.all([
         stakingContract.totalStakedHBAR(),
-        stakingContract.totalRewardPaid(),
+        stakingContract.totalRewardDistributed(),
         stakingContract.totalUsers(),
         rewardToken.balanceOf(stakingContract.target)
       ]);
@@ -48,28 +46,28 @@ const StakingStats = () => {
 
   const statsData = [
     { 
-      label: 'Total HBAR Locked', 
+      label: 'HBAR Locked', 
       value: stats.totalStakedHBAR.toLocaleString() + ' ℏ', 
       icon: Lock, 
       color: 'bg-blue-500/5 text-blue-500',
       border: 'border-blue-500/10'
     },
     { 
-      label: 'Total HRT Distributed', 
+      label: 'HRT Locked', 
       value: stats.totalHRTLocked.toLocaleString(), 
       icon: Diamond, 
       color: 'bg-indigo-500/5 text-indigo-400',
       border: 'border-indigo-500/10'
     },
-    { 
-      label: 'Platform Earnings', 
+    {  
+      label: 'HRT Distributed', 
       value: stats.totalRewardPaid.toLocaleString() + ' ℏ', 
       icon: Banknote, 
       color: 'bg-cyber-blue/5 text-cyber-blue',
       border: 'border-cyber-blue/10'
     },
     { 
-      label: 'Total Participants', 
+      label: 'Participants', 
       value: stats.totalUsers.toLocaleString(), 
       icon: Users, 
       color: 'bg-white/5 text-slate-400',

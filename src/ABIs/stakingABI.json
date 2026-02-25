@@ -3,12 +3,48 @@
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "token",
+				"type": "address"
+			}
+		],
+		"name": "associateSelf",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "claim",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "_rewardToken",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_rewardRatePerSecond",
+				"name": "_startTime",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_endTime",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_totalRewardPool",
 				"type": "uint256"
 			}
 		],
@@ -31,8 +67,15 @@
 				"type": "uint256"
 			}
 		],
-		"name": "RewardClaimed",
+		"name": "Claimed",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "stake",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -52,6 +95,19 @@
 		],
 		"name": "Staked",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "unstake",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -74,6 +130,26 @@
 	},
 	{
 		"inputs": [],
+		"name": "withdrawFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "accRewardPerShare",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "admin",
 		"outputs": [
 			{
@@ -88,47 +164,53 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "adminWithdrawHBAR",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
-				"name": "token",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "associateSelf",
+		"name": "claimedReward",
 		"outputs": [
 			{
-				"internalType": "int256",
+				"internalType": "uint256",
 				"name": "",
-				"type": "int256"
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "claimReward",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "endTime",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "lastRewardTime",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "userAddr",
+				"name": "_user",
 				"type": "address"
 			}
 		],
@@ -144,8 +226,27 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "pendingWithdrawals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
-		"name": "rewardRatePerSecond",
+		"name": "rewardPerSecond",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -170,28 +271,34 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "startTime",
+		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "_rewardRatePerSecond",
+				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "setRewardRate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "stake",
-		"outputs": [],
-		"stateMutability": "payable",
+		"name": "totalRewardDistributed",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "totalRewardPaid",
+		"name": "totalRewardPool",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -231,57 +338,6 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "unstake",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "userAddr",
-				"type": "address"
-			}
-		],
-		"name": "userRewardDebt",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "userAddr",
-				"type": "address"
-			}
-		],
-		"name": "userStake",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
@@ -291,17 +347,12 @@
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "stakedAmount",
+				"name": "amount",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
 				"name": "rewardDebt",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "lastUpdate",
 				"type": "uint256"
 			}
 		],
