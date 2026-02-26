@@ -66,16 +66,46 @@ export function convertIpfsToPinata(ipfsUri) {
   // Check if the link starts with ipfs://
   if (ipfsUri.startsWith("ipfs://")) {
     // Extract the CID and append it to the Pinata gateway
-    return ipfsUri.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
+    return ipfsUri.replace("ipfs://", "https://ipfs.io/ipfs/");
   }
   
   // If it's already an HTTP link or just a CID, return as is or handle accordingly
   return ipfsUri;
 }
 
+
+
+export async function fetchNFTMetadata(mirrorNodeMetadata) {
+  try {
+    // 1. Decode Base64 from Mirror Node
+    const decodedUri = atob(mirrorNodeMetadata);
+    
+    // 2. Convert to a gateway URL (using your Pinata helper)
+    const jsonUrl = convertIpfsToPinata(decodedUri);
+    
+    // 3. Fetch the actual JSON file
+    const response = await fetch(jsonUrl);
+    if (!response.ok) return null;
+    const json = await response.json();
+    
+    // 4. Extract standard HIP-412 fields
+    return {
+      name: json.name || "Unknown Artifact",
+      description: json.description || "",
+      // Use the 'image' field from JSON, converted to Pinata
+      image_url: convertIpfsToPinata(json.image),
+      attributes: json.attributes || []
+    };
+  } catch (e) {
+    console.error("Metadata resolution failed:", e);
+    return null;
+  }
+}
+
+
 export const checkNFTAllowanceMirrorNode = async (ownerId, tokenId, contractId) => {
   try {
-    const response = await axios.get(`https://testnet.mirrornode.hedera.com/api/v1/accounts/${ownerId}/nft/allowances`);
+    const response = await axios.get(`https://mainnet.mirrornode.hedera.com/api/v1/accounts/${ownerId}/nft/allowances`);
     const allowances = response.data.allowances || [];
     return allowances.some(a => 
       a.token_id === tokenId && a.spender === contractId
@@ -94,7 +124,7 @@ export const checkNFTAllowanceMirrorNode = async (ownerId, tokenId, contractId) 
 
 export async function evmToHederaAccount(evmAddress) {
   const res = await fetch(
-    `https://testnet.mirrornode.hedera.com/api/v1/accounts/${evmAddress}`
+    `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${evmAddress}`
   );
 
   const data = await res.json();

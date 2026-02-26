@@ -31,13 +31,13 @@ const Dashboard = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
               {/* Left Column: Wallet Info */}
-              <div className="lg:col-span-4 lg:sticky lg:top-32 space-y-8">
+              <div className="lg:col-span-3 lg:sticky lg:top-32 space-y-8">
                  <div className="glass-card p-2 rounded-[2.5rem] border-white/[0.05] shadow-2xl">
                     <WalletInfo />
                  </div>
               </div>
               {/* Right Column: Stats & Staking */}
-              <div className="lg:col-span-8 space-y-8 md:space-y-12">
+              <div className="lg:col-span-9 space-y-8 md:space-y-12">
                 <StakingStats />
                 <StakePanel />
               </div>

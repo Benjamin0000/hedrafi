@@ -1,13 +1,13 @@
 import { ethers } from 'ethers';
 import CONTRACT_ABI from '../ABIs/stakingABI.json';
-import { ContractId } from '@hashgraph/sdk';
+import { ContractId, TokenId } from '@hashgraph/sdk';
 
 const CONTRACT_ID = process.env.REACT_APP_STAKING_ADDRESS_EVM;
 const REWARD_TOKEN_ID = process.env.REACT_APP_REWARD_TOKEN;
-const RPC_URL = process.env.REACT_APP_RPC || "https://testnet.hashio.io/v1/testnet";
+const RPC_URL = process.env.REACT_APP_RPC || "https://mainnet.hashio.io/api";
 
 // Safe EVM address conversion
-const getEvmAddress = (id) => {
+export const getEvmAddress = (id) => {
     if (!id) return null;
     try {
         return `0x${ContractId.fromString(id).toEvmAddress()}`;

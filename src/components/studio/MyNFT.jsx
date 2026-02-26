@@ -4,10 +4,10 @@ import Header from "../shared/Header";
 import Footer from "../shared/Footer";
 import Modal from "../shared/Modal";
 import { useWriteContract, useEvmAddress, useWallet, useAccountId, useApproveTokenNftAllowance } from "@buidlerlabs/hashgraph-react-wallets";
-import { convertIpfsToPinata, checkNFTAllowanceMirrorNode } from "../../lib/marketplace"
+import { convertIpfsToPinata, checkNFTAllowanceMirrorNode, fetchNFTMetadata,  } from "../../lib/marketplace"
 import marketplaceABI from "../../ABIs/marketplaceABI.json";
 import { toast } from "react-toastify";
-import { ContractId } from "@hashgraph/sdk";
+import { ContractId, TokenId } from "@hashgraph/sdk";
 import { Box, Settings, Activity, ArrowRight, Lock, Tag, Sparkles, Filter, LayoutGrid, Info, ShieldCheck } from 'lucide-react';
 
 const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
@@ -26,21 +26,39 @@ const MyNFTs = () => {
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
   const { approve } = useApproveTokenNftAllowance(); 
 
-  useEffect(() => {
-    if(!evmAddress) return;
-    const loadNFTs = async () => {
-        try {
-            const res = await fetch(`${API_URL}/api/my-nfts/${evmAddress}`);
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+      useEffect(() => {
+      if (!evmAddress) return;
+
+      const loadNFTs = async () => {
+         try {
+            const mirrorNodeBase = "https://mainnet.mirrornode.hedera.com";
+            const res = await fetch(`${mirrorNodeBase}/api/v1/accounts/${evmAddress}/nfts?limit=10`);
             const data = await res.json();
-            setNfts(data);
-        } catch (error) {
-            console.error("Failed to load NFTs:", error);
-            toast.error("Failed to load inventory");
-        }
-    };
-    loadNFTs();
-  }, [evmAddress, API_URL]);
+
+            // Resolve all metadata in parallel
+            const resolvedNfts = await Promise.all(
+            data.nfts.map(async (nft) => {
+               const details = await fetchNFTMetadata(nft.metadata);
+               return {
+                  ...nft,
+                  id: TokenId.fromString(nft.token_id).toEvmAddress(),
+                  // Fallback to a placeholder if metadata fetch fails
+                  name: details?.name || `Artifact #${nft.serial_number}`,
+                  image_url: details?.image_url || "/placeholder-nft.png",
+               };
+            })
+            );
+
+            setNfts(resolvedNfts);
+         } catch (error) {
+            toast.error("Failed to sync inventory");
+         }
+      };
+
+      loadNFTs();
+      }, [evmAddress]);
+
 
   const openListModal = (nft) => {
     setSelectedNFT(nft);
@@ -48,7 +66,7 @@ const MyNFTs = () => {
   };
 
   const listNFT = async () => {
-    const TOKENS = [{ tokenId: nftTokenContract, serial: selectedNFT.serial_number }];
+    const TOKENS = [{ tokenId: selectedNFT.token_id, serial: selectedNFT.serial_number }];
     const SPENDER = marketplaceContract;
     const transactionIdOrHash = await approve(TOKENS, SPENDER);
 
@@ -68,9 +86,10 @@ const MyNFTs = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                token_id: selectedNFT.id,
-                price,
-                seller: evmAddress,
+               token: selectedNFT.id,
+               seller: evmAddress,
+               serialNumber: selectedNFT.serial_number,
+               price,
             }),
         });
         toast.success("Listing successful"); 
@@ -130,9 +149,9 @@ const MyNFTs = () => {
 
             {/* Personal Inventory Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-               {nfts.length > 0 ? nfts.map((nft) => (
+               {nfts.length > 0 ? nfts.map((nft, index) => (
                  <div
-                   key={nft.serial_number}
+                   key={index}
                    className="glass-card group rounded-[3rem] border-white/[0.05] overflow-hidden hover:bg-[#0E1529] hover:border-blue-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col shadow-2xl"
                    onClick={() => openListModal(nft)}
                  >
@@ -168,7 +187,7 @@ const MyNFTs = () => {
                      <div className="pt-6 border-t border-white/5 flex items-center justify-between">
                         {nft.price ? (
                            <div className="text-xl font-mono font-black text-white">
-                              {Number(nft.price)} <span className="text-[10px] text-slate-600 font-black">HRT</span>
+                              {Number(nft.price)} <span className="text-[10px] text-slate-600 font-black">ℏ</span>
                            </div>
                         ) : (
                            <div className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -233,17 +252,17 @@ const MyNFTs = () => {
                 <div className="space-y-10">
                    <div className="space-y-4">
                       <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 flex items-center gap-2">
-                         <Tag size={14} className="text-blue-500" /> Listing Valuation (HRT)
+                         <Tag size={14} className="text-blue-500" /> Listing Valuation (ℏ)
                       </label>
                       <div className="relative group">
                          <input
-                           type="number"
+                           type="text"
                            value={price}
                            onChange={(e) => setPrice(e.target.value)}
                            className="w-full bg-[#030712] border border-white/10 rounded-2xl px-8 py-5 font-mono text-white text-2xl outline-none focus:border-blue-500/50 transition-all shadow-inner"
                            placeholder="0.00"
                          />
-                         <div className="absolute right-8 top-1/2 -translate-y-1/2 text-slate-700 font-black">HRT</div>
+                         <div className="absolute right-8 top-1/2 -translate-y-1/2 text-slate-700 font-black">ℏ</div>
                       </div>
                       <div className="flex items-start gap-2 text-slate-500">
                          <Info size={12} className="mt-0.5" />

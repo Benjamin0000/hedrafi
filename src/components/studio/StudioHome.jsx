@@ -73,7 +73,7 @@ const StudioHome = () => {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {stats.map((stat, i) => (
                 <div 
                   key={i}
@@ -88,7 +88,7 @@ const StudioHome = () => {
                   <div className="text-2xl md:text-3xl font-mono font-black text-white tracking-tighter">{stat.value}</div>
                 </div>
               ))}
-            </div>
+            </div> */}
 
             {/* Quick Actions */}
             <div className="space-y-10">

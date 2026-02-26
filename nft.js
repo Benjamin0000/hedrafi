@@ -94,7 +94,7 @@ const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
 const operatorKey = PrivateKey.fromStringECDSA(process.env.HEDERA_OPERATOR_KEY);
 const marketPlaceContract = ContractId.fromString(process.env.REACT_APP_MARKETPLACE_CONTRACT); 
 
-const client = Client.forTestnet();
+const client = Client.forMainnet();
 client.setOperator(operatorId, operatorKey);
 
 

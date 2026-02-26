@@ -92,7 +92,7 @@ contract HedraFiNFTMarketPlace {
         token.name = _name;
         token.symbol = _symbol;
         token.treasury = contractAddress; 
-        token.memo = "HedraFi Test";
+        token.memo = "HedraFi";
         token.tokenSupplyType = true;
         token.maxSupply = _maxSupply;
         token.tokenKeys = keys;

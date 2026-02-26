@@ -46,7 +46,7 @@ const App = () => {
         <Route path="/studio/collections" element={<StudioCollections />} />
         <Route path="/studio/storefront" element={<StudioStorefront />} />
         <Route path="/marketplace" element={<MarketplaceHome />} />
-        <Route path="/marketplace/nft/:id" element={<NFTDetail />} />
+        <Route path="/marketplace/nft/:tokenId/:serialNumber" element={<NFTDetail />} />
         <Route path="/marketplace/collection/:id" element={<CollectionDetail />} />
       </Routes>
     </BrowserRouter>

@@ -2,7 +2,7 @@
 
 import { HWBridgeProvider } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
-import { HederaTestnet } from '@buidlerlabs/hashgraph-react-wallets/chains';
+import { HederaTestnet, HederaMainnet } from '@buidlerlabs/hashgraph-react-wallets/chains';
 
 import DAppLogo from './assets/logo.png';
 
@@ -19,7 +19,7 @@ const WalletProvider = ({ children }) => {
       metadata={metadata}
       projectId={process.env.REACT_APP_WC_PROJECT_ID} 
       connectors={[HWCConnector]}
-      chains={[HederaTestnet]}
+      chains={[HederaMainnet]}
     >
       {children}
     </HWBridgeProvider>

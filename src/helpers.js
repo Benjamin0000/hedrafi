@@ -6,7 +6,7 @@ export const truncateAddress = (hash) =>
 
 export const checkTokenAssociation = async (accountId, tokenId) => {
     // 1. Construct the Mirror Node URL for mainnet
-    const mirrorNodeUrl = `https://testnet.mirrornode.hedera.com/api/v1/accounts/${accountId}/tokens`;
+    const mirrorNodeUrl = `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${accountId}/tokens`;
 
     try {
         const response = await fetch(mirrorNodeUrl);
@@ -14,9 +14,10 @@ export const checkTokenAssociation = async (accountId, tokenId) => {
 
         // 2. Check if the account is associated with the specific token
         const isAssociated = data.tokens.some(
-            (token) => token.token_id === tokenId
+            (token) => token.token_id == tokenId
         );
 
+        console.log("Account "+accountId +"Token " + tokenId+" is associated: " + isAssociated)
         return isAssociated;
 
     } catch (error) {

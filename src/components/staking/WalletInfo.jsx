@@ -56,7 +56,7 @@ const WalletInfo = () => {
         <div className="space-y-1.5">
           <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">HBAR Balance</div>
           <div className="text-3xl font-mono font-black text-white flex items-baseline gap-2">
-            {hbarBalance.split(' ')[0]} <span className="text-xs text-gray-500 font-bold uppercase tracking-widest">HBAR</span>
+            {Number(hbarBalance.split(' ')[0]).toFixed(2)} <span className="text-xs text-gray-500 font-bold uppercase tracking-widest">HBAR</span>
           </div>
         </div>
 
@@ -64,7 +64,7 @@ const WalletInfo = () => {
         <div className="space-y-1.5 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10">
           <div className="text-[10px] font-black uppercase tracking-widest text-blue-400">Yield Token (HRT)</div>
           <div className="text-xl font-mono font-bold text-blue-200">
-            {(Number(hrtBalance) / 1e8).toFixed(4).toLocaleString()} <span className="text-[10px] text-blue-500 font-black">HRT</span>
+            {(Number(hrtBalance) / 1e8).toFixed(2).toLocaleString()} <span className="text-[10px] text-blue-500 font-black">HRT</span>
           </div>
         </div>
 

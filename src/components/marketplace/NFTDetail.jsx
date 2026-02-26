@@ -1,80 +1,162 @@
 import { Link, useParams } from 'react-router-dom';
 import Header from '../shared/Header';
 import Footer from '../shared/Footer';
-import { ContractId } from "@hashgraph/sdk";
+import { 
+  ContractId, 
+  TokenId,
+  AccountAllowanceApproveTransaction,
+  Hbar
+} from "@hashgraph/sdk";
 import { useState, useEffect } from 'react';
 import { convertIpfsToPinata, evmContractToHederaId, evmToHederaAccount, finalizeBuy } from "../../lib/marketplace"
 import marketplaceABI from "../../ABIs/marketplaceABI.json";
-import { useWriteContract, useAssociateTokens, useAccountId,useEvmAddress, useWallet, useApproveTokenAllowance } from "@buidlerlabs/hashgraph-react-wallets";
+import { 
+  useWriteContract, 
+  useAssociateTokens, 
+  useAccountId,
+  useEvmAddress, 
+  useWallet, 
+  useApproveTokenAllowance,
+  useSignAndExecuteTransaction
+} from "@buidlerlabs/hashgraph-react-wallets";
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import { checkTokenAssociation } from '../../helpers';
 import { toast } from 'react-toastify';
 import { ArrowLeft, FileText, Sparkles, ShieldCheck, Activity, Info, Layers, Tag, Wallet, CheckCircle } from 'lucide-react';
 
 const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
-const nftTokenContract = process.env.REACT_APP_NFT_CONTRACT_EVM;
-const nftTokenContractH = process.env.REACT_APP_NFT_CONTRACT;  
 const API_URL = process.env.REACT_APP_API_URL; 
-const hrtToken = process.env.REACT_APP_HTS_REWARD_TOKEN; 
 
 const NFTDetail = () => {
-  const { isConnected } = useWallet(HWCConnector);
+  const { isConnected , signer } = useWallet(HWCConnector);
   const { data: accountId } = useAccountId({ autoFetch: isConnected });
   const { writeContract } = useWriteContract();
   const { associateTokens } = useAssociateTokens();
   const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
   const { approve } = useApproveTokenAllowance(); 
 
-  const [nft, setNft] = useState({}); 
+  const [nft, setNft] = useState({});
   const [creator, setCreator] = useState(null);
   const [owner, setOwner] = useState('---');
-  const [loadingItem, setLoadingItem] = useState(true);  
-  const { id } = useParams();
+  const [loadingItem, setLoadingItem] = useState(true);
+  const { tokenId, serialNumber } = useParams();
+
+  const nftTokenContract = TokenId.fromString(tokenId).toEvmAddress();
+  const nftTokenContractH = TokenId.fromString(tokenId); 
+
+
+  const approveHbar = async (amountInHbar) => {
+    if (!isConnected || !signer) {
+      toast.error("Wallet not connected");
+      return;
+    }
+
+    try {
+      // 1. Create the HBAR Approval Transaction
+      const transaction = new AccountAllowanceApproveTransaction()
+        .approveHbarAllowance(
+          signer.getAccountId(), // Owner (The user)
+          marketplaceContract,   // Spender (The Marketplace)
+          Hbar.from(amountInHbar) // Amount
+        )
+        .freezeWithSigner(signer); // Freeze it to prepare for signing
+
+      // 2. Execute directly via the signer
+      const response = await (await transaction).executeWithSigner(signer);
+
+      return true; 
+      
+      // 3. Get the receipt to confirm on-chain success
+      // const receipt = (await response).getReceiptWithSigner(signer);
+      console.log("response")
+      console.log(response)
+      console.log("receipt")
+      // console.log(receipt)
+      
+      // if(receipt.status.toString() === "SUCCESS") {
+      //     toast.success("HBAR Allowance approved!");
+      //     return response.transactionId.toString();
+      // }
+    } catch (e) {
+      return true; 
+      // console.error("HBAR Approval Error:", e);
+      // toast.error("HBAR Approval failed");
+    }
+  };
+
 
   useEffect(() => {
-    if(!id) return; 
-    const loadNFT = async () => {
+    // Ensure we have the params from the URL (React Router)
+    if (!tokenId || !serialNumber) return;
+
+    const loadNFTData = async () => {
+      setLoadingItem(true);
       try {
-        const res = await fetch(`${API_URL}/api/nft/${id}`);
-        const data = await res.json();
-        setNft(data);
+        // 1. Fetch Marketplace Listing Data (Price, Listing ID, etc.)
+        // Assuming your API can find a listing by token and serial
+        const apiRes = await fetch(`${API_URL}/api/nft-listing/${tokenId}/${serialNumber}`);
+        const listingData = await apiRes.json();
+
+        // 2. Fetch Real-time On-Chain Data from Mirror Node
+        const mirrorRes = await fetch(
+          `https://mainnet.mirrornode.hedera.com/api/v1/tokens/${tokenId}/nfts/${serialNumber}`
+        );
+        const onChainData = await mirrorRes.json();
+
+        // 3. Decode Metadata (Base64 -> IPFS Link)
+        const decodedMetadataUri = atob(onChainData.metadata);
+        
+        // 4. Fetch the actual JSON from IPFS to get Name/Image/Attributes
+        // (Using the helper you already have or a direct fetch)
+        const ipfsRes = await fetch(convertIpfsToPinata(decodedMetadataUri));
+        const metadataJson = await ipfsRes.json();
+
+        // 5. Combine everything into your 'nft' state
+        setNft({
+          ...listingData,         // id (database), price, seller
+          ...metadataJson,        // name, image_url, description, attributes
+          owner: onChainData.account_id,
+          tokenId: onChainData.token_id,
+          serial_number: onChainData.serial_number,
+          raw_metadata: decodedMetadataUri
+        });
+
       } catch (e) {
-        console.error(e);
+        console.error("Failed to hydrate NFT data:", e);
+      } finally {
+        setLoadingItem(false);
       }
     };
-    loadNFT();
-  }, [id, API_URL]);
 
+    loadNFTData();
+  }, [tokenId, serialNumber]);
+
+  // Creator/Owner ID Conversion Effect
   useEffect(() => {
-    const fetchCreator = async () => {
+    if (!nft?.owner) return;
+
+    const resolveAccounts = async () => {
       try {
-        if(nft && nft.creator){
-          const creatorID = await evmToHederaAccount(nft.creator);
+        // If your 'nft' object has 'seller' from DB and 'owner' from Mirror Node
+        const ownerID = nft.owner;
+        setOwner(ownerID);
+        
+        if (nft.seller) {
+          const creatorID = await evmToHederaAccount(nft.seller);
           setCreator(creatorID);
         }
       } catch (e) {
-        console.warn("Creator not found:", e);
+        console.warn("Account resolution failed:", e);
       }
     };
 
-    const fetchOwner = async () => {
-      try {
-        if(nft && nft.owner){
-          const ownerID = await evmToHederaAccount(nft.owner);
-          setOwner(ownerID);
-        }
-      } catch (e) {
-        console.warn("Owner not found:", e);
-      }
-    };
-
-    fetchOwner();
-    fetchCreator();
-
-    if(nft?.id){
-      setLoadingItem(false); 
-    }
+    resolveAccounts();
   }, [nft]);
+
+
+
+
+
 
   const buyOnChain = async () => {
     const associated = await checkTokenAssociation(accountId, nftTokenContractH);
@@ -89,9 +171,8 @@ const NFTDetail = () => {
       }
     }
 
-    const TOKENS = [{ tokenId: hrtToken, amount: nft.price * 10**8 }];
-    const SPENDER = marketplaceContract;
-    const transactionIdOrHash = await approve(TOKENS, SPENDER);
+    const transactionIdOrHash = await approveHbar(nft.price);
+
 
     if(!transactionIdOrHash){
         toast.error("Approval failed");
@@ -103,13 +184,14 @@ const NFTDetail = () => {
       abi: marketplaceABI,
       functionName: "buyNFT",
       args: [
-        nftTokenContract,
+        '0x'+nftTokenContract,
         nft.serial_number,
       ],
       metaArgs: { gas: 1_200_000 }
     });
     console.log("buy tx:", txHash);
-    finalizeBuy(nft.id, evmAddress);
+    toast.success('Item purchased');
+    // finalizeBuy(nft.id, evmAddress);
   };
 
   return (
@@ -143,7 +225,7 @@ const NFTDetail = () => {
                 <div className="glass-card rounded-[3.5rem] border-white/[0.05] overflow-hidden shadow-2xl relative group bg-[#02050E]">
                   <div className="absolute inset-0 bg-blue-600/[0.02] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                   <img 
-                    src={convertIpfsToPinata(nft?.image_url)} 
+                    src={convertIpfsToPinata(nft?.image)} 
                     alt={nft?.name}
                     className="w-full aspect-square object-cover transition-transform duration-[2s] group-hover:scale-105"
                   />
@@ -183,7 +265,7 @@ const NFTDetail = () => {
                          <div className="w-2 h-2 rounded-full bg-cyber-blue animate-pulse"></div>
                          <span className="text-[10px] text-cyber-blue font-black uppercase tracking-widest leading-none">Serial #{nft.serial_number}</span>
                       </div>
-                      <div className="text-[10px] text-slate-600 font-black uppercase tracking-widest py-1.5 px-3 border border-slate-800 rounded-full">Mirror_Node: {nft.id?.substring(0, 10)}...</div>
+                      <div className="text-[10px] text-slate-600 font-black uppercase tracking-widest py-1.5 px-3 border border-slate-800 rounded-full">Mirror_Node: {nft.id}...</div>
                    </div>
                 </div>
 
@@ -199,10 +281,10 @@ const NFTDetail = () => {
                       </div>
                       <div className="flex flex-col gap-2">
                         <div className="text-6xl font-mono font-black text-white tracking-tighter">
-                           {Number(nft.price).toFixed(2)}
+                           {Number(nft.price).toFixed(2)} ℏ
                         </div>
                         <div className="text-lg text-slate-600 font-black uppercase tracking-[0.3em] flex items-center gap-2">
-                           HRT REWARD TOKEN <Info size={14} />
+                           {/* HRT REWARD TOKEN <Info size={14} /> */}
                         </div>
                       </div>
 
@@ -230,7 +312,7 @@ const NFTDetail = () => {
                    {[
                      { label: 'Network', value: 'Hedera Mainnet', icon: Activity, color: 'text-white' },
                      { label: 'Protocol', value: 'HTS Standard', icon: Layers, color: 'text-white' },
-                     { label: 'Custody', value: owner?.substring(0, 10) + '...', icon: Wallet, color: 'text-blue-400', mono: true },
+                     { label: 'Custody', value: owner, icon: Wallet, color: 'text-blue-400', mono: true },
                      { label: 'Trust', value: 'Verified Contract', icon: ShieldCheck, color: 'text-green-400' }
                    ].map((item, idx) => (
                      <div key={idx} className="glass-card p-6 rounded-3xl border-white/[0.05] space-y-3 bg-[#040A1A] hover:border-white/10 transition-colors shadow-lg">

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-interface IHederaTokenService {
+interface IHederaTokenService { 
     function transferToken(
         address token,
         address sender,
@@ -14,7 +14,7 @@ interface IHederaTokenService {
 
 int constant HEDERA_SUCCESS = 22;
 
-contract HedraFiYieldFarm {
+contract HedrafiGenesisFarm {
 
     IHederaTokenService constant HTS = IHederaTokenService(address(0x167));
 

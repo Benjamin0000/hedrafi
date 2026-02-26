@@ -57,7 +57,7 @@ const Homepage = () => {
                  <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Infrastructure Partners</div>
                  <div className="flex items-center gap-6 md:gap-8 overflow-hidden grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
                      <span className="text-xl font-black text-white cursor-default select-none tracking-tighter">HEDERA</span>
-                     <span className="text-xl font-black text-white cursor-default select-none tracking-tighter italic">ZKVERIFY</span>
+                     {/* <span className="text-xl font-black text-white cursor-default select-none tracking-tighter italic">ZKVERIFY</span> */}
                      <span className="text-xl font-black text-white cursor-default select-none tracking-tighter">SAUCERSWAP</span>
                  </div>
               </div>
@@ -90,7 +90,7 @@ const Homepage = () => {
                   
                   {/* Professional Insight Badges - Fixed Z-Index Layering */}
                   <div className="absolute -top-4 -right-4 sm:-top-8 sm:-right-8 z-20 glass-card px-6 py-4 sm:px-8 sm:py-5 rounded-3xl border-blue-500/30 shadow-2xl backdrop-blur-3xl animate-float-slow group-hover:translate-y-[-10px] transition-all duration-700 bg-white/10" style={{animationDelay: '1s'}}>
-                     <div className="text-cyan-400 font-black text-2xl sm:text-3xl tracking-tighter shadow-blue-500/20">24.5%</div>
+                     {/* <div className="text-cyan-400 font-black text-2xl sm:text-3xl tracking-tighter shadow-blue-500/20">24.5%</div> */}
                      <div className="text-[9px] sm:text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] leading-none mt-1">Staking Yield</div>
                   </div>
                   

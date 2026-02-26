@@ -34,9 +34,9 @@ const Header = () => {
                         <img src={logo} width={45} alt="HedraFi Logo" className="drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]"/> 
                     </Link>
                     <div className="hidden lg:block h-6 w-px bg-white/10"></div>
-                    <span className="hidden sm:inline-flex bg-blue-500/10 text-cyber-blue text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-cyber-blue/20">
+                    {/* <span className="hidden sm:inline-flex bg-blue-500/10 text-cyber-blue text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-cyber-blue/20">
                         TestNet 2.0
-                    </span>
+                    </span> */}
                 </div>
                 
                 <nav className="hidden md:flex items-center gap-1">

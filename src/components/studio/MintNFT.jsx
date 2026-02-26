@@ -32,7 +32,7 @@ const MintNFT = () => {
     description: '',
     externalLink: '',
     supply: '1',
-    royalty: '10',
+   //  royalty: '10',
     owner: evmAddress
   });
 
@@ -81,10 +81,11 @@ const MintNFT = () => {
       contractId: ContractId.fromString(marketplaceContract),
       abi: marketplaceABI,
       functionName: "mintNFTs",
-      args: [nftTokenContract, uris, parseInt(formData.royalty) * 100],
+      args: [nftTokenContract, uris],
       metaArgs: { gas: 1_200_000 }
     });
-    finalizeMint(txHash, metadata_url);
+    toast.success('Minting successful');
+   //  finalizeMint(txHash, metadata_url);
   };
 
   const validateForm = () => {
@@ -104,7 +105,7 @@ const MintNFT = () => {
     form.append('image', uploadedFile);
     form.append('attributes', JSON.stringify(formatAttributes()));
     form.append('owner', evmAddress);
-    form.append('royalty', formData.royalty);
+   //  form.append('royalty', formData.royalty);
 
     try{
       setMinting(true);
@@ -243,11 +244,11 @@ const MintNFT = () => {
                        </div>
 
                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
-                          <div className="space-y-4">
+                          {/* <div className="space-y-4">
                              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Emission Supply</label>
                              <div className="bg-[#030712] border border-white/5 px-8 py-5 rounded-2xl text-slate-700 font-mono text-lg shadow-inner">001 (Unique)</div>
-                          </div>
-                          <div className="space-y-4">
+                          </div> */}
+                          {/* <div className="space-y-4">
                              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Royalty Partition (%)</label>
                              <div className="relative group/royalty">
                                 <input
@@ -259,7 +260,7 @@ const MintNFT = () => {
                                 />
                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-700 font-black">%</div>
                              </div>
-                          </div>
+                          </div> */}
                        </div>
                     </div>
                  </div>

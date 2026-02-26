@@ -9,6 +9,7 @@ const MarketplaceHome = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [nfts, setNfts] = useState([]); 
+  const [loading, setLoading] = useState(true); 
   const API_URL = process.env.REACT_APP_API_URL;
 
   const categories = ['All', 'Art', 'Gaming', 'Music', 'Photography', 'Sports'];
@@ -19,12 +20,17 @@ const MarketplaceHome = () => {
         const res = await fetch(`${API_URL}/api/listings`);
         const data = await res.json();
         setNfts(data);
+        setLoading(false); 
       } catch (e) {
         console.error("Error loading NFTs:", e);
       }
     };
     loadNFTs();
   }, [API_URL]);
+
+
+
+  
 
   return (
     <div className="relative min-h-screen bg-[#040816] overflow-hidden text-slate-200">
@@ -118,17 +124,21 @@ const MarketplaceHome = () => {
                   <NFTCard key={nft.id} nft={nft} />
                 ))
               ) : (
+                loading ? 
                 [...Array(8)].map((_, i) => (
                   <div key={i} className="glass-card aspect-[3/4] rounded-[3rem] animate-pulse border-white/[0.05] flex flex-col p-6 space-y-6">
                      <div className="flex-1 bg-white/5 rounded-3xl"></div>
                      <div className="h-6 bg-white/5 rounded-full w-2/3"></div>
                      <div className="h-4 bg-white/5 rounded-full w-1/3"></div>
                   </div>
-                ))
+                )) : <div></div>
               )}
             </div>
           </div>
         </section>
+
+
+
 
         {/* Creator CTA */}
         <section className="pb-40 px-4 sm:px-6 lg:px-8">
