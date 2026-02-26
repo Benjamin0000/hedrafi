@@ -86,7 +86,7 @@ const MyNFTs = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-               token: selectedNFT.id,
+               token: selectedNFT.token_id,
                seller: evmAddress,
                serialNumber: selectedNFT.serial_number,
                price,

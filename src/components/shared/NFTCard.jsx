@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { convertIpfsToPinata } from "../../lib/marketplace"
 
 const NFTCard = ({ nft }) => {
-  return (
-    <Link to={`/marketplace/nft/${nft.token_id}/${nft.id}`} className="group block">
+  return ( 
+    <Link to={`/marketplace/nft/${nft.token_id}/${nft.serial_number}`} className="group block">
       <div className="glass rounded-[2rem] border-white/5 overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:bg-white/[0.03] hover:border-blue-500/30 shadow-2xl relative">
         {/* Hover Glow Effect */}
         <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-        
+         
         <div className="relative aspect-square overflow-hidden">
           <img 
             src={convertIpfsToPinata(nft.image_url)} 
