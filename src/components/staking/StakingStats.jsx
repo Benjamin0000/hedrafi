@@ -49,54 +49,84 @@ const StakingStats = () => {
   const statsData = [
     { 
       label: 'Total HBAR Locked', 
-      value: stats.totalStakedHBAR.toLocaleString() + ' ℏ', 
+      value: stats.totalStakedHBAR.toLocaleString(), 
+      suffix: 'ℏ',
       icon: Lock, 
       color: 'bg-blue-500/5 text-blue-500',
-      border: 'border-blue-500/10'
+      border: 'border-blue-500/10',
+      glow: 'group-hover:bg-blue-600/10'
     },
     { 
       label: 'Total HRT Distributed', 
       value: stats.totalHRTLocked.toLocaleString(), 
+      suffix: '',
       icon: Diamond, 
       color: 'bg-indigo-500/5 text-indigo-400',
-      border: 'border-indigo-500/10'
+      border: 'border-indigo-500/10',
+      glow: 'group-hover:bg-indigo-600/10'
     },
     { 
       label: 'Platform Earnings', 
-      value: stats.totalRewardPaid.toLocaleString() + ' ℏ', 
+      value: stats.totalRewardPaid.toLocaleString(), 
+      suffix: 'ℏ',
       icon: Banknote, 
       color: 'bg-cyber-blue/5 text-cyber-blue',
-      border: 'border-cyber-blue/10'
+      border: 'border-cyber-blue/10',
+      glow: 'group-hover:bg-cyber-blue/10'
     },
     { 
       label: 'Total Participants', 
       value: stats.totalUsers.toLocaleString(), 
+      suffix: '',
       icon: Users, 
       color: 'bg-white/5 text-slate-400',
-      border: 'border-white/5'
+      border: 'border-white/5',
+      glow: 'group-hover:bg-slate-400/10'
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 w-full">
       {statsData.map((stat, index) => (
         <div 
           key={index} 
-          className={`glass-card p-8 rounded-[2.5rem] border-white/[0.05] relative overflow-hidden group hover:bg-[#0E1529] transition-all duration-700 shadow-xl`}
+          className={`glass-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border-white/[0.05] relative overflow-hidden group hover:bg-[#0E1529] transition-all duration-700 shadow-xl flex flex-col justify-between min-h-[160px] md:min-h-[200px]`}
         >
           {/* Advanced Glow Layer */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+          <div className={`absolute -top-10 -right-10 w-40 h-40 blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ${stat.glow}`}></div>
           
-          <div className="relative z-10 space-y-6">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${stat.color} border ${stat.border} group-hover:border-blue-500/30 transition-all duration-500 shadow-inner`}>
-              <stat.icon size={24} className="group-hover:scale-110 transition-transform duration-500" />
+          <div className="relative z-10 space-y-4 md:space-y-6">
+            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center ${stat.color} border ${stat.border} group-hover:border-blue-500/30 transition-all duration-500 shadow-inner`}>
+              <stat.icon size={22} className="group-hover:scale-110 transition-transform duration-500" />
             </div>
             
-            <div className="space-y-2">
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 leading-none">{stat.label}</div>
-              <div className="text-3xl font-mono font-black text-white tracking-tighter">{stat.value}</div>
+            <div className="space-y-1 md:space-y-2">
+              <div className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-500 leading-none">
+                {stat.label}
+              </div>
+              <div className="flex items-baseline gap-1 overflow-hidden">
+                <div 
+                  className="font-mono font-black text-white tracking-tighter truncate"
+                  style={{ 
+                    fontSize: 'clamp(1.5rem, 5vw, 1.875rem)',
+                    lineHeight: '1',
+                    maxWidth: '100%'
+                  }}
+                  title={stat.value + (stat.suffix ? ` ${stat.suffix}` : '')}
+                >
+                  {stat.value}
+                </div>
+                {stat.suffix && (
+                  <span className="text-lg md:text-xl font-mono font-bold text-slate-500 shrink-0">
+                    {stat.suffix}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* Bottom Progress Indicator (Subtle Decoration) */}
+          <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent w-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
         </div>
       ))}
     </div>
