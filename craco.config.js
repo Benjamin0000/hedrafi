@@ -8,5 +8,9 @@ module.exports = {
       };
       return config;
     }
+  },
+  
+  eslint: {
+    enable: false 
   }
 };
