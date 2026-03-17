@@ -298,7 +298,7 @@ const StakePanel = () => {
                   <div className="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-[8px] font-black uppercase tracking-[0.3em] border border-green-500/20">Accruing</div>
                </div>
                <div className="text-4xl md:text-5xl font-mono font-black text-white tracking-tighter">
-                  {pendingReward.toFixed(4)} <span className="text-xs text-slate-600 uppercase font-black">HRT</span>
+                  {pendingReward.toFixed(4)} <span className="text-xs text-slate-600 uppercase font-black">$HRT</span>
                </div>
                <button 
                  onClick={handleClaim}
@@ -320,7 +320,7 @@ const StakePanel = () => {
                   </div>
                </div>
                <div className="text-4xl md:text-5xl font-mono font-black text-white tracking-tighter">
-                  {claimedReward.toFixed(2)} <span className="text-xs text-slate-600 uppercase font-black">HRT</span>
+                  {claimedReward.toFixed(2)} <span className="text-xs text-slate-600 uppercase font-black">$HRT</span>
                </div>
                <div className="flex items-center gap-3 text-[10px] font-black text-slate-600 pt-2 uppercase tracking-widest">
                   <Info size={14} className="text-indigo-500" />

@@ -1,9 +1,15 @@
 import { useWallet, useBalance, useAccountId, useEvmAddress, useTokensBalance } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors'; 
 import WalletButton from '../shared/WalletButton';
-import { Copy } from 'lucide-react';
+import { ExternalLink, Copy, ShieldCheck, Coins } from 'lucide-react'; // Added icons
 
 const HRT_TOKEN_ID = process.env.REACT_APP_REWARD_TOKEN;
+
+  // Helper for copying to clipboard
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    // You could add a toast notification here
+  };
 
 const WalletInfo = () => {
   const { isConnected } = useWallet(HWCConnector);
@@ -64,22 +70,52 @@ const WalletInfo = () => {
         <div className="space-y-1.5 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10">
           <div className="text-[10px] font-black uppercase tracking-widest text-blue-400">Yield Token (HRT)</div>
           <div className="text-xl font-mono font-bold text-blue-200">
-            { Number((hrtBalance / 1e8).toFixed(2)).toLocaleString()} <span className="text-[10px] text-blue-500 font-black">HRT</span>
+            { Number((hrtBalance / 1e8).toFixed(2)).toLocaleString()} <span className="text-[10px] text-blue-500 font-black">$HRT</span>
           </div>
         </div>
 
-        {/* EVM Address Section */}
-        <div className="space-y-1.5 pt-4 border-t border-white/5">
-          <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">EVM Address</div>
-          <div className="bg-white/5 px-4 py-3 rounded-xl border border-white/5 flex items-center justify-between group cursor-pointer hover:bg-white/10 transition-colors">
-            <div className="text-[10px] font-mono text-gray-400 truncate max-w-[200px]">{evmAddress || '---'}</div>
-            <Copy size={12} className="text-blue-500 group-hover:scale-110 transition-transform" />
-          </div>
-        </div>
+  
+
+              {/* --- NEW CONTRACT SECTION --- */}
+              <div className=" mt-8">
+                {[
+                  { label: 'Staking Contract', id: '0.0.10299519', icon: <ShieldCheck className="w-4 h-4 text-cyber-blue"/>,  url: "https://hashscan.io/mainnet/contract/0.0.10299519" },
+                  { label: '$HRT Token', id: '0.0.10299453', icon: <Coins className="w-4 h-4 text-purple-400" />, url: "https://hashscan.io/mainnet/token/0.0.10299453" }
+                ].map((contract) => (
+                  <div key={contract.id} className=" p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-cyber-blue/50 transition-all duration-300">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      {contract.icon}
+                      {contract.label}
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <code className="text-sm font-mono text-slate-200 truncate">{contract.id}</code>
+                      <div className="flex items-center gap-2">
+                        {/* <button 
+                          onClick={() => copyToClipboard(contract.id)}
+                          className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white"
+                          title="Copy ID"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button> */}
+                        <a 
+                          href={contract.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* --- END CONTRACT SECTION --- */}
 
         <div className="pt-4">
           <WalletButton />
         </div>
+        
       </div>
     </div>
   );

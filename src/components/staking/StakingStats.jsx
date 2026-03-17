@@ -58,7 +58,7 @@ const StakingStats = () => {
       glow: 'group-hover:bg-blue-600/10'
     },
     { 
-      label: 'HRT Locked', 
+      label: '$HRT Locked', 
       value: stats.totalHRTLocked.toLocaleString(), 
       suffix: '',
       icon: Diamond, 
@@ -67,7 +67,7 @@ const StakingStats = () => {
       glow: 'group-hover:bg-indigo-600/10'
     },
     {  
-      label: 'HRT Distributed', 
+      label: '$HRT Distributed', 
       value: stats.totalRewardPaid.toLocaleString(), 
       icon: Banknote, 
       color: 'bg-cyber-blue/5 text-cyber-blue',
