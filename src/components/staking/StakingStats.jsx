@@ -12,7 +12,11 @@ const StakingStats = () => {
   });
 
   const fetchStats = async () => {
-    if (!stakingContract || !rewardToken) return;
+    if (!stakingContract || !rewardToken){
+      console.warn('Staking contract ' + (stakingContract ? 'is initialized' : 'not initialized'));
+      console.warn('rewardToken contract ' + (rewardToken ? 'is initialized' : 'not initialized'));
+      return;
+    } 
     try {
       const [
         totalStakedHBAR,
