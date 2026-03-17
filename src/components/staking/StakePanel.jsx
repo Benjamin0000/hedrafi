@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useWallet, useWriteContract, useReadContract, useAccountId, useBalance, useAssociateTokens, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
+import { useWallet, useWriteContract, useAccountId, useBalance, useAssociateTokens, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import CONTRACT_ABI from '../../ABIs/stakingABI.json';
-import { ContractId } from '@hashgraph/sdk';
 import { checkTokenAssociation } from '../../helpers';
-import { Lock, Unlock, History, Sparkles, AlertCircle, Info, ChevronRight, Wallet } from 'lucide-react';
+import { Lock, Unlock, History, Sparkles, Info} from 'lucide-react';
 
-import { stakingContract, rewardToken } from '../../lib/staking'
+import { stakingContract } from '../../lib/staking'
 
 const CONTRACT_ADDRESS = process.env.REACT_APP_STAKING_ADDRESS;
 const REWARD_TOKEN_ID = process.env.REACT_APP_REWARD_TOKEN;
@@ -72,6 +71,8 @@ const StakePanel = () => {
     if (!stakingContract) return toast.error('Contract not initialized');
     if (!stakeAmount || stakeAmount <= 0) return toast.error('Enter a valid amount');
 
+    if(stakeAmount > balance.value) return toast.error('Insufficient HBAR for staking');
+
     try {
       setStaking(true);
       await writeContract({
@@ -125,7 +126,7 @@ const StakePanel = () => {
     if (!isAssociated) {
       try {
         await associateTokens([REWARD_TOKEN_ID]);
-        toast.success('HTS token associated!');
+        toast.success('HRT token associated!');
         setIsAssociated(true);
         return;
       } catch (e) {
@@ -198,14 +199,14 @@ const StakePanel = () => {
 
               <div className="relative group/input">
                  <input
-                  //  type="number"
+                   type="number"
                    value={stakeAmount}
                    onChange={(e) => setStakeAmount(e.target.value)}
                    className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-blue-500/40 focus:border-blue-500 p-6 md:p-8 rounded-3xl text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-800"
                    placeholder="0.00"
                  />
                  <button 
-                   onClick={() => setStakeAmount(hbarBalance)}
+                   onClick={() => setStakeAmount(balance.value) }
                    className="absolute right-4 top-1/2 -translate-y-1/2 px-4 py-2 bg-blue-500/10 text-cyber-blue rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all shadow-lg"
                  >
                     MAX
@@ -256,6 +257,7 @@ const StakePanel = () => {
                    onChange={(e) => setUnstakeAmount(e.target.value)}
                    className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-red-500/40 focus:border-red-500 p-6 md:p-8 rounded-3xl text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-800"
                    placeholder="0.00"
+                   
                  />
                  <button 
                    onClick={() => setUnstakeAmount(userStake)}

@@ -5,38 +5,66 @@ import { Palette, Folder, Gem, Trophy, Zap, Sparkles, Box, LayoutPanelLeft, Wall
 
 const StudioHome = () => {
   const stats = [
-    { label: 'NFTs Created', value: '12', icon: Palette },
-    { label: 'Collections', value: '3', icon: Folder },
-    { label: 'Volume Traded', value: '450 HRT', icon: Gem },
+    { label: 'NFTs Created', value: '0', icon: Palette },
+    { label: 'Collections', value: '0', icon: Folder },
+    { label: 'Volume Traded', value: '0 ℏ', icon: Gem },
     { label: 'Artist Rank', value: 'Top 5%', icon: Trophy }
   ];
 
+  // const quickActions = [
+  //   {
+  //     title: 'Mint NFT',
+  //     description: 'Deploy a new unique asset to Hedera',
+  //     icon: Sparkles,
+  //     link: '/studio/mint',
+  //     color: 'bg-blue-600/10',
+  //     border: 'border-blue-500/20'
+  //   }, 
+  //   {
+  //     title: 'My Inventory',
+  //     description: 'Manage and list your created assets',
+  //     icon: Box,
+  //     link: '/studio/mynfts',
+  //     color: 'bg-indigo-600/10',
+  //     border: 'border-indigo-500/20'
+  //   }, 
+  //   {
+  //     title: 'Storefront',
+  //     description: 'Customize your collector profile',
+  //     icon: LayoutPanelLeft,
+  //     link: '/studio/storefront',
+  //     color: 'bg-cyber-blue/5',
+  //     border: 'border-cyber-blue/20'
+  //   }
+  // ];
+
+
   const quickActions = [
-    {
-      title: 'Mint NFT',
-      description: 'Deploy a new unique asset to Hedera',
-      icon: Sparkles,
-      link: '/studio/mint',
-      color: 'bg-blue-600/10',
-      border: 'border-blue-500/20'
-    }, 
-    {
-      title: 'My Inventory',
-      description: 'Manage and list your created assets',
-      icon: Box,
-      link: '/studio/mynfts',
-      color: 'bg-indigo-600/10',
-      border: 'border-indigo-500/20'
-    }, 
-    {
-      title: 'Storefront',
-      description: 'Customize your collector profile',
-      icon: LayoutPanelLeft,
-      link: '/studio/storefront',
-      color: 'bg-cyber-blue/5',
-      border: 'border-cyber-blue/20'
-    }
-  ];
+  {
+    title: 'Mint NFT',
+    description: 'Coming soon — create and deploy your own digital assets',
+    icon: Sparkles,
+    link: '#',
+    color: 'bg-blue-600/10',
+    border: 'border-blue-500/20'
+  }, 
+  {
+    title: 'My Inventory',
+    description: 'Coming soon — manage and list your NFTs',
+    icon: Box,
+    link: '#',
+    color: 'bg-indigo-600/10',
+    border: 'border-indigo-500/20'
+  }, 
+  {
+    title: 'Storefront',
+    description: 'Coming soon — customize your creator profile',
+    icon: LayoutPanelLeft,
+    link: '#',
+    color: 'bg-cyber-blue/5',
+    border: 'border-cyber-blue/20'
+  }
+];
 
   return (
     <div className="relative min-h-screen bg-[#040816] overflow-hidden text-slate-200">
@@ -98,7 +126,8 @@ const StudioHome = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {quickActions.map((action, i) => (
-                  <Link key={i} to={action.link} className="group">
+                  // <Link key={i} to={action.link} className="group">
+                  <div key={i} className="group cursor-not-allowed opacity-80">
                     <div className="glass-card h-full p-10 rounded-[3rem] border-white/[0.05] relative overflow-hidden transition-all duration-500 hover:bg-[#0E1529] hover:border-blue-500/20 hover:-translate-y-2 shadow-xl">
                       <div className={`absolute top-0 right-0 w-32 h-32 ${action.color} blur-3xl rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000`}></div>
                       <div className="relative z-10 space-y-8">
@@ -110,11 +139,14 @@ const StudioHome = () => {
                             <p className="text-slate-400 font-medium leading-relaxed">{action.description}</p>
                          </div>
                          <div className="pt-2 flex items-center gap-2 text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                            INITIALIZE SEQUENCE <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            {/* INITIALIZE SEQUENCE  */}
+                            COMING SOON
+                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                          </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
+                // </Link> 
                 ))}
               </div>
             </div>
@@ -127,13 +159,27 @@ const StudioHome = () => {
                     <div className="w-24 h-24 bg-blue-600/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
                        <Palette size={48} className="text-blue-500" />
                     </div>
-                    <h3 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">Your Digital Legacy <br /><span className="text-gradient">Starts Now</span></h3>
+                    {/* <h3 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">Your Digital Legacy <br /><span className="text-gradient">Starts Now</span></h3>
                     <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
                        Our Studio provides institutional-grade tools to mint and manage your high-fidelity assets on the world's most sustainable ledger.
-                    </p>
+                    </p> */}
+
+                <h3 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                  Creator Studio <br />
+                  <span className="text-gradient">Launching Soon</span>
+                </h3>
+
+                <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
+                  We’re putting the final touches on the HedraFi NFT Studio. Soon you’ll be able to mint, manage, and launch collections with powerful creator tools on Hedera.
+                </p>
+
                  </div>
+
+<button className="btn-primary !px-12 !py-6 text-lg w-full opacity-60 cursor-not-allowed">
+  Launching Soon
+</button>
                  <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                   <Link to="/studio/mint" className="w-full sm:w-auto group">
+                   {/* <Link to="/studio/mint" className="w-full sm:w-auto group">
                      <button className="btn-primary !px-12 !py-6 text-lg w-full relative overflow-hidden">
                         <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                         <span className="relative z-10">Architect First Asset</span>
@@ -143,7 +189,7 @@ const StudioHome = () => {
                      <button className="btn-glass !px-12 !py-6 text-lg w-full border border-white/5 hover:border-white/10">
                        Configure Presence
                      </button>
-                   </Link>
+                   </Link> */}
                  </div>
               </div>
             </div>

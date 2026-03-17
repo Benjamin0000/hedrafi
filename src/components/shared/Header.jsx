@@ -19,7 +19,7 @@ const Header = () => {
         { name: 'Studio', path: '/studio', icon: LayoutGrid },
         { name: 'Marketplace', path: '/marketplace', icon: ShoppingCart },
         { name: 'Staking', path: '/staking', icon: Coins },
-        { name: 'Profit', path: '/profit', icon: TrendingUp },
+        // { name: 'Profit', path: '/profit', icon: TrendingUp },
     ];
 
     const isActive = (path) => location.pathname === path;
