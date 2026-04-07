@@ -1,6 +1,7 @@
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
 import { Link } from "react-router-dom";
+import { Discord } from "../shared/Icons";
 
 const PartnerPage = () => {
   return (
@@ -74,7 +75,7 @@ const PartnerPage = () => {
         <section>
           <h2 className="text-3xl font-bold text-white mb-4">Next Steps</h2>
           <p className="text-slate-400 mb-6">
-            Interested in collaborating or learning more? <a href="https://x.com/hedrafi" target="_blank" className="text-blue-500">Contact us on X</a>
+            Want to collaborate or learn more? <a href="https://discord.gg/cDjN62RJKC" target="_blank" className="text-blue-500">Contact us on Discord</a>
           </p>
           {/* <Link to="/staking">
             <button className="btn-primary px-12 py-4 text-lg">View Live Staking</button>

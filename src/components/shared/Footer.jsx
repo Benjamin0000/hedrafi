@@ -25,7 +25,7 @@ const Footer = () => {
                         <div className="flex gap-4">
                             {[
                                 { icon: XIcon, href: "https://x.com/hedrafi" },
-                                { icon: Discord, href: "https://discord.gg/3wxGb38Z" },
+                                { icon: Discord, href: "https://discord.gg/cDjN62RJKC" },
                                 // { icon: MessageCircle, href: "#Text" },
                                 // { icon: Github, href: "#Text" }
                             ].map((social, i) => (
@@ -89,6 +89,8 @@ const Footer = () => {
                         <a href="#" className="hover:text-white transition-colors">Cookies</a>
                     </div>
                 </div> */}
+
+                <div className='text-center'>Backed by Thrive Protocol.</div>
 
                  <div className="pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                     <div className='text-center'>© {currentYear} HedraFi Protocol. Decentralized Archive.</div>

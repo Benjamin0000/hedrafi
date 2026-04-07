@@ -3,6 +3,7 @@ import StakePanel from './StakePanel';
 import StakingStats from './StakingStats';
 import Header from "../shared/Header"
 import Footer from "../shared/Footer"
+import { Discord } from '../shared/Icons';
 
 const Dashboard = () => {
 
@@ -30,6 +31,23 @@ const Dashboard = () => {
               <p className="text-slate-400 text-lg font-medium max-w-2xl leading-relaxed">
                 Secure your assets in the HedraFi protocol. Monitor multi-layered yield streams and participate in ecosystem governance.
               </p>
+
+<div className="flex my-4">
+  <div className="animate-pulse flex items-center gap-2 px-4 py-2 border-2 border-blue-500/50 bg-blue-50/10 rounded-full shadow-sm">
+    <b className="text-sm md:text-base text-gray-100">
+      Join our 
+      <a 
+        href="https://discord.gg/cDjN62RJKC" 
+        target="_blank" 
+        rel="noreferrer"
+        className="text-blue-400 hover:text-blue-300 inline-flex items-center mx-1 transition-colors"
+      > 
+        Discord<Discord size={18} />
+      </a> 
+      for real-time updates and support!
+    </b>
+  </div>
+</div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
