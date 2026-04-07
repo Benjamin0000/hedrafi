@@ -1,4 +1,5 @@
-import { XIcon, Github, MessageCircle, ArrowUpRight } from 'lucide-react';
+import { XIcon, MessageCircle, ArrowUpRight } from 'lucide-react';
+import { Discord } from './Icons';
 import logo from "../../assets/logo.png";
 import { Link } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ const Footer = () => {
                         <div className="flex gap-4">
                             {[
                                 { icon: XIcon, href: "https://x.com/hedrafi" },
+                                { icon: Discord, href: "https://discord.gg/3wxGb38Z" },
                                 // { icon: MessageCircle, href: "#Text" },
                                 // { icon: Github, href: "#Text" }
                             ].map((social, i) => (

@@ -57,7 +57,7 @@ const Homepage = () => {
                  <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Infrastructure Partners</div>
                  <div className="flex items-center gap-6 md:gap-8 overflow-hidden grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
                      <span className="text-xl font-black text-white cursor-default select-none tracking-tighter">HEDERA</span>
-                     {/* <span className="text-xl font-black text-white cursor-default select-none tracking-tighter italic">ZKVERIFY</span> */}
+                     <span className="text-xl font-black text-white cursor-default select-none tracking-tighter italic">ZKVERIFY</span>
                      <span className="text-xl font-black text-white cursor-default select-none tracking-tighter">SAUCERSWAP</span>
                  </div>
               </div>
