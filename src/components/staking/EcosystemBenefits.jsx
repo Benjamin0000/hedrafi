@@ -1,25 +1,25 @@
 import { TrendingUp, Palette, Globe, Trophy } from "lucide-react";
 
 const BenefitCard = ({ icon: Icon, number, title, description }) => (
-  <div className="glass-card p-8 rounded-2xl border-white/[0.05] shadow-lg hover:shadow-2xl transition-all duration-500 group">
+  <div className="glass-card p-10 rounded-[2.5rem] border border-white/[0.05] shadow-xl hover:shadow-2xl transition-all duration-500 group bg-[#0A1024]/40 h-full flex flex-col items-start overflow-hidden">
     {/* Number Badge */}
-    <div className="absolute -top-3 -left-3 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-black text-lg shadow-lg">
+    <div className="absolute -top-3 -left-3 w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-black text-xl shadow-lg border-4 border-[#040816]">
       {number}
     </div>
 
     {/* Icon */}
-    <div className="mb-6 inline-flex p-4 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300">
-      <Icon size={28} className="text-purple-400 group-hover:text-purple-300" />
+    <div className="mb-8 inline-flex p-5 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300">
+      <Icon size={32} className="text-purple-400 group-hover:text-purple-300" />
     </div>
 
     {/* Content */}
-    <h3 className="text-xl font-black text-white mb-3 group-hover:text-purple-400 transition-colors duration-300">
+    <h3 className="text-2xl font-black text-white mb-4 group-hover:text-purple-400 transition-colors duration-300 tracking-tight">
       {title}
     </h3>
-    <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
+    <p className="text-slate-400 text-md leading-relaxed font-medium mb-auto">{description}</p>
 
     {/* Interactive Element */}
-    <div className="mt-4 inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-xs text-slate-400 group-hover:border-purple-500/50 group-hover:text-purple-400 transition-all duration-300">
+    <div className="mt-8 inline-block px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black tracking-widest uppercase text-slate-400 group-hover:border-purple-500/50 group-hover:text-purple-400 transition-all duration-300">
       Learn More →
     </div>
   </div>

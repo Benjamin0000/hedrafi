@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Homepage from "./components/home/Homepage";
 import Dashboard from "./components/staking/Dashboard";
 import Profit from "./components/profit/Profit";
@@ -15,8 +15,6 @@ import PartnerPage from "./components/home/PartnerPage";
 import PhaseNotification from "./components/shared/PhaseNotification";
 
 const App = () => {
-  const [showNotification, setShowNotification] = useState(true);
-
   useEffect(() => {
     const loader = document.getElementById("startup-loader");
     if (loader) loader.style.display = "none";
@@ -41,9 +39,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {showNotification && (
-        <PhaseNotification onClose={() => setShowNotification(false)} />
-      )}
+      <PhaseNotification />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<PartnerPage />} />

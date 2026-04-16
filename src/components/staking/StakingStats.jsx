@@ -12,14 +12,7 @@ const StakingStats = () => {
 
   const fetchStats = async () => {
     if (!stakingContract || !rewardToken) {
-      console.warn(
-        "Staking contract " +
-          (stakingContract ? "is initialized" : "not initialized"),
-      );
-      console.warn(
-        "rewardToken contract " +
-          (rewardToken ? "is initialized" : "not initialized"),
-      );
+      console.warn("Staking contract " + (stakingContract ? "is initialized" : "not initialized"));
       return;
     }
     try {
@@ -50,75 +43,68 @@ const StakingStats = () => {
 
   const statsData = [
     {
-      label: "HBAR Locked",
-      value: stats.totalStakedHBAR.toLocaleString() + " ℏ",
+      label: "Total\nHBAR\nLocked",
+      value: stats.totalStakedHBAR.toLocaleString(),
+      suffix: "ℏ",
       icon: Lock,
-      color: "bg-blue-500/5 text-blue-500",
-      border: "border-blue-500/10",
-      glow: "group-hover:bg-blue-600/10",
+      color: "bg-blue-600/5 text-blue-500",
+      border: "border-blue-500/20",
     },
     {
-      label: "$HRT Locked",
-      value: stats.totalHRTLocked.toLocaleString(),
+      label: "Total\nHRT\nDistributed",
+      value: stats.totalRewardPaid.toLocaleString(),
       suffix: "",
       icon: Diamond,
-      color: "bg-indigo-500/5 text-indigo-400",
-      border: "border-indigo-500/10",
-      glow: "group-hover:bg-indigo-600/10",
+      color: "bg-indigo-600/5 text-indigo-400",
+      border: "border-indigo-500/20",
     },
     {
-      label: "$HRT Distributed",
-      value: stats.totalRewardPaid.toLocaleString(),
+      label: "Platform\nEarnings",
+      value: "0",
+      suffix: "ℏ",
       icon: Banknote,
-      color: "bg-cyber-blue/5 text-cyber-blue",
-      border: "border-cyber-blue/10",
-      glow: "group-hover:bg-cyber-blue/10",
+      color: "bg-cyan-600/5 text-cyan-400",
+      border: "border-cyan-500/20",
     },
     {
-      label: "Participants",
+      label: "Total\nParticipant",
       value: stats.totalUsers.toLocaleString(),
       suffix: "",
       icon: Users,
-      color: "bg-white/5 text-slate-400",
-      border: "border-white/5",
-      glow: "group-hover:bg-slate-400/10",
+      color: "bg-slate-600/5 text-slate-400",
+      border: "border-slate-500/20",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 w-full">
       {statsData.map((stat, index) => (
         <div
           key={index}
-          className={`glass-card p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border-white/[0.05] relative overflow-hidden group hover:bg-[#0E1529] transition-all duration-700 shadow-lg hover:shadow-xl flex flex-col justify-between min-h-[200px] md:min-h-[240px]`}
+          className="glass-card rounded-[3rem] border border-white/[0.05] bg-[#0A1024]/60 p-10 md:p-12 flex flex-col justify-center min-h-[280px] hover:bg-[#0D152D] transition-all duration-500 group shadow-2xl relative overflow-hidden"
         >
-          {/* Advanced Glow Layer */}
-          <div
-            className={`absolute -top-10 -right-10 w-40 h-40 blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ${stat.glow}`}
-          ></div>
+          {/* Animated Glow on hover */}
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-[80px] group-hover:bg-blue-500/20 transition-all duration-700"></div>
 
-          <div className="relative z-10 space-y-4 md:space-y-6">
-            <div
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center ${stat.color} border ${stat.border} group-hover:border-blue-500/30 transition-all duration-500 shadow-inner`}
-            >
-              <stat.icon
-                size={22}
-                className="group-hover:scale-110 transition-transform duration-500"
-              />
+          <div className="flex items-center gap-6 mb-8">
+             <div className={`w-16 h-16 rounded-[1.25rem] flex items-center justify-center ${stat.color} border ${stat.border} shadow-inner`}>
+               <stat.icon size={28} />
+             </div>
+             <div className="text-[12px] sm:text-[14px] font-black uppercase tracking-[0.3em] text-slate-500 leading-tight whitespace-pre-line text-left">
+              {stat.label}
             </div>
-
-            <div className="space-y-2">
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 leading-none">
-                {stat.label}
-              </div>
-              <div className="text-[18px] font-mono font-black text-white tracking-tighter">
-                {stat.value}
-              </div>
+          </div>
+          
+          <div className="space-y-2 mb-2">
+            <div className="text-5xl sm:text-6xl font-black text-white flex items-baseline gap-3 font-mono tracking-tighter">
+              {stat.value}
+              {stat.suffix && <span className="text-slate-500 text-xl font-bold uppercase">{stat.suffix}</span>}
             </div>
           </div>
 
-          {/* Bottom Progress Indicator (Subtle Decoration) */}
-          <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent w-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+          <div className="h-1 w-full bg-white/[0.02] rounded-full mt-6 overflow-hidden">
+             <div className="h-full bg-gradient-to-r from-blue-500/40 to-cyan-500/40 w-1/3 group-hover:w-full transition-all duration-1000 ease-out"></div>
+          </div>
         </div>
       ))}
     </div>
