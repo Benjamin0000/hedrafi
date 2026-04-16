@@ -2,35 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from "../shared/Header"
 import Footer from "../shared/Footer"
-import NFTCard from '../shared/NFTCard';
 import { Search, SlidersHorizontal, Rocket, Palette, ArrowRight, LayoutGrid, Sparkles } from 'lucide-react';
+import MarketplaceCountdown from './MarketplaceCountdown';
 
 const MarketplaceHome = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  // const [nfts, setNfts] = useState([]); 
-  // const [loading, setLoading] = useState(true); 
-  const API_URL = process.env.REACT_APP_API_URL;
-
   const categories = ['All', 'Art', 'Gaming', 'Music', 'Photography', 'Sports'];
-
-  // useEffect(() => {
-  //   const loadNFTs = async () => {
-  //     try {
-  //       const res = await fetch(`${API_URL}/api/listings`);
-  //       const data = await res.json();
-  //       setNfts(data);
-  //       setLoading(false); 
-  //     } catch (e) {
-  //       console.error("Error loading NFTs:", e);
-  //     }
-  //   };
-  //   loadNFTs();
-  // }, [API_URL]);
-
-
-
-  
 
   return (
     <div className="relative min-h-screen bg-[#040816] overflow-hidden text-slate-200">
@@ -118,125 +96,61 @@ const MarketplaceHome = () => {
                </Link>
             </div>
 
-            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-              {nfts.length > 0 ? (
-                nfts.map((nft) => (
-                  <NFTCard key={nft.id} nft={nft} />
-                ))
-              ) : (
-                loading ? 
-                [...Array(8)].map((_, i) => (
-                  <div key={i} className="glass-card aspect-[3/4] rounded-[3rem] animate-pulse border-white/[0.05] flex flex-col p-6 space-y-6">
-                     <div className="flex-1 bg-white/5 rounded-3xl"></div>
-                     <div className="h-6 bg-white/5 rounded-full w-2/3"></div>
-                     <div className="h-4 bg-white/5 rounded-full w-1/3"></div>
-                  </div>
-                )) : <div></div>
-              )}
-            </div> */}
+            <div className="w-full flex flex-col items-center justify-center py-24 text-center space-y-12">
+              <div className="w-24 h-24 rounded-[2rem] bg-blue-600/5 flex items-center justify-center border border-white/10">
+                <Sparkles size={40} className="text-cyber-blue" />
+              </div>
 
+              <div className="space-y-4 max-w-2xl px-6">
+                <h3 className="text-4xl md:text-6xl font-black text-white tracking-tight uppercase leading-none">
+                  Marketplace <span className="text-gradient">Launching Soon</span>
+                </h3>
+                <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
+                  The HedraFi NFT marketplace is in its final stage of deployment. 
+                  Soon you’ll be able to discover, trade, and collect premium digital assets on Hedera.
+                </p>
+              </div>
 
-<div className="w-full flex flex-col items-center justify-center py-24 text-center space-y-10">
-  
-  <div className="w-24 h-24 rounded-[2rem] bg-blue-600/5 flex items-center justify-center border border-white/10">
-    <Sparkles size={40} className="text-cyber-blue" />
-  </div>
+              <div className="py-10 w-full">
+                 <MarketplaceCountdown />
+              </div>
 
-  <div className="space-y-4 max-w-2xl">
-    <h3 className="text-3xl md:text-5xl font-black text-white tracking-tight">
-      Marketplace <span className="text-gradient">Launching Soon</span>
-    </h3>
-    <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
-      The HedraFi NFT marketplace is in its final stage of deployment. 
-      Soon you’ll be able to discover, trade, and collect premium digital assets on Hedera.
-    </p>
-  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl pt-6">
+                <div className="glass-card p-8 rounded-[2.5rem] border border-white/5 bg-[#0A1024]/40 h-full flex flex-col items-start text-left group hover:border-white/10 transition-all">
+                  <h4 className="text-xl font-black text-white mb-3 tracking-tight group-hover:text-cyber-blue transition-colors">Curated Collections</h4>
+                  <p className="text-slate-500 font-medium leading-relaxed">Explore high-quality creator launches and exclusive digital series.</p>
+                </div>
 
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl pt-6">
+                <div className="glass-card p-8 rounded-[2.5rem] border border-white/5 bg-[#0A1024]/40 h-full flex flex-col items-start text-left group hover:border-white/10 transition-all">
+                  <h4 className="text-xl font-black text-white mb-3 tracking-tight group-hover:text-cyber-blue transition-colors">Seamless Trading</h4>
+                  <p className="text-slate-500 font-medium leading-relaxed">Fast, eco-friendly, and ultra-low fee NFT transactions on Hedera.</p>
+                </div>
 
-    <div className="glass-card p-6 rounded-2xl border-white/5">
-      <h4 className="text-white font-bold mb-2">Curated Collections</h4>
-      <p className="text-slate-500 text-sm">Explore high-quality creator launches</p>
-    </div>
+                <div className="glass-card p-8 rounded-[2.5rem] border border-white/5 bg-[#0A1024]/40 h-full flex flex-col items-start text-left group hover:border-white/10 transition-all">
+                  <h4 className="text-xl font-black text-white mb-3 tracking-tight group-hover:text-cyber-blue transition-colors">Creator Economy</h4>
+                  <p className="text-slate-500 font-medium leading-relaxed">Advanced tools to launch, manage, and monetize your digital vision.</p>
+                </div>
+              </div>
 
-    <div className="glass-card p-6 rounded-2xl border-white/5">
-      <h4 className="text-white font-bold mb-2">Seamless Trading</h4>
-      <p className="text-slate-500 text-sm">Fast, low-fee NFT transactions</p>
-    </div>
+              <div className="pt-10">
+                <p className="text-cyber-blue text-sm font-black tracking-[0.2em] uppercase">
+                  🎉 Early staking participants get priority access to NFT drops
+                </p>
+              </div>
 
-    <div className="glass-card p-6 rounded-2xl border-white/5">
-      <h4 className="text-white font-bold mb-2">Creator Economy</h4>
-      <p className="text-slate-500 text-sm">Launch and monetize your collections</p>
-    </div>
-
-  </div>
-
-  <div className="pt-6">
-    <p className="text-cyber-blue text-sm font-bold tracking-wide">
-      🎉 Early staking participants will get priority access to NFT drops
-    </p>
-  </div>
-
-
-    <div className='text-center'>
-      <Link to="/staking" className="group">
-        <button className="btn-primary !px-16 !py-6 text-xl w-full sm:w-auto relative overflow-hidden">
-            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              <Rocket size={24} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" /> Start earning HRT tokens
-            </span>
-        </button>
-      </Link>
-    </div>
-
-</div>
-
-
-
-          
-
-
-
-
-
-
+              <div className='pt-8'>
+                <Link to="/staking" className="group">
+                  <button className="btn-primary !px-16 !py-6 text-xl w-full sm:w-auto relative overflow-hidden">
+                      <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                      <span className="relative z-10 flex items-center justify-center gap-3">
+                        <Rocket size={24} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" /> Start Earning HRT
+                      </span>
+                  </button>
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
-
-
-
-
-        {/* Creator CTA */}
-        {/* <section className="pb-40 px-4 sm:px-6 lg:px-8">
-          <div className="container-main">
-             <div className="glass-card p-12 md:p-32 rounded-[4rem] border-white/[0.05] relative overflow-hidden group text-center space-y-12 shadow-2xl">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(0,102,255,0.05)_0%,_transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                <div className="relative z-10 space-y-6">
-                   <h2 className="text-4xl md:text-7xl font-black leading-[1.1] text-white tracking-tight">
-                      Ready to <span className="text-gradient">Immortalize</span><br />Your Vision?
-                   </h2>
-                   <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
-                      Join the most advanced creative economy on Hedera. Mint your vision with enterprise-grade infrastructure.
-                   </p>
-                </div>
-                <div className="relative z-10 flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                   <Link to="/studio/mint" className="group">
-                      <button className="btn-primary !px-16 !py-6 text-xl w-full sm:w-auto relative overflow-hidden">
-                         <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                         <span className="relative z-10 flex items-center justify-center gap-2">
-                            <Rocket size={24} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" /> Launch Studio
-                         </span>
-                      </button>
-                   </Link>
-                   <Link to="/marketplace">
-                      <button className="btn-glass !px-16 !py-6 text-xl w-full sm:w-auto flex items-center justify-center gap-2 border border-white/5 hover:border-white/10">
-                         <Palette size={24} /> Explore Art
-                      </button>
-                   </Link>
-                </div>
-             </div>
-          </div>
-        </section> */}
       </main>
 
       <Footer />
