@@ -125,7 +125,10 @@ const EcosystemBenefits = () => {
         <p className="text-slate-300 mb-4">
           Ready to unlock all ecosystem benefits?
         </p>
-        <button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 active:scale-[0.98]">
+        <button 
+          onClick={() => document.getElementById("stake-form")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 active:scale-[0.98]"
+        >
           Start Staking Now
         </button>
       </div>

@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { stakingContract } from "../../lib/staking";
 import WalletInfo from "./WalletInfo";
 import StakePanel from "./StakePanel";
 import StakingStats from "./StakingStats";
@@ -8,6 +10,39 @@ import Header from "../shared/Header";
 import Footer from "../shared/Footer";
 
 const Dashboard = () => {
+  const [totalParticipants, setTotalParticipants] = useState(0);
+
+  const fetchGlobalStats = async () => {
+    if (!stakingContract) return;
+    try {
+      const totalUsers = await stakingContract.totalUsers();
+      setTotalParticipants(Number(totalUsers));
+    } catch (e) {
+      console.error("Error fetching global stats:", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchGlobalStats();
+    const interval = setInterval(fetchGlobalStats, 10000);
+    
+    // Handle hash scroll on mount
+    if (window.location.hash === '#stake-form') {
+      setTimeout(() => {
+        scrollToForm();
+      }, 500); // Small delay to ensure render
+    }
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const scrollToForm = () => {
+    const element = document.getElementById("stake-form");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-[#040816] overflow-hidden text-slate-200">
       {/* Background Orbs */}
@@ -47,14 +82,17 @@ const Dashboard = () => {
                      </p>
 
                      <div className="flex flex-wrap items-center gap-6 pt-4">
-                        <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+                        <button 
+                          onClick={scrollToForm}
+                          className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+                        >
                            Join the First 400 Pioneers
                         </button>
 
                         <div className="glass-card p-4 rounded-2xl border-white/[0.05] shadow-xl flex flex-col justify-center min-w-[140px] bg-white/[0.02]">
                            <p className="text-[9px] text-slate-500 font-black tracking-widest uppercase mb-1">Live Counter</p>
                            <div className="flex items-baseline gap-1">
-                              <span className="text-3xl font-black text-white">18</span>
+                              <span className="text-3xl font-black text-white">{totalParticipants || '...'}</span>
                               <span className="text-sm font-bold text-slate-400">/ 400</span>
                            </div>
                            <p className="text-[9px] text-cyan-500 font-black tracking-widest uppercase mt-1 text-shadow-sm shadow-cyan-500">Pioneers Joined</p>
@@ -73,7 +111,10 @@ const Dashboard = () => {
                            We are currently in Phase 1 of the HedraFi rollout. The first 400 stakers are more than just users—they are the Pioneers who anchor the network. By staking 1,500 HBAR or more, you secure your place in the governance of the next great Hedera utility.
                         </p>
 
-                        <button className="w-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white font-bold py-4 rounded-xl transition-all text-xs tracking-widest uppercase mt-4">
+                        <button 
+                          onClick={scrollToForm}
+                          className="w-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white font-bold py-4 rounded-xl transition-all text-xs tracking-widest uppercase mt-4"
+                        >
                            Secure Your Spot
                         </button>
                      </div>
@@ -87,7 +128,7 @@ const Dashboard = () => {
             </div>
 
             {/* SECTION 3: Stake Panel & Wallet Info */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-start focus-within:scroll-mt-40">
                {/* Left column: Staking Form */}
                <div className="lg:col-span-7 xl:col-span-8 space-y-10">
                   <StakePanel />
