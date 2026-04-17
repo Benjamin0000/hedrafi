@@ -17,11 +17,6 @@ const BenefitCard = ({ icon: Icon, number, title, description }) => (
       {title}
     </h3>
     <p className="text-slate-400 text-md leading-relaxed font-medium mb-auto">{description}</p>
-
-    {/* Interactive Element */}
-    <div className="mt-8 inline-block px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black tracking-widest uppercase text-slate-400 group-hover:border-purple-500/50 group-hover:text-purple-400 transition-all duration-300">
-      Learn More →
-    </div>
   </div>
 );
 

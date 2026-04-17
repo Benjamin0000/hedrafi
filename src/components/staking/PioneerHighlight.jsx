@@ -76,12 +76,9 @@ const PioneerHighlight = () => {
         <div className="mt-8 flex gap-4">
           <button 
             onClick={() => document.getElementById("stake-form")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-            className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-[0.98]"
+            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-[0.98]"
           >
             Become a Pioneer
-          </button>
-          <button className="flex-1 bg-white/5 border border-white/20 hover:bg-white/10 text-white font-bold py-4 rounded-xl transition-colors duration-300">
-            Learn More
           </button>
         </div>
       </div>

@@ -90,7 +90,9 @@ const Footer = () => {
                     </div>
                 </div> */}
 
-                <div className='text-center'>Backed by Thrive Protocol.</div>
+                <div className='text-center text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4'>
+                    Backed by <span className="text-white">Hedera Foundation</span> & <span className="text-white">Thrive Hedera</span>
+                </div>
 
                  <div className="pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                     <div className='text-center'>© {currentYear} HedraFi Protocol. Decentralized Archive.</div>

@@ -51,20 +51,20 @@ const StakingStats = () => {
       border: "border-blue-500/10",
     },
     {
-      label: "Total HRT Distributed",
-      value: stats.totalRewardPaid.toLocaleString(),
-      suffix: "",
-      icon: Diamond,
-      color: "bg-indigo-600/5 text-indigo-400",
-      border: "border-indigo-500/10",
-    },
-    {
       label: "Platform Earnings",
       value: "0",
       suffix: "ℏ",
       icon: Banknote,
       color: "bg-cyan-600/5 text-cyan-400",
       border: "border-cyan-500/10",
+    },
+    {
+      label: "Total HRT Distributed",
+      value: stats.totalRewardPaid.toLocaleString(),
+      suffix: "",
+      icon: Diamond,
+      color: "bg-indigo-600/5 text-indigo-400",
+      border: "border-indigo-500/10",
     },
     {
       label: "Total Participants",

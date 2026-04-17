@@ -58,6 +58,31 @@ const Dashboard = () => {
 
       <main className="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
+          {/* Discord Join Banner */}
+          <div className="mb-10 animate-fade-in">
+             <a 
+               href="https://discord.gg/cDjN62RJKC" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               className="group flex flex-col sm:flex-row items-center justify-between gap-4 p-4 md:px-8 rounded-[2rem] bg-indigo-600/5 hover:bg-indigo-600/10 border border-indigo-500/10 hover:border-indigo-500/30 transition-all duration-500 shadow-xl"
+             >
+                <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:scale-110 transition-transform">
+                      <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="white">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.77,16.15,77.7,77.7,0,0,0,7.31-11.86A69,69,0,0,1,28.68,78.1a48.09,48.09,0,0,0,4.06-3.14c18.71,8.59,39,8.59,57.4,0a48.53,48.53,0,0,0,4.06,3.14,69.1,69.1,0,0,1-11.78,6.4,77.74,77.74,0,0,0,7.31,11.86,105.56,105.56,0,0,0,32.8-16.14C131,51.13,124.16,27.52,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5.09-12.73,11.45-12.73S54.18,46,54,53,49,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.09-12.73,11.44-12.73S96.23,46,96.05,53,91,65.69,84.69,65.69Z"/>
+                      </svg>
+                   </div>
+                   <div className="text-left">
+                      <p className="text-sm md:text-md font-bold text-white tracking-tight">Join our Discord for real-time updates and support!</p>
+                      <p className="text-[10px] uppercase tracking-widest text-indigo-400 font-black">Community & Support Governance</p>
+                   </div>
+                </div>
+                <div className="flex items-center gap-2 text-indigo-400 font-black text-[10px] uppercase tracking-[0.2em] group-hover:text-white transition-colors">
+                   Get Involved <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+             </a>
+          </div>
+
           <div className="flex flex-col gap-10 md:gap-14">
             
             {/* HERO SECTION - REPLICATING IMAGE 1 */}
@@ -127,18 +152,18 @@ const Dashboard = () => {
                <StakingStats />
             </div>
 
-            {/* SECTION 3: Stake Panel & Wallet Info */}
+            {/* SECTION 3: Layout - Wallet Info ON LEFT, Stake Panel ON RIGHT */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-start focus-within:scroll-mt-40">
-               {/* Left column: Staking Form */}
-               <div className="lg:col-span-7 xl:col-span-8 space-y-10">
-                  <StakePanel />
-               </div>
-
-               {/* Right column: Wallet Overview */}
-               <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-40">
+               {/* Left column: Wallet Overview */}
+               <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-40 order-2 lg:order-1">
                   <div className="glass-card p-6 rounded-[3rem] border border-white/[0.05] bg-[#0A1024] shadow-2xl">
                      <WalletInfo />
                   </div>
+               </div>
+
+               {/* Right column: Staking Form */}
+               <div className="lg:col-span-7 xl:col-span-8 space-y-10 order-1 lg:order-2">
+                  <StakePanel />
                </div>
             </div>
 
