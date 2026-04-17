@@ -92,7 +92,7 @@ const Dashboard = () => {
                         <div className="glass-card p-4 rounded-2xl border-white/[0.05] shadow-xl flex flex-col justify-center min-w-[140px] bg-white/[0.02]">
                            <p className="text-[9px] text-slate-500 font-black tracking-widest uppercase mb-1">Live Counter</p>
                            <div className="flex items-baseline gap-1">
-                              <span className="text-3xl font-black text-white">{totalParticipants || '...'}</span>
+                              <span className="text-3xl font-black text-white">{totalParticipants > 0 ? totalParticipants.toLocaleString() : '...'}</span>
                               <span className="text-sm font-bold text-slate-400">/ 400</span>
                            </div>
                            <p className="text-[9px] text-cyan-500 font-black tracking-widest uppercase mt-1 text-shadow-sm shadow-cyan-500">Pioneers Joined</p>
