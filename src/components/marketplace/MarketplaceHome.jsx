@@ -134,7 +134,7 @@ const MarketplaceHome = () => {
 
               <div className="pt-10">
                 <p className="text-cyber-blue text-sm font-black tracking-[0.2em] uppercase">
-                  🎉 Early staking participants get priority access to NFT drops
+                  Early staking participants get priority access to NFT drops
                 </p>
               </div>
 
