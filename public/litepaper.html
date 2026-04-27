@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HedraFi | Litepaper</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+     <link rel="apple-touch-icon" href="logo.png" />
+    <style>
+        :root {
+            --primary: #4ca1af;
+            --secondary: #2c3e50;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --accent: #38bdf8;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--dark); color: var(--light); line-height: 1.7; scroll-behavior: smooth; }
+        .container { max-width: 950px; margin: 0 auto; padding: 60px 24px; }
+
+        header { text-align: center; margin-bottom: 80px; }
+        h1 { font-size: 3.5rem; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; letter-spacing: -1.5px; }
+        .tagline { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 3px; font-size: 0.85rem; }
+
+        section { margin-bottom: 70px; }
+        h2 { font-size: 1.9rem; color: var(--primary); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+        h2::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+        p { margin-bottom: 20px; color: #cbd5e1; font-size: 1.1rem; text-align: justify; }
+        
+        .highlight-box { background: var(--glass); border-left: 4px solid var(--primary); padding: 35px; border-radius: 8px; margin: 30px 0; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .highlight-box p:last-child { margin-bottom: 0; }
+
+        ul { margin-bottom: 20px; list-style-position: inside; }
+        li { margin-bottom: 12px; color: #cbd5e1; font-size: 1.05rem; }
+        li strong { color: var(--light); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+        .card { background: var(--glass); padding: 25px; border: 1px solid var(--border); border-radius: 12px; transition: transform 0.3s ease; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .card span { display: block; font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .card label { font-weight: 600; color: var(--light); display: block; margin-bottom: 5px; }
+        .card small { color: #94a3b8; font-size: 0.9rem; line-height: 1.4; display: block; }
+
+        .roadmap-item { border-left: 2px solid var(--primary); padding-left: 25px; position: relative; margin-bottom: 30px; }
+        .roadmap-item::before { content: ""; position: absolute; left: -9px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--dark); border: 2px solid var(--primary); }
+        .roadmap-item h3 { font-size: 1.2rem; margin-bottom: 5px; color: var(--accent); }
+        .roadmap-item p { font-size: 1rem; margin-bottom: 0; }
+
+        .id-list { list-style: none; }
+        .id-list li { background: rgba(30, 41, 59, 0.5); padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .id-list span { font-weight: 600; color: #94a3b8; }
+        .id-list a { color: var(--accent); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-weight: 500; transition: color 0.2s; }
+        .id-list a:hover { color: var(--primary); text-decoration: underline; }
+
+        .founder-card { margin-bottom: 40px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--border); }
+        .founder-card h3 { margin-bottom: 10px; color: var(--light); }
+        .founder-link { display: inline-block; margin-top: 10px; color: var(--accent); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
+        .founder-link:hover { text-decoration: underline; }
+
+footer { 
+            text-align: center; 
+            margin-top: 100px; 
+            padding: 60px 0; 
+            border-top: 1px solid var(--border); 
+            background: rgba(0,0,0,0.2); 
+            border-radius: 20px 20px 0 0;
+        }
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-style: italic;
+            margin-bottom: 25px;
+            /* max-width: 600px; */
+            /* margin-left: auto;
+            margin-right: auto; */
+            text-align: center;
+        }
+        footer p.copyright { 
+            text-align: center; 
+            color: var(--light); 
+            font-size: 1rem; 
+            margin-bottom: 25px; 
+            font-weight: 600;
+        }
+        .footer-links { 
+            display: flex; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            gap: 30px; 
+        }
+        .footer-links a { 
+            color: var(--primary); 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: all 0.3s ease; 
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-links a:hover { 
+            color: var(--accent); 
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .id-list li { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .footer-links { gap: 15px; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="text-center"><img src="logo.png" width="40" alt="HedraFi Logo"></div>
+        <h1>HedraFi Litepaper</h1>
+        <div class="tagline">The Sovereign Infrastructure of Hedera</div>
+    </header>
+
+    <section id="vision">
+        <h2><i class="fas fa-eye"></i> 1. Executive Summary</h2>
+        <p>HedraFi is a Next-Gen DeFi ecosystem built natively on the Hedera Mainnet.</p>
+        <div class="highlight-box">
+            <p><strong>Our Vision:</strong> For too long, the space has been divided between "boring" enterprise tech and "unstable" retail hype. HedraFi exists to bridge that gap. Our goal is to <strong>bring back the fun to Hedera</strong> by "Hedrafying" everything—injecting life, engagement, and utility into every transaction.</p>
+            <p>From staking and creator-powered marketplaces to <strong>The Institutional Bridge for Real-World Assets (RWA)</strong>, we are putting life back into the network. We aren't just building a protocol; we are building the heartbeat of the new Hedera economy.</p>
+            <p>We are proud to be <strong>backed by the HBAR Foundation & Thrive Hedera</strong>, aligning our high-energy vision with the world's most stable enterprise-grade network.</p>
+        </div>
+    </section>
+
+    <section id="staking">
+        <h2><i class="fas fa-heart"></i> 2. The Heart of the Protocol: Why We Stake</h2>
+        <p>We didn't launch our staking program to take from the community; we launched it to <strong>give</strong>.</p>
+        <ul>
+            <li><strong>Community-First Distribution:</strong> Staking is the engine we use to distribute 150M $HRT tokens to our earliest believers.</li>
+            <li><strong>The "Win-Win" Model:</strong> Our staking is <strong>100% non-custodial</strong>. We never take possession of your HBAR. Your funds stay under your control at all times—you lose nothing, yet you earn a share in the future of the ecosystem.</li>
+            <li><strong>Proving Conviction:</strong> Instead of "hollow hype," we use staking to prove to the ecosystem that HedraFi has a foundation of strong believers. Our aim is to give to the community, not take from them.</li>
+        </ul>
+    </section>
+
+    <section id="pioneer">
+        <h2><i class="fas fa-users"></i> 3. The Pioneer Council: The First 400</h2>
+        <p>Governance shouldn't be for "random advantage seekers." It should be for the committed.</p>
+        <ul>
+            <li><strong>The 1,500 HBAR Minimum:</strong> By requiring a minimum non-custodial stake of 1,500 HBAR to join the Council, we ensure our governance seats are held by individuals who truly value the position.</li>
+            <li><strong>High-Conviction Governance:</strong> This threshold acts as a filter. We want the first 400 seats occupied by people dedicated to the Council’s vision—not just passing through.</li>
+            <li><strong>Council Benefits:</strong> Membership grants the <strong>Pioneer Council Badge</strong>, representing a permanent seat at the table where your voice shapes the "Hedrafied" future of the network.</li>
+        </ul>
+    </section>
+
+<section id="utility">
+        <h2><i class="fas fa-bolt"></i> 4. $HRT Token Utility</h2>
+        <p>$HRT is the fuel powering the Marketplace and the Institutional Bridge for Real-World Assets (RWA). It is designed to be a high-velocity utility token that rewards long-term believers with exclusive protocol advantages.</p>
+        <ul>
+            <li><strong>Premium Featuring & Visibility:</strong> Creators and collectors can use $HRT to "Boost" their assets on the marketplace, securing front-page placement and premium highlighting to increase visibility and sales velocity.</li>
+            <li><strong>Exclusive Access & Early-Bird Drops:</strong> Certain high-tier NFT collections and "Institutional Bridge" asset pools will be gated, requiring $HRT to unlock access before they open to the general public.</li>
+            <li><strong>The Reward Multiplier:</strong> Staking $HRT alongside HBAR unlocks "Tiered Rewards," allowing dedicated users to accelerate their yield and earn higher percentages of the daily distribution.</li>
+            <li><strong>Governance & Protocol Influence:</strong> Beyond the Pioneer Council, $HRT acts as the voting weight for the DAO, allowing the community to curate marketplace collections and decide on new asset integrations.</li>
+            <!-- <li><strong>Fee Deflation & Rebates:</strong> Users who hold $HRT in their wallets receive automated fee discounts on all marketplace transactions, making it the most efficient way to trade on Hedera.</li> -->
+        </ul>
+        <p><em>$HRT distribution is handled 100% automatically by Mainnet smart contracts, ensuring instant utility and transparency.</em></p>
+    </section>
+
+    <section id="founders">
+        <h2><i class="fas fa-hammer"></i> 5. Meet the Founders: Engineers First</h2>
+        <p>HedraFi isn't led by marketing agencies; it is led by <strong>Builders</strong>. We prioritize technical security and clean code over empty promises.</p>
+        
+        <div class="founder-card">
+            <h3>Benjamin Odiowa <small>(Founder / Blockchain Engineer)</small></h3>
+            <p>An expert in smart contract architecture and HTS integration. Benjamin handles the "Plumbing" of HedraFi, ensuring the staking and marketplace infrastructure is robust, immutable, and secure.</p>
+            <a href="https://x.com/benodzy" class="founder-link" target="_blank"><i class="fab fa-twitter"></i> @benodzy</a>
+        </div>
+
+        <div class="founder-card">
+            <h3>Bethel Okafor .E <small>(Co-Founder / Frontend Engineer)</small></h3>
+            <p>Specializing in UI/UX architecture and product experience. Bethel ensures the complex backend engineering is translated into a seamless, intuitive experience for every user.</p>
+            <a href="https://www.linkedin.com/in/bethel-egwuchukwu-b49ab7327/" class="founder-link" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+        </div>
+    </section>
+
+    <section id="partnerships">
+        <h2><i class="fas fa-handshake"></i> 6. Partnerships: Shared Goals over Hype</h2>
+        <p>We are not looking for short-term "paid trend" games. HedraFi is building for the next decade. We partner with community leaders and builders who value organic growth and educational content. We prioritize long-term aligned partnerships where mutual upside is earned through real adoption.</p>
+    </section>
+
+    <section id="tokenomics">
+        <h2><i class="fas fa-chart-pie"></i> 7. Tokenomics: $HRT (The Fuel)</h2>
+        <p>Total Max Supply: <strong>1,000,000,000 $HRT</strong></p>
+        <div class="grid">
+            <div class="card"><span>30%</span><label>Creators & Ecosystem</label><small>300M HRT: Incentivizing quality content and platform adoption.</small></div>
+            <div class="card"><span>15%</span><label>Staking Rewards</label><small>150M HRT: Allocated to our community of HBAR stakers.</small></div>
+            <div class="card"><span>15%</span><label>Community & Early Users</label><small>150M HRT: Rewarding the "Pioneers" and early adopters.</small></div>
+            <div class="card"><span>15%</span><label>Team & Contributors</label><small>150M HRT: Locked for long-term project alignment.</small></div>
+            <div class="card"><span>15%</span><label>Treasury / DAO Reserve</label><small>150M HRT: Future governance and ecosystem safety.</small></div>
+            <div class="card"><span>10%</span><label>Exchange Liquidity</label><small>100M HRT: Ensuring a healthy and stable market.</small></div>
+        </div>
+    </section>
+
+    <section id="roadmap">
+        <h2><i class="fas fa-route"></i> 8. Roadmap: Genesis to Global</h2>
+        <div class="roadmap-item">
+            <h3>Genesis (Dec 2, 2025)</h3>
+            <p>Core development commenced. Smart contract architecture and security modeling.</p>
+        </div>
+        <div class="roadmap-item">
+            <h3>The Pioneer Phase (April 2026 - Current)</h3>
+            <p>Official Staking launch and Council onboarding. Distribution of early $HRT rewards.</p>
+        </div>
+        <div class="roadmap-item">
+            <h3>The Marketplace Unlock (May 31, 2026)</h3>
+            <p>Launch of the Creator-Powered NFT Marketplace. First "Hedrafied" asset drops.</p>
+        </div>
+        <div class="roadmap-item">
+            <h3>The Institutional Bridge (Post-Launch 2026)</h3>
+            <p>Pivot into RWA Integration—bringing institutional capital and physical assets to the Hedera ledger.</p>
+        </div>
+    </section>
+
+    <section id="infrastructure">
+        <h2><i class="fas fa-code"></i> 9. Mainnet Proof (Verifiable Infrastructure)</h2>
+        <ul class="id-list">
+            <li><span>HRT Token</span> <a href="https://hashscan.io/mainnet/token/0.0.10299453" target="_blank">0.0.10299453</a></li>
+            <li><span>Staking Contract</span> <a href="https://hashscan.io/mainnet/contract/0.0.10299519" target="_blank">0.0.10299519</a></li>
+            <li><span>Marketplace Contract</span> <a href="https://hashscan.io/mainnet/contract/0.0.10299364" target="_blank">0.0.10299364</a></li>
+            <li><span>HedraFi Collection Token</span> <a href="https://hashscan.io/mainnet/token/0.0.10299412" target="_blank">0.0.10299412</a></li>
+        </ul>
+    </section>
+
+<footer>
+        <p class="footer-disclaimer">
+            "The information provided here are subject to change without notice."
+        </p>
+        
+        <p class="copyright">&copy; 2026 HedraFi. Engineered for the Future of Hedera.</p>
+        
+        <div class="footer-links">
+            <a href="https://hedrafi.xyz" target="_blank"><i class="fas fa-globe"></i> Website</a>
+            <a href="https://hedrafi.xyz/staking" target="_blank"><i class="fas fa-coins"></i> Staking Portal</a>
+            <a href="https://x.com/hedrafi" target="_blank"><i class="fab fa-twitter"></i> Twitter/X</a>
+            <a href="https://discord.gg/cDjN62RJKC" target="_blank"><i class="fab fa-discord"></i> Discord Community</a>
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
