@@ -134,12 +134,12 @@ const MarketplaceHome = () => {
 
               <div className="pt-10">
                 <p className="text-cyber-blue text-sm font-black tracking-[0.2em] uppercase">
-                  🎉 Early staking participants get priority access to NFT drops
+                  Early staking participants get priority access to NFT drops
                 </p>
               </div>
 
               <div className='pt-8'>
-                <Link to="/staking" className="group">
+                <Link to="/staking#stake-form" className="group">
                   <button className="btn-primary !px-16 !py-6 text-xl w-full sm:w-auto relative overflow-hidden">
                       <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                       <span className="relative z-10 flex items-center justify-center gap-3">

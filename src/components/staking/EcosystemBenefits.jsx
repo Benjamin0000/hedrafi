@@ -17,11 +17,6 @@ const BenefitCard = ({ icon: Icon, number, title, description }) => (
       {title}
     </h3>
     <p className="text-slate-400 text-md leading-relaxed font-medium mb-auto">{description}</p>
-
-    {/* Interactive Element */}
-    <div className="mt-8 inline-block px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black tracking-widest uppercase text-slate-400 group-hover:border-purple-500/50 group-hover:text-purple-400 transition-all duration-300">
-      Learn More →
-    </div>
   </div>
 );
 
@@ -125,7 +120,10 @@ const EcosystemBenefits = () => {
         <p className="text-slate-300 mb-4">
           Ready to unlock all ecosystem benefits?
         </p>
-        <button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 active:scale-[0.98]">
+        <button 
+          onClick={() => document.getElementById("stake-form")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 active:scale-[0.98]"
+        >
           Start Staking Now
         </button>
       </div>
