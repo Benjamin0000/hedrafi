@@ -48,13 +48,19 @@ const Footer = () => {
                     <div className="space-y-6">
                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Protocol</h4>
                         <ul className="space-y-4">
-                            {['About', 'Studio', 'Marketplace', 'Staking'].map((link) => (
+                            <li>
+                                <a href="/litepaper.html" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
+                                    LitePaper <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-cyber-blue" />
+                                </a>
+                            </li>
+                            {['Studio', 'Marketplace', 'Staking'].map((link) => (
                                 <li key={link}>
                                     <Link to={`/${link.toLowerCase()}`} className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-2 group">
                                         {link} <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-cyber-blue" />
                                     </Link>
                                 </li>
                             ))}
+
                         </ul>
                     </div>
 
@@ -97,6 +103,8 @@ const Footer = () => {
                         <a href="#" className="hover:text-white transition-colors">Cookies</a>
                     </div>
                 </div> */}
+
+                {/* <div className='text-center'>Backed by Thrive Protocol.</div> */}
 
                  <div className="pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                     <div className='text-center'>© {currentYear} HedraFi Protocol. Decentralized Archive.</div>

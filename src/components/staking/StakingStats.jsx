@@ -96,7 +96,7 @@ const StakingStats = () => {
           </div>
           
           <div className="space-y-1 relative z-10">
-            <div className="text-3xl md:text-4xl font-black text-white flex items-baseline gap-2 font-mono tracking-tighter">
+            <div className="text-2xl font-black text-white flex items-baseline gap-2 font-mono tracking-tighter">
               {stat.value}
               {stat.suffix && <span className="text-slate-600 text-xs font-bold uppercase">{stat.suffix}</span>}
             </div>
