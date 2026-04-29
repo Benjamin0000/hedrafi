@@ -7,7 +7,7 @@ import {
   HederaMainnet,
 } from "@buidlerlabs/hashgraph-react-wallets/chains";
 
-import DAppLogo from "./assets/logo.png";
+import DAppLogo from "./assets/hedrafinew.png";
 
 const metadata = {
   name: "HedraFi",

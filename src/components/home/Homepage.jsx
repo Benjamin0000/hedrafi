@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { AreaChart, Cpu, ShieldCheck, ArrowRight, Sparkles, Rocket, Globe } from 'lucide-react';
 import Header from "../shared/Header";
 import Footer from "../shared/Footer"; 
-import logo from '../../assets/logo.png';
+import logo from '../../assets/hedrafinew.png';
 import { useEffect } from 'react';
 
 const Homepage = () => {

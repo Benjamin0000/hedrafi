@@ -1,6 +1,6 @@
 import { XIcon, MessageCircle, ArrowUpRight } from 'lucide-react';
 import { Discord } from './Icons';
-import logo from "../../assets/logo.png";
+import logo from "../../assets/hedrafinew.png";
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
