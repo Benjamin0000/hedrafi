@@ -133,7 +133,7 @@ const Dashboard = () => {
                         </div>
                         
                         <p className="text-sm text-slate-300 leading-relaxed">
-                           We are currently in Phase 1 of the HedraFi rollout. The first 400 stakers are more than just users—they are the Pioneers who anchor the network. By staking 1,500 HBAR or more, you secure your place in the governance of the next great Hedera utility.
+                           We are currently in Phase 1 of the HedraFi rollout. The first 400 stakers are more than just users—they are the Pioneers who anchor the network. By staking any amount, you secure your place in the governance of the next great Hedera utility.
                         </p>
 
                         <button 

@@ -34,7 +34,7 @@ const PioneerHighlight = () => {
             Pioneers who anchor the network
           </span>
           . By staking{" "}
-          <span className="font-bold text-emerald-400">1,500 HBAR or more</span>
+          <span className="font-bold text-emerald-400">any amount</span>
           , you secure your place in the governance of the next great Hedera
           utility.
         </p>
