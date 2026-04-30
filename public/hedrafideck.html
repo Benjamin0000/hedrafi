@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HedraFi | Pitch Deck</title>
+  <link rel="apple-touch-icon" href="/hedrafinew.png" />
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --primary: #4ca1af;
+      --accent: #38bdf8;
+      --green: #22c55e;
+      --yellow: #fbbf24;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family: Inter, system-ui, Arial, sans-serif;}
+    body{
+      background: radial-gradient(circle at top, rgba(76,161,175,0.15), transparent 45%),
+                  radial-gradient(circle at bottom, rgba(56,189,248,0.12), transparent 45%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      scroll-behavior: smooth;
+    }
+
+    .container{
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 60px 22px;
+    }
+
+    header{
+      text-align:center;
+      margin-bottom: 80px;
+    }
+
+    .logo{
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin: 0 auto 20px auto;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: var(--accent);
+      box-shadow: 0 0 60px rgba(56,189,248,0.08);
+    }
+
+    h1{
+      font-size: 3.2rem;
+      line-height: 1.1;
+      margin-bottom: 15px;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #ffffff, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle{
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .pill-row{
+      margin-top: 28px;
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    section{
+      margin-bottom: 70px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 18px;
+      padding: 38px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.35);
+    }
+
+    h2{
+      font-size: 1.8rem;
+      margin-bottom: 14px;
+      color: #ffffff;
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+
+    .tag{
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(56,189,248,0.12);
+      border: 1px solid rgba(56,189,248,0.25);
+      color: var(--accent);
+    }
+
+    p{
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .card{
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .card h3{
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .card p{
+      margin-bottom: 0;
+      font-size: 0.98rem;
+    }
+
+    .metrics{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .metric{
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .metric .value{
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 2px;
+      color: var(--accent);
+    }
+
+    .metric .label{
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .highlight{
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    ul{
+      margin-top: 12px;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    li{
+      margin-bottom: 10px;
+      font-size: 1.02rem;
+    }
+
+    .quote{
+      border-left: 4px solid var(--primary);
+      padding: 15px 18px;
+      border-radius: 12px;
+      background: rgba(76,161,175,0.08);
+      margin-top: 20px;
+      color: #cbd5e1;
+      font-size: 1.02rem;
+    }
+
+    .cta{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .btn{
+      text-decoration:none;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-weight: 700;
+      color: #ffffff;
+      background: rgba(255,255,255,0.03);
+      transition: 0.2s ease;
+      display:inline-block;
+    }
+
+    .btn:hover{
+      transform: translateY(-2px);
+      border-color: rgba(56,189,248,0.45);
+    }
+
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(76,161,175,0.35), rgba(56,189,248,0.25));
+      border: 1px solid rgba(56,189,248,0.3);
+    }
+
+    .small{
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    footer{
+      text-align:center;
+      padding: 50px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .divider{
+      margin: 22px 0;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .status-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .status{
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      color: var(--muted);
+    }
+
+    .status.green{
+      color: var(--green);
+      border-color: rgba(34,197,94,0.3);
+      background: rgba(34,197,94,0.08);
+    }
+
+    .status.yellow{
+      color: var(--yellow);
+      border-color: rgba(251,191,36,0.3);
+      background: rgba(251,191,36,0.08);
+    }
+
+    @media(max-width: 768px){
+      h1{font-size: 2.3rem;}
+      section{padding: 28px;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <div class="logo">
+        <img src="hedrafinew.png" width="50" alt="HedraFi Logo" />
+      </div>
+      <h1>HedraFi</h1>
+      <p class="subtitle">
+        A trust-first NFT + DeFi ecosystem built on <span class="highlight">Hedera Mainnet</span>.
+        Starting with creator marketplaces, expanding into <span class="highlight">RWAs</span>.
+      </p>
+
+      <div class="pill-row">
+        <div class="pill">Built on Hedera</div>
+        <div class="pill">Non-Custodial Staking</div>
+        <div class="pill">Pioneer Council (400 Seats)</div>
+        <div class="pill">Marketplace Launch: May 31</div>
+      </div>
+    </header>
+
+
+    <section>
+      <h2><span class="tag">01</span> What HedraFi Is</h2>
+      <p>
+        HedraFi is building a new participation layer for Hedera — where creators, collectors, and communities
+        can onboard, trade, and grow with real utility.
+      </p>
+      <p>
+        Hedera has world-class infrastructure, but consumer-facing activity is still early.
+        HedraFi exists to help solve that by building a product people actually use.
+      </p>
+
+      <div class="quote">
+        "We’re not here to run hype cycles. We’re here to build the marketplace layer that brings daily activity to Hedera."
+      </div>
+
+      <div class="status-row">
+        <div class="status green">Mainnet Deployed</div>
+        <div class="status green">Staking Live</div>
+        <div class="status yellow">Marketplace In Progress</div>
+        <div class="status yellow">RWA Layer Roadmap</div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">02</span> Problem</h2>
+      <p>
+        Despite Hedera’s speed and low fees, the ecosystem still faces adoption gaps:
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Low Retail Engagement</h3>
+          <p>Hedera has strong tech, but consumer-facing daily activity is still developing.</p>
+        </div>
+        <div class="card">
+          <h3>Weak Creator Monetization</h3>
+          <p>Creators need better tools, better visibility, and a marketplace that rewards quality.</p>
+        </div>
+        <div class="card">
+          <h3>Lack of Trust Frameworks</h3>
+          <p>Many NFT ecosystems struggle with credibility, low retention, and poor long-term structure.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">03</span> Solution</h2>
+      <p>
+        HedraFi is building a trust-first NFT ecosystem with community-driven onboarding, governance, and utility.
+      </p>
+
+      <ul>
+        <li><span class="highlight">Pioneer Program:</span> Non-custodial staking that rewards early supporters with $HRT.</li>
+        <li><span class="highlight">Creator-Powered Marketplace:</span> Built for discovery, engagement, and visibility tools.</li>
+        <li><span class="highlight">Governance Layer:</span> The Pioneer Council forms the foundation for long-term decision-making.</li>
+        <li><span class="highlight">RWA Expansion:</span> NFTs are the entry point; real-world assets are the long-term destination.</li>
+      </ul>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">04</span> Product (Live Today)</h2>
+      <p>
+        HedraFi is already deployed on Hedera Mainnet with verifiable contracts and a live staking system.
+      </p>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="value">22</div>
+          <div class="label">Active Stakers</div>
+        </div>
+        <div class="metric">
+          <div class="value">12,583+</div>
+          <div class="label">HBAR TVL (Current)</div>
+        </div>
+        <div class="metric">
+          <div class="value">100+</div>
+          <div class="label">On-chain Transactions</div>
+        </div>
+      </div>
+
+      <p class="small">
+        Note: These metrics reflect current traction and are actively growing as we expand outreach.
+      </p>
+
+      <div class="divider"></div>
+
+      <p>
+        The Pioneer Program is designed to onboard early believers through transparent incentives,
+        while we prepare for full marketplace rollout.
+      </p>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">05</span> $HRT Token Utility</h2>
+      <p>
+        $HRT is HedraFi’s utility token designed to power marketplace incentives, ecosystem growth,
+        and long-term governance.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Boost & Visibility</h3>
+          <p>Creators can use $HRT to boost collections and gain premium marketplace visibility.</p>
+        </div>
+        <div class="card">
+          <h3>Access & Drops</h3>
+          <p>$HRT unlocks access to premium tools, gated drops, and ecosystem opportunities.</p>
+        </div>
+        <div class="card">
+          <h3>Tiered Rewards</h3>
+          <p>Staking $HRT alongside HBAR enables higher reward tiers and long-term incentives.</p>
+        </div>
+        <div class="card">
+          <h3>Governance Weight</h3>
+          <p>$HRT supports future governance decisions and marketplace ecosystem parameters.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">06</span> Why Hedera</h2>
+      <p>
+        Hedera’s speed, low fees, and enterprise-grade reliability make it one of the strongest foundations
+        for real-world adoption.
+      </p>
+      <p>
+        HedraFi is building natively on Hedera to help expand consumer usage, creator participation,
+        and on-chain volume.
+      </p>
+
+      <div class="quote">
+        "Hedera is building the rails. HedraFi is building what runs on top of it."
+      </div>
+
+      <p class="small">
+        HedraFi is currently supported through the Thrive Hedera program.
+      </p>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">07</span> Roadmap</h2>
+      <p>We are moving fast with a clear product rollout path:</p>
+
+      <ul>
+        <li><span class="highlight">Now:</span> Pioneer staking + council onboarding + community traction</li>
+        <li><span class="highlight">May 30:</span> Creator-powered NFT Marketplace launch</li>
+        <li><span class="highlight">Post Launch:</span> Marketplace scaling + creator tools expansion</li>
+        <li><span class="highlight">Next Phase:</span> RWA integration roadmap and institutional onboarding layer</li>
+      </ul>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">08</span> Team</h2>
+      <p>
+        HedraFi is led by builders — not marketing agencies. We prioritize security, clean engineering, and execution.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Benjamin Odiowa</h3>
+          <p>Founder / Blockchain Engineer<br/>Smart contract architecture + HTS integration.</p>
+          <p class="small">X: @benodzy</p>
+        </div>
+
+        <div class="card">
+          <h3>Bethel Okafor .E</h3>
+          <p>Co-Founder / Frontend Engineer<br/>UI/UX + product experience architecture.</p>
+          <p class="small">LinkedIn available</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <h2><span class="tag">09</span> What We Need</h2>
+      <p>
+        HedraFi is bootstrapped and execution-focused. We are not dependent on funding to build,
+        but additional support accelerates our ability to ship faster and scale adoption.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Funding Ask</h3>
+          <p>
+            Seeking <span class="highlight">$100,000</span> in non-dilutive support / ecosystem capital to accelerate:
+          </p>
+          <ul>
+            <li>Security review / audit</li>
+            <li>Development acceleration</li>
+            <li>User acquisition + distribution</li>
+            <li>Creator onboarding campaigns</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Partnership Support</h3>
+          <p>
+            We are also looking for ecosystem partnerships, creator communities, and strategic collaborators
+            who can help drive adoption into the marketplace launch.
+          </p>
+        </div>
+      </div>
+
+      <div class="cta">
+        <a class="btn primary" href="https://hedrafi.xyz" target="_blank">Website</a>
+        <a class="btn" href="https://hedrafi.xyz/staking" target="_blank">Staking Portal</a>
+        <a class="btn" href="https://x.com/hedrafi" target="_blank">X / Twitter</a>
+        <a class="btn" href="https://discord.gg/cDjN62RJKC" target="_blank">Discord</a>
+      </div>
+
+      <p class="small">
+        Disclaimer: This presentation is informational and subject to change as the protocol evolves.
+      </p>
+    </section>
+
+    <footer>
+      © 2026 HedraFi — Built on Hedera Mainnet.
+    </footer>
+
+  </div>
+</body>
+</html>
