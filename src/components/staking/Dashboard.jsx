@@ -133,7 +133,7 @@ const Dashboard = () => {
                         </div>
                         
                         <p className="text-sm text-slate-300 leading-relaxed">
-                           We are currently in Phase 1 of the HedraFi rollout. The first 400 stakers are more than just users—they are the Pioneers who anchor the network. By staking any amount, you secure your place in the governance of the next great Hedera utility.
+                           Exclusive Reward: The first 400 unique addresses to stake will receive a Premium Pioneer Council NFT Badge. This NFT marks your status as an early protocol builder and grants long-term governance influence within HedraFi
                         </p>
 
                         <button 
