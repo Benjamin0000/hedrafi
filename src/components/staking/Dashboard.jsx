@@ -8,6 +8,7 @@ import SecuritySection from "./SecuritySection";
 import EcosystemBenefits from "./EcosystemBenefits";
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
+import PioneerCountdown from "./PioneerCountdown";
 
 const Dashboard = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
@@ -127,22 +128,7 @@ const Dashboard = () => {
 
                   {/* Right Highlight Card */}
                   <div className="lg:col-span-5 flex items-center justify-end">
-                     <div className="glass-card w-full lg:max-w-sm rounded-[2rem] p-8 border border-white/[0.08] shadow-2xl space-y-6 bg-[#080d20]">
-                        <div className="inline-block px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 w-full text-center mb-2">
-                           <span className="text-[10px] font-black tracking-[0.2em] uppercase text-white">Join the First 400 Pioneers</span>
-                        </div>
-                        
-                        <p className="text-sm text-slate-300 leading-relaxed">
-                           Exclusive Reward: The first 400 unique addresses to stake will receive a Premium Pioneer Council NFT Badge. This NFT marks your status as an early protocol builder and grants long-term governance influence within HedraFi
-                        </p>
-
-                        <button 
-                          onClick={scrollToForm}
-                          className="w-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white font-bold py-4 rounded-xl transition-all text-xs tracking-widest uppercase mt-4"
-                        >
-                           Secure Your Spot
-                        </button>
-                     </div>
+                     <PioneerCountdown />
                   </div>
                </div>
             </div>
