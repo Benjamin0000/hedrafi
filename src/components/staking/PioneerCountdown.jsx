@@ -74,7 +74,7 @@ const PioneerCountdown = () => {
         onClick={() => document.getElementById("stake-form")?.scrollIntoView({ behavior: "smooth", block: "start" })}
         className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 text-xs tracking-widest uppercase mt-4"
       >
-         Secure Your NFT
+         Secure Your Spot Now
       </button>
     </div>
   );
