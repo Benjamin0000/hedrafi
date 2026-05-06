@@ -15,33 +15,36 @@ const CountdownUnit = ({ value, label, color }) => (
   </div>
 );
 
+// Target: June 1, 2026 00:00:00 UTC
+const TARGET_DATE = new Date('2026-06-01T00:00:00Z').getTime();
+
+const calculateTimeLeft = (targetTime) => {
+  const now = new Date().getTime();
+  const difference = targetTime - now;
+
+  if (difference <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  return {
+    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds: Math.floor((difference % (1000 * 60)) / 1000)
+  };
+};
+
 const MarketplaceCountdown = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(TARGET_DATE));
 
   useEffect(() => {
-    // Target: May 31, 2026
-    const target = new Date('May 31, 2026 00:00:00').getTime();
-
     const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const difference = target - now;
+      const newTime = calculateTimeLeft(TARGET_DATE);
+      setTimeLeft(newTime);
 
-      if (difference <= 0) {
+      if (newTime.days === 0 && newTime.hours === 0 && newTime.minutes === 0 && newTime.seconds === 0) {
         clearInterval(timer);
-        return;
       }
-
-      setTimeLeft({
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((difference % (1000 * 60)) / 1000)
-      });
     }, 1000);
 
     return () => clearInterval(timer);
