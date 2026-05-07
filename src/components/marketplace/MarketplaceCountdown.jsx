@@ -15,8 +15,8 @@ const CountdownUnit = ({ value, label, color }) => (
   </div>
 );
 
-// Target: June 1, 2026 00:00:00 UTC
-const TARGET_DATE = new Date('2026-06-01T00:00:00Z').getTime();
+// Target: July 1, 2026 00:00:00 UTC
+const TARGET_DATE = new Date('2026-07-01T00:00:00Z').getTime();
 
 const calculateTimeLeft = (targetTime) => {
   const now = new Date().getTime();
