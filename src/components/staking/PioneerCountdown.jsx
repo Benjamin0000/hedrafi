@@ -1,37 +1,39 @@
 import { useState, useEffect } from "react";
 
-const PioneerCountdown = () => {
-  // Target date: May 7, 2026 00:00:00 UTC (or local time, let's just do a fixed timestamp or 7 days from now)
-  // Hardcoding May 7th, 2026 to match the text "closes on May 7th"
-  const targetDate = new Date("2026-05-07T23:59:59Z").getTime();
+// Target date: June 1, 2026 23:59:59 UTC
+const TARGET_DATE = new Date("2026-06-01T23:59:59Z").getTime();
 
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+const calculateTimeLeft = (target) => {
+  const now = new Date().getTime();
+  const distance = target - now;
+
+  if (distance < 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  return {
+    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds: Math.floor((distance % (1000 * 60)) / 1000),
+  };
+};
+
+const PioneerCountdown = () => {
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(TARGET_DATE));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-
-      if (distance < 0) {
+      const newTime = calculateTimeLeft(TARGET_DATE);
+      setTimeLeft(newTime);
+      
+      if (newTime.days === 0 && newTime.hours === 0 && newTime.minutes === 0 && newTime.seconds === 0) {
         clearInterval(interval);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      } else {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000),
-        });
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [targetDate]);
+  }, []);
 
   const pad = (num) => String(num).padStart(2, "0");
 
@@ -67,7 +69,7 @@ const PioneerCountdown = () => {
       </div>
       
       <p className="text-sm text-slate-300 leading-relaxed text-center">
-         Stake <span className="text-white font-bold">any amount of HBAR</span> now to secure 1 of 400 <span className="text-amber-400 font-bold">Premium Pioneer Council NFT Badges</span>. The gate closes on May 7th.
+         Stake <span className="text-white font-bold">any amount of HBAR</span> now to secure 1 of 400 <span className="text-amber-400 font-bold">Premium Pioneer Council NFT Badges</span>. The gate closes on June 1st.
       </p>
 
       <button 
