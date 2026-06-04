@@ -39,7 +39,7 @@ const PhaseNotification = () => {
             <div className="absolute inset-0 w-2 h-2 rounded-full bg-cyan-400 animate-pulse opacity-50"></div>
           </div>
           <p className="text-[11px] md:text-xs font-black text-white leading-none tracking-[0.1em] uppercase">
-            Phase 1 Live: Only 400 Pioneer slots available. <span className="text-cyan-400 group-hover:text-cyan-300 transition-colors">Stake now</span>
+            Phase 1 Live: Start staking and earn $HRT. <span className="text-cyan-400 group-hover:text-cyan-300 transition-colors">Stake now</span>
           </p>
         </div>
       </div>

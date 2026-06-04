@@ -46,9 +46,9 @@ const EcosystemBenefits = () => {
     {
       icon: Trophy,
       number: "4",
-      title: "Pioneer Perk",
+      title: "Governance",
       description:
-        "Exclusive Pioneer status badge and recognition in future modules. VIP treatment locked in forever.",
+        "Stake your assets to gain voting power and influence over protocol decisions. Your voice shapes HedraFi.",
     },
   ];
 

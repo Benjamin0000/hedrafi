@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { stakingContract } from "../../lib/staking";
+import { useEffect } from "react";
 import WalletInfo from "./WalletInfo";
 import StakePanel from "./StakePanel";
 import StakingStats from "./StakingStats";
@@ -8,33 +7,16 @@ import SecuritySection from "./SecuritySection";
 import EcosystemBenefits from "./EcosystemBenefits";
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
-import PioneerCountdown from "./PioneerCountdown";
 
 const Dashboard = () => {
-  const [totalParticipants, setTotalParticipants] = useState(0);
-
-  const fetchGlobalStats = async () => {
-    if (!stakingContract) return;
-    try {
-      const totalUsers = await stakingContract.totalUsers();
-      setTotalParticipants(Number(totalUsers));
-    } catch (e) {
-      console.error("Error fetching global stats:", e);
-    }
-  };
 
   useEffect(() => {
-    fetchGlobalStats();
-    const interval = setInterval(fetchGlobalStats, 10000);
-    
     // Handle hash scroll on mount
     if (window.location.hash === '#stake-form') {
       setTimeout(() => {
         scrollToForm();
       }, 500); // Small delay to ensure render
     }
-
-    return () => clearInterval(interval);
   }, []);
 
   const scrollToForm = () => {
@@ -92,43 +74,29 @@ const Dashboard = () => {
                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] -mr-40 -mt-40 pointer-events-none"></div>
 
                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 relative z-10">
-                  {/* Left Hero Content */}
-                  <div className="lg:col-span-7 space-y-6">
+                  {/* Hero Content */}
+                  <div className="lg:col-span-12 space-y-8 flex flex-col items-center text-center">
                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20">
                         <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
                         <span className="text-[10px] font-black tracking-[0.2em] uppercase text-cyan-100">Premium Staking Infrastructure</span>
                      </div>
                      
-                     <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] text-white">
-                        Staking Infrastructure
+                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white max-w-4xl">
+                        Stake & Earn $HRT
                      </h1>
                      
-                     <p className="text-slate-300 text-lg font-medium max-w-xl leading-relaxed">
+                     <p className="text-slate-300 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
                         Secure your assets within the HedraFi protocol. Monitor multi-layered yield streams and participate in ecosystem governance through a 100% non-custodial interface.
                      </p>
 
-                     <div className="flex flex-wrap items-center gap-6 pt-4">
+                     <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
                         <button 
                           onClick={scrollToForm}
-                          className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+                          className="bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold py-4 px-10 rounded-2xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105"
                         >
-                           Join the First 400 Pioneers
+                           Start Staking Now
                         </button>
-
-                        <div className="glass-card p-4 rounded-2xl border-white/[0.05] shadow-xl flex flex-col justify-center min-w-[140px] bg-white/[0.02]">
-                           <p className="text-[9px] text-slate-500 font-black tracking-widest uppercase mb-1">Live Counter</p>
-                           <div className="flex items-baseline gap-1">
-                              <span className="text-3xl font-black text-white">{totalParticipants > 0 ? totalParticipants.toLocaleString() : '...'}</span>
-                              <span className="text-sm font-bold text-slate-400">/ 400</span>
-                           </div>
-                           <p className="text-[9px] text-cyan-500 font-black tracking-widest uppercase mt-1 text-shadow-sm shadow-cyan-500">Pioneers Joined</p>
-                        </div>
                      </div>
-                  </div>
-
-                  {/* Right Highlight Card */}
-                  <div className="lg:col-span-5 flex items-center justify-end">
-                     <PioneerCountdown />
                   </div>
                </div>
             </div>
