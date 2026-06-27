@@ -136,8 +136,8 @@ const MyNFTs = () => {
                      Curate your collection and manage your digital legacy on the world's most sustainable ledger with institutional precision.
                   </p>
                </div>
-               <div className="glass-card px-8 py-5 rounded-3xl border-white/[0.05] flex items-center gap-5 shadow-xl">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600/5 flex items-center justify-center border border-white/5">
+               <div className="glass-card px-8 py-5 rounded-[16px] border-white/[0.05] flex items-center gap-5 shadow-xl">
+                  <div className="w-12 h-12 rounded-[16px] bg-blue-600/5 flex items-center justify-center border border-white/5">
                      <Activity size={24} className="text-cyber-blue animate-pulse" />
                   </div>
                   <div>
@@ -152,7 +152,7 @@ const MyNFTs = () => {
                {nfts.length > 0 ? nfts.map((nft, index) => (
                  <div
                    key={index}
-                   className="glass-card group rounded-[3rem] border-white/[0.05] overflow-hidden hover:bg-[#0E1529] hover:border-blue-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col shadow-2xl"
+                   className="glass-card group rounded-[16px] border-white/[0.05] overflow-hidden hover:bg-[#0E1529] hover:border-blue-500/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col shadow-2xl"
                    onClick={() => openListModal(nft)}
                  >
                    {/* Visual Asset */}
@@ -163,7 +163,7 @@ const MyNFTs = () => {
                        className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
                      />
                      <div className="absolute top-6 right-6 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                        <div className="bg-brand-base/80 backdrop-blur-xl border border-white/10 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-2xl flex items-center gap-2">
+                        <div className="bg-brand-base/80 backdrop-blur-xl border border-white/10 px-6 py-3 rounded-[16px] text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-2xl flex items-center gap-2">
                            <Settings size={14} className="group-hover:rotate-90 transition-transform" /> Manage
                         </div>
                      </div>
@@ -194,7 +194,7 @@ const MyNFTs = () => {
                               <Lock size={12} /> Vaulted
                            </div>
                         )}
-                        <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-slate-500 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-blue-500/20">
+                        <div className="w-10 h-10 rounded-[16px] bg-white/5 border border-white/5 flex items-center justify-center text-slate-500 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition-all duration-500 group-hover:shadow-lg group-hover:shadow-blue-500/20">
                            <Tag size={18} />
                         </div>
                      </div>
@@ -203,7 +203,7 @@ const MyNFTs = () => {
                )) : (
                  <div className="col-span-full py-32 glass-card rounded-[4rem] border-white/[0.05] text-center space-y-12 shadow-2xl relative overflow-hidden group">
                     <div className="absolute inset-0 bg-blue-600/[0.02] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="w-24 h-24 bg-blue-600/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
+                    <div className="w-24 h-24 bg-blue-600/5 rounded-[16px] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
                        <Box size={48} className="text-blue-500 opacity-30" />
                     </div>
                     <div className="space-y-4 max-w-lg mx-auto relative z-10">
@@ -232,7 +232,7 @@ const MyNFTs = () => {
         {selectedNFT && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 p-2">
              <div className="space-y-8">
-                <div className="glass-card rounded-[2.5rem] overflow-hidden border-white/[0.05] aspect-square shadow-2xl bg-[#02050E]">
+                <div className="glass-card rounded-[16px] overflow-hidden border-white/[0.05] aspect-square shadow-2xl bg-[#02050E]">
                   <img
                     src={convertIpfsToPinata(selectedNFT.image_url)}
                     alt={selectedNFT.name}
@@ -259,7 +259,7 @@ const MyNFTs = () => {
                            type="text"
                            value={price}
                            onChange={(e) => setPrice(e.target.value)}
-                           className="w-full bg-[#030712] border border-white/10 rounded-2xl px-8 py-5 font-mono text-white text-2xl outline-none focus:border-blue-500/50 transition-all shadow-inner"
+                           className="w-full bg-[#030712] border border-white/10 rounded-[16px] px-8 py-5 font-mono text-white text-2xl outline-none focus:border-blue-500/50 transition-all shadow-inner"
                            placeholder="0.00"
                          />
                          <div className="absolute right-8 top-1/2 -translate-y-1/2 text-slate-700 font-black">ℏ</div>
@@ -270,7 +270,7 @@ const MyNFTs = () => {
                       </div>
                    </div>
 
-                   <div className="glass-card p-8 rounded-3xl border-white/[0.05] space-y-4 shadow-xl bg-[#040A1A]">
+                   <div className="glass-card p-8 rounded-[16px] border-white/[0.05] space-y-4 shadow-xl bg-[#040A1A]">
                       <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em]">
                          <span className="text-slate-500">Transmission Fee</span>
                          <span className="text-white">2.50%</span>

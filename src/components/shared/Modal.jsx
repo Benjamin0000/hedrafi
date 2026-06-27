@@ -14,7 +14,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
         className="absolute inset-0 bg-brand-base/80 backdrop-blur-md animate-fade-in"
         onClick={onClose}
       ></div>
-      <div className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden glass rounded-[3rem] border-white/10 shadow-[0_0_100px_rgba(0,100,255,0.1)] flex flex-col animate-scale-in`}>
+      <div className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden glass rounded-[16px] border-white/10 shadow-[0_0_100px_rgba(0,100,255,0.1)] flex flex-col animate-scale-in`}>
         {/* Modal Header */}
         <div className="px-10 py-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
           <h2 className="text-3xl font-black tracking-tight text-gradient">

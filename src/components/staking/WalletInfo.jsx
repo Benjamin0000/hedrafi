@@ -18,7 +18,7 @@ const HRT_TOKEN_ID = process.env.REACT_APP_REWARD_TOKEN;
             { label: 'Staking Contract', id: '0.0.10299519', icon: <ShieldCheck className="w-5 h-5 text-cyber-blue"/>,  url: "https://hashscan.io/mainnet/contract/0.0.10299519" },
             { label: '$HRT Token', id: '0.0.10299453', icon: <Coins className="w-5 h-5 text-purple-400" />, url: "https://hashscan.io/mainnet/token/0.0.10299453" }
           ].map((contract) => (
-            <div key={contract.id} className="p-5 rounded-[1.5rem] bg-white/[0.03] border border-white/[0.08] hover:border-cyber-blue/50 transition-all duration-300">
+            <div key={contract.id} className="p-5 rounded-[16px] bg-white/[0.03] border border-white/[0.08] hover:border-cyber-blue/50 transition-all duration-300">
               <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">
                 {contract.icon}
                 {contract.label}
@@ -102,7 +102,7 @@ const WalletInfo = () => {
         </div>
 
         {/* HRT Balance Section */}
-        <div className="space-y-3 p-6 rounded-[2rem] bg-blue-500/5 border border-blue-500/10 shadow-inner">
+        <div className="space-y-3 p-6 rounded-[16px] bg-blue-500/5 border border-blue-500/10 shadow-inner">
           <div className="text-[11px] font-black uppercase tracking-[0.3em] text-blue-400">Yield Token (HRT)</div>
           <div className="text-2xl font-mono font-black text-blue-200">
             { Number((hrtBalance / 1e8).toFixed(2)).toLocaleString()} <span className="text-xs text-blue-500 font-black uppercase tracking-widest">$HRT</span>

@@ -9,7 +9,7 @@ const WalletButton = () => {
   return isConnected ? (
     <button
       onClick={disconnect}
-      className="group relative flex flex-col items-center justify-center bg-brand-base border border-red-500/30 hover:border-red-500 text-white px-5 py-2 rounded-2xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]"
+      className="group relative flex flex-col items-center justify-center bg-brand-base border border-red-500/30 hover:border-red-500 text-white px-5 py-2 rounded-[16px] transition-all duration-300 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]"
     >
       <div className="flex items-center gap-2">
          <span className="text-[10px] font-black text-red-400 uppercase tracking-widest">Disconnect</span>

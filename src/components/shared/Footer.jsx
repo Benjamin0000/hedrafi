@@ -79,7 +79,7 @@ const Footer = () => {
 
                     <div className="space-y-6">
                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Live Status</h4>
-                        <div className="glass p-5 rounded-2xl border-white/5 space-y-4">
+                        <div className="glass p-5 rounded-[16px] border-white/5 space-y-4">
                             <div className="flex justify-between items-center text-xs">
                                 <span className="text-slate-500 font-medium">Network</span>
                                 <span className="text-green-400 font-black flex items-center gap-1.5 uppercase tracking-widest">

@@ -12,7 +12,9 @@ import NFTDetail from "./components/marketplace/NFTDetail";
 import CollectionDetail from "./components/marketplace/CollectionDetail";
 import MyNFTs from "./components/studio/MyNFT";
 import PartnerPage from "./components/home/PartnerPage";
-import PhaseNotification from "./components/shared/PhaseNotification";
+import AssetsHome from "./components/marketplace/AssetsHome";
+import AssetDetailReady from "./components/marketplace/AssetDetailReady";
+import PioneerCouncilPass from "./components/marketplace/PioneerCouncilPass";
 
 const App = () => {
   useEffect(() => {
@@ -39,7 +41,6 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <PhaseNotification />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<PartnerPage />} />
@@ -59,6 +60,9 @@ const App = () => {
           path="/marketplace/collection/:id"
           element={<CollectionDetail />}
         />
+        <Route path="/assets" element={<AssetsHome />} />
+        <Route path="/assets/:id" element={<AssetDetailReady />} />
+        <Route path="/pioneer-pass" element={<PioneerCouncilPass />} />
       </Routes>
     </BrowserRouter>
   );

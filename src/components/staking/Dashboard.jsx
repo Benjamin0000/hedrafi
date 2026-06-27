@@ -47,7 +47,7 @@ const Dashboard = () => {
                href="https://discord.gg/cDjN62RJKC" 
                target="_blank" 
                rel="noopener noreferrer"
-               className="group flex flex-col sm:flex-row items-center justify-between gap-4 p-4 md:px-8 rounded-[2rem] bg-indigo-600/5 hover:bg-indigo-600/10 border border-indigo-500/10 hover:border-indigo-500/30 transition-all duration-500 shadow-xl"
+               className="group flex flex-col sm:flex-row items-center justify-between gap-4 p-4 md:px-8 rounded-[16px] bg-indigo-600/5 hover:bg-indigo-600/10 border border-indigo-500/10 hover:border-indigo-500/30 transition-all duration-500 shadow-xl"
              >
                 <div className="flex items-center gap-4">
                    <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:scale-110 transition-transform">
@@ -69,7 +69,7 @@ const Dashboard = () => {
           <div className="flex flex-col gap-10 md:gap-14">
             
             {/* HERO SECTION - REPLICATING IMAGE 1 */}
-            <div className="glass-card rounded-[2.5rem] border border-white/[0.05] shadow-2xl p-8 md:p-12 lg:p-16 relative overflow-hidden group w-full bg-[#0A1128]/40">
+            <div className="glass-card rounded-[16px] border border-white/[0.05] shadow-2xl p-8 md:p-12 lg:p-16 relative overflow-hidden group w-full bg-[#0A1128]/40">
                {/* Ambient Glow inside card */}
                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] -mr-40 -mt-40 pointer-events-none"></div>
 
@@ -92,7 +92,7 @@ const Dashboard = () => {
                      <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
                         <button 
                           onClick={scrollToForm}
-                          className="bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold py-4 px-10 rounded-2xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105"
+                          className="bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold py-4 px-10 rounded-[16px] transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105"
                         >
                            Start Staking Now
                         </button>
@@ -110,7 +110,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-start focus-within:scroll-mt-40">
                {/* Left column: Wallet Overview */}
                <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-40 order-2 lg:order-1">
-                  <div className="glass-card p-6 rounded-[3rem] border border-white/[0.05] bg-[#0A1024] shadow-2xl">
+                  <div className="glass-card p-6 rounded-[16px] border border-white/[0.05] bg-[#0A1024] shadow-2xl">
                      <WalletInfo />
                   </div>
                </div>

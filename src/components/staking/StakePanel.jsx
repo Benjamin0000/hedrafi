@@ -164,12 +164,12 @@ const StakePanel = () => {
    return (
     <div id="stake-form" className="w-full space-y-6 md:space-y-8 animate-fade-in-up scroll-mt-32">
       {/* Tabs Layout */}
-      <div className="glass p-1.5 rounded-[2rem] border-white/5 flex gap-1.5">
+      <div className="glass p-1.5 rounded-[16px] border-white/5 flex gap-1.5">
         {['stake', 'unstake'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-4 md:py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-500 flex items-center justify-center gap-2 ${
+            className={`flex-1 py-4 md:py-5 rounded-[16px] font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-500 flex items-center justify-center gap-2 ${
               activeTab === tab 
               ? 'bg-blue-600 text-white shadow-2xl shadow-blue-500/20' 
               : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.03]'
@@ -182,7 +182,7 @@ const StakePanel = () => {
       </div>
 
       {activeTab === 'stake' ? (
-        <div className="glass-card p-6 md:p-10 rounded-[2.5rem] space-y-8 border-white/[0.05] relative overflow-hidden group">
+        <div className="glass-card p-6 md:p-10 rounded-[16px] space-y-8 border-white/[0.05] relative overflow-hidden group">
            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/5 blur-[120px] -mr-40 -mt-40"></div>
            
            <div className="space-y-6">
@@ -202,7 +202,7 @@ const StakePanel = () => {
                    type="number"
                    value={stakeAmount}
                    onChange={(e) => setStakeAmount(e.target.value)}
-                   className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-blue-500/40 focus:border-blue-500 p-6 md:p-8 rounded-[2rem] text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-900"
+                   className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-blue-500/40 focus:border-blue-500 p-6 md:p-8 rounded-[16px] text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-900"
                    placeholder="0.00"
                  />
                  <button 
@@ -233,7 +233,7 @@ const StakePanel = () => {
            </div>
         </div>
       ) : (
-        <div className="glass-card p-6 md:p-10 rounded-[2.5rem] space-y-8 border-white/[0.05] relative overflow-hidden group">
+        <div className="glass-card p-6 md:p-10 rounded-[16px] space-y-8 border-white/[0.05] relative overflow-hidden group">
            <div className="absolute bottom-0 left-0 w-80 h-80 bg-red-600/5 blur-[120px] -ml-40 -mb-40"></div>
 
            <div className="space-y-6">
@@ -253,7 +253,7 @@ const StakePanel = () => {
                    type="number"
                    value={unstakeAmount}
                    onChange={(e) => setUnstakeAmount(e.target.value)}
-                   className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-red-500/40 focus:border-red-500 p-6 md:p-8 rounded-[2rem] text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-900"
+                   className="w-full bg-[#040A1A] border border-white/10 group-hover/input:border-red-500/40 focus:border-red-500 p-6 md:p-8 rounded-[16px] text-3xl md:text-4xl font-mono font-black text-white outline-none transition-all placeholder:text-slate-900"
                    placeholder="0.00"
                  />
                  <button 
@@ -269,7 +269,7 @@ const StakePanel = () => {
               <button 
                 onClick={handleUnstake}
                 disabled={unstaking}
-                className="w-full py-6 rounded-3xl bg-white/[0.03] border border-white/10 text-xl font-black text-white hover:bg-red-500/20 hover:border-red-500 transition-all flex items-center justify-center gap-3"
+                className="w-full py-6 rounded-[16px] bg-white/[0.03] border border-white/10 text-xl font-black text-white hover:bg-red-500/20 hover:border-red-500 transition-all flex items-center justify-center gap-3"
               >
                 {unstaking ? (
                   <>
@@ -284,7 +284,7 @@ const StakePanel = () => {
 
       {/* Rewards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-         <div className="glass-card p-8 rounded-[2.5rem] border-white/5 group overflow-hidden relative">
+         <div className="glass-card p-8 rounded-[16px] border-white/5 group overflow-hidden relative">
             <div className="absolute top-0 right-0 w-48 h-48 bg-cyber-blue/5 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10 space-y-8">
                <div className="flex justify-between items-center">
@@ -300,14 +300,14 @@ const StakePanel = () => {
                <button 
                  onClick={handleClaim}
                  disabled={claiming}
-                 className="w-full !py-5 rounded-2xl bg-white/[0.02] border border-white/5 text-[11px] font-black uppercase tracking-[0.3em] hover:bg-blue-600 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/30 transition-all text-white"
+                 className="w-full !py-5 rounded-[16px] bg-white/[0.02] border border-white/5 text-[11px] font-black uppercase tracking-[0.3em] hover:bg-blue-600 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/30 transition-all text-white"
                >
                  {claiming ? 'Transmitting...' : (isAssociated ? 'Harvest Yield' : 'Associate & Harvest')}
                </button>
             </div>
          </div>
 
-         <div className="glass-card p-8 rounded-[2.5rem] border-white/5 group overflow-hidden relative">
+         <div className="glass-card p-8 rounded-[16px] border-white/5 group overflow-hidden relative">
             <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-600/5 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10 space-y-8">
                <div className="flex justify-between items-center">

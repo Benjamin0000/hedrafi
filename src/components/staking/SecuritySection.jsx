@@ -1,7 +1,7 @@
 import { Shield, LockKeyhole, Zap, Search } from "lucide-react";
 
 const SecurityCard = ({ icon: Icon, title, description }) => (
-  <div className="glass-card p-8 rounded-[2rem] border border-white/[0.05] flex flex-col items-start hover:border-cyan-500/20 transition-all duration-300 w-full h-full bg-[#0A1024]">
+  <div className="glass-card p-8 rounded-[16px] border border-white/[0.05] flex flex-col items-start hover:border-cyan-500/20 transition-all duration-300 w-full h-full bg-[#0A1024]">
     {/* Icon */}
     <div className="p-3.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
       <Icon size={20} className="text-cyan-400" />
