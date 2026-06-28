@@ -7,7 +7,7 @@ const EmptyState = ({ icon: Icon = Inbox, title, description, action }) => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-blue-600/5 blur-[100px] pointer-events-none"></div>
       
       <div className="relative z-10 space-y-8">
-        <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/5 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
+        <div className="w-24 h-24 bg-white/5 rounded-[16px] flex items-center justify-center mx-auto border border-white/5 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
            <Icon size={40} className="text-slate-600 group-hover:text-blue-500 transition-colors" />
         </div>
         

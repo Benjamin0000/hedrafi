@@ -131,8 +131,8 @@ const Profit = () => {
                   Analyze your staking performance, monitor projected yields, and optimize your portfolio growth with institutional-grade precision.
                 </p>
               </div>
-              <div className="glass-card px-8 py-5 rounded-3xl border-white/[0.05] flex items-center gap-5 shadow-xl">
-                 <div className="w-12 h-12 rounded-2xl bg-blue-600/5 flex items-center justify-center border border-white/5">
+              <div className="glass-card px-8 py-5 rounded-[16px] border-white/[0.05] flex items-center gap-5 shadow-xl">
+                 <div className="w-12 h-12 rounded-[16px] bg-blue-600/5 flex items-center justify-center border border-white/5">
                     <TrendingUp size={24} className="text-cyber-blue" />
                  </div>
                  <div>
@@ -145,7 +145,7 @@ const Profit = () => {
             {!isConnected ? (
               <div className="glass-card p-12 md:p-24 rounded-[4rem] border-white/[0.05] text-center space-y-10 mt-8 shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-0 bg-blue-600/[0.02] pointer-events-none"></div>
-                <div className="w-24 h-24 bg-blue-600/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
+                <div className="w-24 h-24 bg-blue-600/5 rounded-[16px] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
                    <Lock size={40} className="text-blue-500" />
                 </div>
                 <div className="space-y-4 relative z-10">
@@ -166,10 +166,10 @@ const Profit = () => {
                      { label: 'Settled Rewards', value: profitData.claimedRewards.toFixed(2), unit: 'HRT', icon: Activity, color: 'text-indigo-400' },
                      { label: 'Active Principal', value: profitData.stakedAmount.toFixed(2), unit: 'HBAR', icon: Wallet, color: 'text-cyber-blue' }
                    ].map((stat, idx) => (
-                     <div key={idx} className="glass-card p-8 rounded-[2.5rem] border-white/[0.05] group hover:bg-[#0E1529] transition-all duration-500 shadow-xl overflow-hidden relative">
+                     <div key={idx} className="glass-card p-8 rounded-[16px] border-white/[0.05] group hover:bg-[#0E1529] transition-all duration-500 shadow-xl overflow-hidden relative">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-blue-600/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div className="flex justify-between items-start mb-8 relative z-10">
-                           <div className="w-12 h-12 bg-blue-600/5 rounded-2xl flex items-center justify-center border border-white/5 group-hover:border-blue-500/30 transition-colors">
+                           <div className="w-12 h-12 bg-blue-600/5 rounded-[16px] flex items-center justify-center border border-white/5 group-hover:border-blue-500/30 transition-colors">
                               <stat.icon className="text-cyber-blue" size={20} />
                            </div>
                            <div className="text-[10px] font-black uppercase tracking-widest text-slate-600 bg-white/5 px-2.5 py-1 rounded-lg">Real-time</div>
@@ -227,10 +227,10 @@ const Profit = () => {
 
                    {/* Quick Actions Side */}
                    <div className="lg:col-span-4 space-y-8">
-                      <div className="glass-card p-10 rounded-[3rem] border-white/[0.05] h-full flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                      <div className="glass-card p-10 rounded-[16px] border-white/[0.05] h-full flex flex-col justify-between shadow-2xl relative overflow-hidden">
                          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 blur-3xl"></div>
                          <div className="space-y-6 relative z-10">
-                            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5">
+                            <div className="w-12 h-12 bg-white/5 rounded-[16px] flex items-center justify-center border border-white/5">
                                <Zap size={24} className="text-indigo-400" />
                             </div>
                             <h3 className="text-2xl font-black text-white tracking-tight">Strategic Scaling</h3>
@@ -242,7 +242,7 @@ const Profit = () => {
                                   Optimize Principal <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </Link>
-                            <div className="bg-[#040A1A] p-5 rounded-2xl border border-white/5 text-center">
+                            <div className="bg-[#040A1A] p-5 rounded-[16px] border border-white/5 text-center">
                                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 mb-1">Coming Next</div>
                                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Yield Compounding Engine V2</div>
                             </div>

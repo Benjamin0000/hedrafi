@@ -156,21 +156,21 @@ const MintNFT = () => {
                  <div className="glass-card p-2 rounded-[3.5rem] border-white/[0.05] relative group shadow-2xl overflow-hidden">
                     <div className="absolute inset-0 bg-blue-600/[0.02] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div 
-                      className={`relative z-10 border-2 border-dashed rounded-[3rem] p-12 md:p-20 text-center cursor-pointer transition-all duration-500 ${
+                      className={`relative z-10 border-2 border-dashed rounded-[16px] p-12 md:p-20 text-center cursor-pointer transition-all duration-500 ${
                         errors.file ? 'border-red-500/30 bg-red-500/5' : 'border-white/10 hover:border-blue-500/40 bg-[#040A1A]/50'
                       }`}
                       onClick={() => document.getElementById('file-upload').click()}
                     >
                       {previewUrl ? (
                          <div className="space-y-6">
-                            <img src={previewUrl} alt="Preview" className="max-h-[400px] mx-auto rounded-[2rem] shadow-2xl border border-white/10" />
+                            <img src={previewUrl} alt="Preview" className="max-h-[400px] mx-auto rounded-[16px] shadow-2xl border border-white/10" />
                             <div className="flex justify-center items-center gap-2 text-[10px] font-black text-cyber-blue uppercase tracking-[0.2em] bg-blue-500/5 py-3 px-6 rounded-full inline-flex border border-blue-500/10">
                                <Upload size={14} /> Replace High Fidelity Asset
                             </div>
                          </div>
                       ) : (
                          <div className="space-y-6 py-10">
-                            <div className="w-24 h-24 bg-blue-600/5 rounded-3xl flex items-center justify-center mx-auto border border-white/5 group-hover:border-blue-500/30 transition-colors shadow-inner">
+                            <div className="w-24 h-24 bg-blue-600/5 rounded-[16px] flex items-center justify-center mx-auto border border-white/5 group-hover:border-blue-500/30 transition-colors shadow-inner">
                                <ImageIcon size={40} className="text-blue-500 group-hover:scale-110 transition-transform duration-500" />
                             </div>
                             <div className="space-y-3">
@@ -195,7 +195,7 @@ const MintNFT = () => {
                             value={formData.name}
                             onChange={handleInputChange}
                             placeholder="ARTIFACT_REVISION_01"
-                            className="bg-[#030712] border border-white/10 w-full px-8 py-5 rounded-2xl font-mono text-white outline-none focus:border-blue-500/50 transition-all placeholder:text-slate-800 text-lg shadow-inner"
+                            className="bg-[#030712] border border-white/10 w-full px-8 py-5 rounded-[16px] font-mono text-white outline-none focus:border-blue-500/50 transition-all placeholder:text-slate-800 text-lg shadow-inner"
                           />
                        </div>
 
@@ -209,7 +209,7 @@ const MintNFT = () => {
                             onChange={handleInputChange}
                             placeholder="Engineering notes and creative intent..."
                             rows="4"
-                            className="bg-[#030712] border border-white/10 w-full px-8 py-5 rounded-2xl font-medium text-white outline-none focus:border-blue-500/50 transition-all resize-none shadow-inner"
+                            className="bg-[#030712] border border-white/10 w-full px-8 py-5 rounded-[16px] font-medium text-white outline-none focus:border-blue-500/50 transition-all resize-none shadow-inner"
                           />
                        </div>
 
@@ -246,7 +246,7 @@ const MintNFT = () => {
                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
                           {/* <div className="space-y-4">
                              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Emission Supply</label>
-                             <div className="bg-[#030712] border border-white/5 px-8 py-5 rounded-2xl text-slate-700 font-mono text-lg shadow-inner">001 (Unique)</div>
+                             <div className="bg-[#030712] border border-white/5 px-8 py-5 rounded-[16px] text-slate-700 font-mono text-lg shadow-inner">001 (Unique)</div>
                           </div> */}
                           {/* <div className="space-y-4">
                              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Royalty Partition (%)</label>
@@ -256,7 +256,7 @@ const MintNFT = () => {
                                   name="royalty"
                                   value={formData.royalty}
                                   onChange={handleInputChange}
-                                  className="bg-[#030712] border border-white/10 w-full px-8 py-5 rounded-2xl font-mono text-white outline-none focus:border-blue-500/50 transition-all text-lg shadow-inner"
+                                  className="bg-[#030712] border border-white/10 w-full px-8 py-5 rounded-[16px] font-mono text-white outline-none focus:border-blue-500/50 transition-all text-lg shadow-inner"
                                 />
                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-700 font-black">%</div>
                              </div>
@@ -276,7 +276,7 @@ const MintNFT = () => {
                        </h3>
                        
                        {/* Mini Preview Card */}
-                       <div className="glass-card rounded-[2.5rem] border-white/10 overflow-hidden bg-[#02050E] flex flex-col items-center group/preview relative">
+                       <div className="glass-card rounded-[16px] border-white/10 overflow-hidden bg-[#02050E] flex flex-col items-center group/preview relative">
                           <div className="w-full aspect-square bg-[#040A1A] flex items-center justify-center relative overflow-hidden">
                              {previewUrl ? (
                                 <img src={previewUrl} alt="Preview" className="w-full h-full object-cover transition-transform duration-1000 group-hover/preview:scale-110" />
@@ -319,7 +319,7 @@ const MintNFT = () => {
                             )}
                           </button>
                           {!isConnected && (
-                             <div className="flex items-center justify-center gap-2 bg-red-500/5 py-4 rounded-2xl border border-red-500/10">
+                             <div className="flex items-center justify-center gap-2 bg-red-500/5 py-4 rounded-[16px] border border-red-500/10">
                                 <Zap size={14} className="text-red-500 animate-pulse" />
                                 <p className="text-[10px] font-black text-red-400 uppercase tracking-[0.2em]">Authentication Required</p>
                              </div>
@@ -328,8 +328,8 @@ const MintNFT = () => {
                     </div>
 
                     {/* Network Insight */}
-                    <div className="glass-card p-6 rounded-3xl border-white/[0.05] flex items-center gap-5 shadow-xl relative overflow-hidden bg-[#040A1A]">
-                       <div className="w-12 h-12 rounded-2xl bg-green-500/5 flex items-center justify-center border border-green-500/10">
+                    <div className="glass-card p-6 rounded-[16px] border-white/[0.05] flex items-center gap-5 shadow-xl relative overflow-hidden bg-[#040A1A]">
+                       <div className="w-12 h-12 rounded-[16px] bg-green-500/5 flex items-center justify-center border border-green-500/10">
                           <ShieldCheck size={24} className="text-green-500" />
                        </div>
                        <div>

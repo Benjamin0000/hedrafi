@@ -89,8 +89,8 @@ const StudioHome = () => {
                      Precision tools for the modern digital architect. Engineer, mint, and showcase your rare collections with institutional-grade protocols.
                   </p>
                </div>
-               <div className="glass-card px-8 py-5 rounded-3xl border-white/[0.05] flex items-center gap-5 shadow-xl">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600/5 flex items-center justify-center border border-white/5">
+               <div className="glass-card px-8 py-5 rounded-[16px] border-white/[0.05] flex items-center gap-5 shadow-xl">
+                  <div className="w-12 h-12 rounded-[16px] bg-blue-600/5 flex items-center justify-center border border-white/5">
                      <Activity size={24} className="text-cyber-blue animate-pulse" />
                   </div>
                   <div>
@@ -105,11 +105,11 @@ const StudioHome = () => {
               {stats.map((stat, i) => (
                 <div 
                   key={i}
-                  className="glass-card p-8 rounded-[2.5rem] border-white/[0.05] group hover:bg-[#0E1529] transition-all duration-500 shadow-xl"
+                  className="glass-card p-8 rounded-[16px] border-white/[0.05] group hover:bg-[#0E1529] transition-all duration-500 shadow-xl"
                 >
                   <div className="flex items-center justify-between mb-8">
                     <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 leading-none">{stat.label}</div>
-                    <div className="w-12 h-12 rounded-2xl bg-blue-600/5 flex items-center justify-center border border-white/5 group-hover:border-blue-500/30 transition-colors shadow-inner">
+                    <div className="w-12 h-12 rounded-[16px] bg-blue-600/5 flex items-center justify-center border border-white/5 group-hover:border-blue-500/30 transition-colors shadow-inner">
                        <stat.icon size={20} className="text-cyber-blue" />
                     </div>
                   </div>
@@ -128,10 +128,10 @@ const StudioHome = () => {
                 {quickActions.map((action, i) => (
                   // <Link key={i} to={action.link} className="group">
                   <div key={i} className="group cursor-not-allowed opacity-80">
-                    <div className="glass-card h-full p-10 rounded-[3rem] border-white/[0.05] relative overflow-hidden transition-all duration-500 hover:bg-[#0E1529] hover:border-blue-500/20 hover:-translate-y-2 shadow-xl">
+                    <div className="glass-card h-full p-10 rounded-[16px] border-white/[0.05] relative overflow-hidden transition-all duration-500 hover:bg-[#0E1529] hover:border-blue-500/20 hover:-translate-y-2 shadow-xl">
                       <div className={`absolute top-0 right-0 w-32 h-32 ${action.color} blur-3xl rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000`}></div>
                       <div className="relative z-10 space-y-8">
-                         <div className="w-16 h-16 bg-blue-600/5 rounded-2xl flex items-center justify-center border border-white/5 group-hover:border-blue-500/30 transition-colors">
+                         <div className="w-16 h-16 bg-blue-600/5 rounded-[16px] flex items-center justify-center border border-white/5 group-hover:border-blue-500/30 transition-colors">
                             <action.icon size={32} className="text-cyber-blue group-hover:scale-110 transition-transform duration-500" />
                          </div>
                          <div className="space-y-3">
@@ -152,17 +152,13 @@ const StudioHome = () => {
             </div>
 
             {/* Entry Point / Empty State */}
-            <div className="glass-card p-12 md:p-24 rounded-[4rem] border-white/[0.05] text-center relative overflow-hidden group shadow-2xl">
+            <div className="glass-card p-12 md:p-24 rounded-[16px] border-white/[0.05] text-center relative overflow-hidden group shadow-2xl">
               <div className="absolute inset-0 bg-blue-600/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
               <div className="relative z-10 max-w-2xl mx-auto space-y-12">
                  <div className="space-y-8">
-                    <div className="w-24 h-24 bg-blue-600/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
+                    <div className="w-24 h-24 bg-blue-600/5 rounded-[16px] flex items-center justify-center mx-auto border border-white/10 shadow-inner">
                        <Palette size={48} className="text-blue-500" />
                     </div>
-                    {/* <h3 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">Your Digital Legacy <br /><span className="text-gradient">Starts Now</span></h3>
-                    <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
-                       Our Studio provides institutional-grade tools to mint and manage your high-fidelity assets on the world's most sustainable ledger.
-                    </p> */}
 
                 <h3 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
                   Creator Studio <br />

@@ -1,9 +1,9 @@
 import { TrendingUp, Shield, Vote } from "lucide-react";
 
 const WhyStakeCard = ({ icon: Icon, title, description }) => (
-  <div className="glass-card p-10 rounded-[2.5rem] border border-white/[0.05] shadow-xl hover:shadow-2xl transition-all duration-500 group hover:border-white/10 bg-[#0A1024]/40">
+  <div className="glass-card p-10 rounded-[16px] border border-white/[0.05] shadow-xl hover:shadow-2xl transition-all duration-500 group hover:border-white/10 bg-[#0A1024]/40">
     {/* Icon Container */}
-    <div className="mb-8 inline-flex p-5 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300">
+    <div className="mb-8 inline-flex p-5 rounded-[16px] bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300">
       <Icon size={32} className="text-cyan-400 group-hover:text-cyan-300" />
     </div>
 

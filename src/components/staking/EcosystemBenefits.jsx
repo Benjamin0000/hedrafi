@@ -1,14 +1,14 @@
 import { TrendingUp, Palette, Globe, Trophy } from "lucide-react";
 
 const BenefitCard = ({ icon: Icon, number, title, description }) => (
-  <div className="glass-card p-10 rounded-[2.5rem] border border-white/[0.05] shadow-xl hover:shadow-2xl transition-all duration-500 group bg-[#0A1024]/40 h-full flex flex-col items-start relative box-border">
+  <div className="glass-card p-10 rounded-[16px] border border-white/[0.05] shadow-xl hover:shadow-2xl transition-all duration-500 group bg-[#0A1024]/40 h-full flex flex-col items-start relative box-border">
     {/* Number Badge - Positioned to pop out without clipping */}
-    <div className="absolute -top-4 -left-4 w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-mono font-black text-xl shadow-[0_0_20px_rgba(236,72,153,0.4)] border-4 border-[#040816] rotate-[-12deg] group-hover:rotate-0 transition-transform duration-500 z-20">
+    <div className="absolute -top-4 -left-4 w-12 h-12 rounded-[16px] bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-mono font-black text-xl shadow-[0_0_20px_rgba(236,72,153,0.4)] border-4 border-[#040816] rotate-[-12deg] group-hover:rotate-0 transition-transform duration-500 z-20">
       {number}
     </div>
 
     {/* Icon */}
-    <div className="mb-8 inline-flex p-5 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300">
+    <div className="mb-8 inline-flex p-5 rounded-[16px] bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300">
       <Icon size={32} className="text-purple-400 group-hover:text-purple-300" />
     </div>
 
@@ -116,7 +116,7 @@ const EcosystemBenefits = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="mt-12 p-8 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-2xl text-center">
+      <div className="mt-12 p-8 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-[16px] text-center">
         <p className="text-slate-300 mb-4">
           Ready to unlock all ecosystem benefits?
         </p>

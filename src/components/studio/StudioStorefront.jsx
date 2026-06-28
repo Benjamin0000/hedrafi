@@ -48,7 +48,7 @@ const StudioStorefront = () => {
            {/* Header Area */}
            <div className="space-y-4">
               <Link to="/studio" className="inline-flex items-center gap-3 text-slate-500 hover:text-white transition-all group">
-                 <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center border border-white/5 group-hover:bg-blue-600/20 transition-all">
+                 <div className="w-10 h-10 rounded-[16px] bg-white/5 flex items-center justify-center border border-white/5 group-hover:bg-blue-600/20 transition-all">
                     <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                  </div>
                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Back to Studio</span>
@@ -65,13 +65,13 @@ const StudioStorefront = () => {
               {/* Asset Management Suite */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                  {/* Banner Console */}
-                 <div className="lg:col-span-12 glass-card p-10 rounded-[3rem] border-white/10 relative group bg-[#02050E]">
+                 <div className="lg:col-span-12 glass-card p-10 rounded-[16px] border-white/10 relative group bg-[#02050E]">
                     <div className="flex items-center gap-2 mb-6">
                        <ImageIcon size={14} className="text-blue-500" />
                        <label className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 block">Environment Banner</label>
                     </div>
                     <div 
-                      className="relative h-64 border-2 border-dashed border-white/10 rounded-[2.5rem] overflow-hidden cursor-pointer hover:border-blue-500/40 bg-white/5 transition-all group/banner"
+                      className="relative h-64 border-2 border-dashed border-white/10 rounded-[16px] overflow-hidden cursor-pointer hover:border-blue-500/40 bg-white/5 transition-all group/banner"
                       onClick={() => document.getElementById('banner-upload').click()}
                     >
                       {bannerPreview ? (
@@ -79,7 +79,7 @@ const StudioStorefront = () => {
                       ) : (
                         <div className="flex items-center justify-center h-full">
                            <div className="text-center space-y-4">
-                              <div className="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center mx-auto group-hover/banner:scale-110 transition-transform duration-500 border border-white/5">
+                              <div className="w-16 h-16 bg-white/5 rounded-[16px] flex items-center justify-center mx-auto group-hover/banner:scale-110 transition-transform duration-500 border border-white/5">
                                  <Upload size={32} className="text-slate-600" />
                               </div>
                               <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">1500 x 500 PX RECOMMENDED</p>
@@ -105,7 +105,7 @@ const StudioStorefront = () => {
                         <img src={logoPreview} alt="Logo Preview" className="w-full h-full object-cover" />
                       ) : (
                         <div className="text-center space-y-4">
-                           <div className="w-12 h-12 bg-white/5 rounded-[1.5rem] flex items-center justify-center mx-auto group-hover:rotate-12 transition-transform border border-white/5">
+                           <div className="w-12 h-12 bg-white/5 rounded-[16px] flex items-center justify-center mx-auto group-hover:rotate-12 transition-transform border border-white/5">
                               <User size={24} className="text-slate-600" />
                            </div>
                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-none">UPLOAD</p>
@@ -129,7 +129,7 @@ const StudioStorefront = () => {
                          value={formData.storeName}
                          onChange={handleInputChange}
                          placeholder="IDENTIFIER..."
-                         className="w-full bg-[#02050E] border border-white/10 rounded-2xl px-8 py-5 font-mono text-white text-2xl outline-none focus:border-blue-500 transition-all shadow-inner"
+                         className="w-full bg-[#02050E] border border-white/10 rounded-[16px] px-8 py-5 font-mono text-white text-2xl outline-none focus:border-blue-500 transition-all shadow-inner"
                        />
                     </div>
 
@@ -141,7 +141,7 @@ const StudioStorefront = () => {
                          onChange={handleInputChange}
                          placeholder="THE ORIGIN STORY..."
                          rows="5"
-                         className="w-full bg-[#02050E] border border-white/10 rounded-2xl px-8 py-5 font-medium text-white outline-none focus:border-blue-500 transition-all resize-none leading-relaxed shadow-inner"
+                         className="w-full bg-[#02050E] border border-white/10 rounded-[16px] px-8 py-5 font-medium text-white outline-none focus:border-blue-500 transition-all resize-none leading-relaxed shadow-inner"
                        ></textarea>
                     </div>
                  </div>
@@ -157,7 +157,7 @@ const StudioStorefront = () => {
                             value={formData.twitter}
                             onChange={handleInputChange}
                             placeholder="@USERNAME"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-black transition-all outline-none focus:border-blue-400 group-hover/social:bg-white/[0.08] text-white"
+                            className="w-full bg-white/5 border border-white/10 rounded-[16px] px-6 py-5 font-black transition-all outline-none focus:border-blue-400 group-hover/social:bg-white/[0.08] text-white"
                           />
                           <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-600 group-hover/social:text-blue-400 transition-colors">
                              <Twitter size={18} />
@@ -173,7 +173,7 @@ const StudioStorefront = () => {
                             value={formData.instagram}
                             onChange={handleInputChange}
                             placeholder="@USERNAME"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-black transition-all outline-none focus:border-pink-400 group-hover/social:bg-white/[0.08] text-white"
+                            className="w-full bg-white/5 border border-white/10 rounded-[16px] px-6 py-5 font-black transition-all outline-none focus:border-pink-400 group-hover/social:bg-white/[0.08] text-white"
                           />
                           <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-600 group-hover/social:text-pink-400 transition-colors">
                              <Instagram size={18} />
@@ -189,7 +189,7 @@ const StudioStorefront = () => {
                             value={formData.website}
                             onChange={handleInputChange}
                             placeholder="HTTPS://"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 font-black transition-all outline-none focus:border-cyan-400 group-hover/social:bg-white/[0.08] text-white"
+                            className="w-full bg-white/5 border border-white/10 rounded-[16px] px-6 py-5 font-black transition-all outline-none focus:border-cyan-400 group-hover/social:bg-white/[0.08] text-white"
                           />
                           <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-600 group-hover/social:text-cyan-400 transition-colors">
                              <Globe size={18} />
@@ -207,11 +207,11 @@ const StudioStorefront = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                        <button
                          onClick={() => setFormData(prev => ({ ...prev, theme: 'dark' }))}
-                         className={`p-10 rounded-[3rem] border-2 transition-all group text-left relative overflow-hidden ${
+                         className={`p-10 rounded-[16px] border-2 transition-all group text-left relative overflow-hidden ${
                            formData.theme === 'dark' ? 'border-blue-500 bg-blue-500/5' : 'border-white/5 hover:border-white/10 bg-[#02050E]'
                          }`}
                        >
-                         <div className="w-full h-32 bg-[#040816] rounded-2xl mb-6 shadow-2xl border border-white/10 relative overflow-hidden">
+                         <div className="w-full h-32 bg-[#040816] rounded-[16px] mb-6 shadow-2xl border border-white/10 relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent"></div>
                          </div>
                          <div className="text-xl font-black text-white tracking-tight">DEFI NOIR</div>
@@ -219,11 +219,11 @@ const StudioStorefront = () => {
                        </button>
                        <button
                          onClick={() => setFormData(prev => ({ ...prev, theme: 'light' }))}
-                         className={`p-10 rounded-[3rem] border-2 transition-all group opacity-30 text-left relative overflow-hidden bg-white/5 ${
+                         className={`p-10 rounded-[16px] border-2 transition-all group opacity-30 text-left relative overflow-hidden bg-white/5 ${
                            formData.theme === 'light' ? 'border-blue-500 bg-blue-500/5' : 'border-white/5'
                          }`}
                        >
-                         <div className="w-full h-32 bg-slate-100 rounded-2xl mb-6 shadow-2xl border border-black/10"></div>
+                         <div className="w-full h-32 bg-slate-100 rounded-[16px] mb-6 shadow-2xl border border-black/10"></div>
                          <div className="text-xl font-black text-white tracking-tight italic">LUCID (V2)</div>
                          <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">PROTOCOL SYNCING...</div>
                        </button>

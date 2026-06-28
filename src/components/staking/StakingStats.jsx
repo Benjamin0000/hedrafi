@@ -81,7 +81,7 @@ const StakingStats = () => {
       {statsData.map((stat, index) => (
         <div
           key={index}
-          className="glass-card rounded-[2rem] border border-white/[0.05] bg-[#0A1024]/60 p-8 flex flex-col justify-between min-h-[220px] hover:bg-[#0D152D] transition-all duration-500 group shadow-xl relative overflow-hidden"
+          className="glass-card rounded-[16px] border border-white/[0.05] bg-[#0A1024]/60 p-8 flex flex-col justify-between min-h-[220px] hover:bg-[#0D152D] transition-all duration-500 group shadow-xl relative overflow-hidden"
         >
           {/* Animated Glow on hover */}
           <div className="absolute -top-16 -right-16 w-32 h-32 bg-blue-500/5 rounded-full blur-[60px] group-hover:bg-blue-500/10 transition-all duration-700"></div>

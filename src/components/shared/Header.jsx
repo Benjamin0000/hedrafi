@@ -17,16 +17,16 @@ const Header = () => {
 
     const navLinks = [
         { name: 'Studio', path: '/studio', icon: LayoutGrid },
-        { name: 'Marketplace', path: '/marketplace', icon: ShoppingCart },
-        { name: 'Staking', path: '/staking', icon: Coins },
-        // { name: 'Profit', path: '/profit', icon: TrendingUp },
+        { name: 'NFT Marketplace', path: '/marketplace', icon: ShoppingCart },
+        { name: 'Assets', path: '/assets', icon: TrendingUp },
+        { name: 'Pioneer Pass', path: '/pioneer-pass', icon: Coins },
     ];
 
     const isActive = (path) => location.pathname === path;
 
     return (
         <header className={`fixed top-0 z-[100] w-full transition-all duration-300 px-4 pt-4 ${scrolled ? 'translate-y-0' : 'translate-y-0'}`}>
-            <div className={`max-w-7xl mx-auto backdrop-blur-xl rounded-[2rem] px-6 py-3 flex justify-between items-center transition-all duration-500 border-white/10 ${
+            <div className={`max-w-7xl mx-auto backdrop-blur-xl rounded-[16px] px-6 py-3 flex justify-between items-center transition-all duration-500 border-white/10 ${
                 scrolled ? 'bg-white/5 shadow-[0_0_50px_rgba(0,0,0,0.3)] scale-[0.98]' : 'bg-white/[0.02] border-white/5'
             }`}>
                 <div className="flex items-center gap-6">
@@ -76,13 +76,13 @@ const Header = () => {
             <div className={`md:hidden absolute top-full left-4 right-4 mt-4 transition-all duration-500 transform ${
                 isMenuOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'
             }`}>
-                <div className="glass-card rounded-[2rem] p-6 space-y-3 border-white/10 shadow-2xl bg-white/5 backdrop-blur-3xl">
+                <div className="glass-card rounded-[16px] p-6 space-y-3 border-white/10 shadow-2xl bg-white/5 backdrop-blur-3xl">
                     {navLinks.map((link) => (
                         <Link 
                             key={link.name}
                             to={link.path} 
                             onClick={() => setIsMenuOpen(false)}
-                            className={`flex items-center justify-between p-5 rounded-[1.5rem] transition-all ${
+                            className={`flex items-center justify-between p-5 rounded-[16px] transition-all ${
                                 isActive(link.path)
                                 ? 'bg-blue-600/20 border border-blue-500/30'
                                 : 'bg-white/5 border border-white/5 hover:bg-white/10'

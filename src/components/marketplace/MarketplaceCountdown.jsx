@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const CountdownUnit = ({ value, label, color }) => (
   <div className="flex flex-col items-center">
-    <div className="glass-card w-20 h-24 sm:w-28 sm:h-32 md:w-32 md:h-36 rounded-3xl border border-white/[0.05] bg-[#0A1024]/60 flex items-center justify-center relative overflow-hidden group shadow-2xl">
+    <div className="glass-card w-20 h-24 sm:w-28 sm:h-32 md:w-32 md:h-36 rounded-[16px] border border-white/[0.05] bg-[#0A1024]/60 flex items-center justify-center relative overflow-hidden group shadow-2xl">
       {/* Glow Effect */}
       <div className={`absolute inset-0 bg-gradient-to-b ${color} opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500`}></div>
       <div className={`absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t ${color} opacity-[0.05] blur-2xl`}></div>

@@ -53,7 +53,7 @@ const StudioCollections = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
            <div className="space-y-4">
               <Link to="/studio" className="inline-flex items-center gap-3 text-slate-500 hover:text-white transition-all group">
-                 <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center border border-white/5 group-hover:bg-blue-600/20 transition-all">
+                 <div className="w-10 h-10 rounded-[16px] bg-white/5 flex items-center justify-center border border-white/5 group-hover:bg-blue-600/20 transition-all">
                     <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                  </div>
                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Back to Studio</span>
@@ -79,7 +79,7 @@ const StudioCollections = () => {
               <div
                 key={collection.id}
                 onClick={() => openCollectionDetail(collection)}
-                className="glass-card group rounded-[3rem] border-white/10 overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col bg-[#02050E]"
+                className="glass-card group rounded-[16px] border-white/10 overflow-hidden hover:border-blue-500/30 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col bg-[#02050E]"
               >
                 {/* Banner Asset */}
                 <div className="relative h-48 bg-white/5 overflow-hidden">
@@ -93,7 +93,7 @@ const StudioCollections = () => {
 
                 {/* Identity Area */}
                 <div className="relative px-8 -mt-12 space-y-4 flex-grow flex flex-col">
-                  <div className="w-24 h-24 rounded-3xl border-4 border-[#02050E] overflow-hidden bg-white/5 shadow-2xl relative z-10 mx-auto lg:mx-0">
+                  <div className="w-24 h-24 rounded-[16px] border-4 border-[#02050E] overflow-hidden bg-white/5 shadow-2xl relative z-10 mx-auto lg:mx-0">
                     <img 
                       src={collection.logo} 
                       alt={collection.name}
@@ -128,7 +128,7 @@ const StudioCollections = () => {
           </div>
         ) : (
           <div className="py-32 glass-card rounded-[4rem] border-white/5 text-center space-y-8 bg-[#02050E]">
-             <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-white/5">
+             <div className="w-24 h-24 bg-white/5 rounded-[16px] flex items-center justify-center mx-auto border border-white/5">
                 <Archive size={40} className="text-slate-600" />
              </div>
              <div className="space-y-2">
@@ -148,7 +148,7 @@ const StudioCollections = () => {
         {selectedCollection && (
           <div className="space-y-10">
             {/* Immersive Header */}
-            <div className="relative h-48 sm:h-64 rounded-[3rem] overflow-hidden group shadow-2xl border border-white/10 bg-[#02050E]">
+            <div className="relative h-48 sm:h-64 rounded-[16px] overflow-hidden group shadow-2xl border border-white/10 bg-[#02050E]">
               <img 
                 src={selectedCollection.banner} 
                 alt={selectedCollection.name}
@@ -156,7 +156,7 @@ const StudioCollections = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#02050E] via-transparent to-transparent opacity-90"></div>
               <div className="absolute bottom-8 left-8 flex items-end gap-6">
-                 <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-3xl overflow-hidden border-4 border-[#02050E] bg-white/5 shadow-2xl relative z-20">
+                 <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-[16px] overflow-hidden border-4 border-[#02050E] bg-white/5 shadow-2xl relative z-20">
                     <img src={selectedCollection.logo} alt="" className="w-full h-full object-cover" />
                  </div>
                  <div className="pb-1 sm:pb-3 space-y-1">
@@ -178,15 +178,15 @@ const StudioCollections = () => {
 
                   {/* Tech Grid */}
                   <div className="grid grid-cols-3 gap-6">
-                    <div className="glass-card p-8 rounded-[2.5rem] border-white/5 text-center space-y-2 bg-[#02050E]">
+                    <div className="glass-card p-8 rounded-[16px] border-white/5 text-center space-y-2 bg-[#02050E]">
                       <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em]">Supply Cap</div>
                       <div className="text-3xl font-mono font-black text-white">{selectedCollection.items}</div>
                     </div>
-                    <div className="glass-card p-8 rounded-[2.5rem] border-white/5 text-center space-y-2 bg-[#02050E]">
+                    <div className="glass-card p-8 rounded-[16px] border-white/5 text-center space-y-2 bg-[#02050E]">
                        <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em]">On-chain Fee</div>
                        <div className="text-3xl font-mono font-black text-cyan-400">{selectedCollection.royalty}%</div>
                     </div>
-                    <div className="glass-card p-8 rounded-[2.5rem] border-white/5 text-center space-y-2 bg-[#02050E]">
+                    <div className="glass-card p-8 rounded-[16px] border-white/5 text-center space-y-2 bg-[#02050E]">
                        <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em]">Unique Owners</div>
                        <div className="text-3xl font-mono font-black text-slate-800">00</div>
                     </div>
