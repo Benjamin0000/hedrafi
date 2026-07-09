@@ -9,6 +9,7 @@ import { checkTokenAssociation } from '../../helpers';
 import { ContractId } from "@hashgraph/sdk";
 import { useWallet, useWriteContract, useAccountId, useAssociateTokens, useReadContract, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
+import { pioneerCouncil } from '../../lib/staking'
 
 const PioneerCouncilPass = () => {
     const { isConnected } = useWallet(HWCConnector);
@@ -46,11 +47,7 @@ const PioneerCouncilPass = () => {
 
     const getSerialNumber = async () => {
         try {
-            const number = await readContract({
-                address: EVM_CONTRACT_ADDRESS,
-                abi: ABI,
-                functionName: 'minted',
-            })
+            const number = await pioneerCouncil.minted()
             return Number(number);
         } catch (e) {
             console.error(e)

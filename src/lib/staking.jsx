@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import CONTRACT_ABI from '../ABIs/stakingABI.json';
+import CouncilAbi from "../ABIs/pioneerMintingABI.json"
 import { ContractId, TokenId } from '@hashgraph/sdk';
 
 const CONTRACT_ID = process.env.REACT_APP_STAKING_ADDRESS_EVM; 
@@ -32,3 +33,7 @@ export const rewardToken = rewardTokenAddress
         provider
       )
     : null;
+
+
+
+export const pioneerCouncil = new ethers.Contract("0x6211780f8b48b95cd3ab229bf522465c989ff444", CouncilAbi, provider); 
