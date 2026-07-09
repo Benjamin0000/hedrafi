@@ -73,8 +73,7 @@ const PioneerCouncilPass = () => {
         await writeContract({
             contractId: contractID,
             abi: ABI,
-            functionName: 'mint',
-            metaArgs: { gas: 400_000},
+            functionName: 'mint'
         });
         toast.success('NFT minted!');
 
