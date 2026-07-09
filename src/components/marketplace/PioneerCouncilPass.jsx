@@ -174,11 +174,11 @@ const PioneerCouncilPass = () => {
                                 {evmAddress ?
                                 <>
                                     {isWhitelisted == 1 ?
-                                        <p>You are eligiable to mint</p> 
+                                        <p>You are eligible to mint</p> 
                                         : isWhitelisted == 2 ? 
                                         <p>You have already minted.</p>
                                             : 
-                                        <p>You are not whitelisted</p>
+                                        <p>You are not on the whitelist</p>
                                     }
 
                                     <button 
