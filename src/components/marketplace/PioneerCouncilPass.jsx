@@ -14,7 +14,7 @@ const PioneerCouncilPass = () => {
     const { isConnected } = useWallet(HWCConnector);
     const { data: accountId } = useAccountId({ autoFetch: isConnected });
     const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
-    const [serialNumber, setSerialNumber] = useState(1);
+    const [serialNumber, setSerialNumber] = useState(0);
     const [isWhitelisted, setIsWhitelisted] = useState(0);
     const [isAssociated, setIsAssociated] = useState(true);
     const [claiming, setClaiming] = useState(false);
@@ -95,15 +95,18 @@ const PioneerCouncilPass = () => {
     };
 
     useEffect(() => {
+        const fetchSerialNumber = async () => {
+            const number = await getSerialNumber();
+            setSerialNumber(number);
+        };
+        fetchSerialNumber();
+    }, []);
+
+    useEffect(() => {
         const checkIfWhiteListed = async () => {
             if (evmAddress) {
                 const whitelisted = await isWhiteListed();
                 setIsWhitelisted(Number(whitelisted));
-                const serial = await getSerialNumber();
-                setSerialNumber(serial);
-
-                console.log("serial", serial)
-
                 const associated = await checkTokenAssociation(accountId, tokenID);
                 setIsAssociated(associated);
 
