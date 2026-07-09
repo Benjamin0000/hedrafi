@@ -13,12 +13,12 @@ const Footer = () => {
             
             <div className="container-main relative z-10">
                 {/* Backed By Section - Very Bold & Prominent */}
-                <div className="mb-16 text-center border-b border-white/5 pb-10">
+                {/* <div className="mb-16 text-center border-b border-white/5 pb-10">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-4">Official Infrastructure Partner</p>
                     <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase">
                         Backed by <span className="text-blue-500">Hedera Foundation</span> & <span className="text-cyan-400">Thrive Hedera</span>
                     </h3>
-                </div>
+                </div> */}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20">
                     {/* Brand Column */}

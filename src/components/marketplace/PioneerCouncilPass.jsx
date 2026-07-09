@@ -1,13 +1,121 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
-import { Eye, Lock, Star, Landmark, Link as LinkIcon, Infinity, Flame, Settings } from 'lucide-react';
+import { Eye, Lock, Star, Landmark, Link as LinkIcon, Infinity, Flame, Settings, IdCard } from 'lucide-react';
+import { Medal } from 'lucide-react';
+import { toast } from 'react-toastify';
+import ABI from '../../ABIs/pioneerMintingABI.json';
+import { checkTokenAssociation } from '../../helpers';
+import { ContractId } from "@hashgraph/sdk";
+import { useWallet, useWriteContract, useAccountId, useAssociateTokens, useReadContract, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
+import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 
 const PioneerCouncilPass = () => {
+    const { isConnected } = useWallet(HWCConnector);
+    const { data: accountId } = useAccountId({ autoFetch: isConnected });
+    const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
     const [serialNumber, setSerialNumber] = useState(1);
-    const [showDevTools, setShowDevTools] = useState(false);
+    const [isWhitelisted, setIsWhitelisted] = useState(0);
+    const [isAssociated, setIsAssociated] = useState(true);
+    const [claiming, setClaiming] = useState(false);
+    const { readContract } = useReadContract();
+    const { writeContract } = useWriteContract();
+     const { associateTokens } = useAssociateTokens({ connector: HWCConnector });
+
+    const tokenID = "0.0.10631447";
+    const contractID = "0.0.10631442"; 
+    const EVM_CONTRACT_ADDRESS = "0x6211780f8b48b95cd3ab229bf522465c989ff444";
+    const maxAvaliable = 6; 
+
+
+
+    const isWhiteListed = async ()=>{
+        try {
+            const whitelisted = await readContract({
+                address: EVM_CONTRACT_ADDRESS,
+                abi: ABI,
+                functionName: 'users',
+                args: [evmAddress]
+            })
+            console.log("whitelisted", Number(whitelisted))
+            return whitelisted;
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const getSerialNumber = async () => {
+        try {
+            const number = await readContract({
+                address: EVM_CONTRACT_ADDRESS,
+                abi: ABI,
+                functionName: 'minted',
+            })
+            return Number(number);
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+
+    const handleMint = async () => {
+        if (!isConnected) return toast.error('Connect your wallet first');
+
+        if (!isAssociated) {
+            try {
+                await associateTokens([tokenID]);
+                toast.success('NFT token associated!');
+                setIsAssociated(true);
+                return;
+            } catch (e) {
+                return toast.error('Failed to associate token');
+            }
+        }
+
+        try {
+        setClaiming(true);
+        await writeContract({
+            contractId: contractID,
+            abi: ABI,
+            functionName: 'mint',
+            metaArgs: { gas: 400_000},
+        });
+        toast.success('NFT minted!');
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+
+        } catch (e) {
+            console.error(e);
+            toast.error('minting failed');
+        } finally {
+            setClaiming(false);
+        }
+    };
+
+    useEffect(() => {
+        const checkIfWhiteListed = async () => {
+            if (evmAddress) {
+                const whitelisted = await isWhiteListed();
+                setIsWhitelisted(Number(whitelisted));
+                const serial = await getSerialNumber();
+                setSerialNumber(serial);
+
+                console.log("serial", serial)
+
+                const associated = await checkTokenAssociation(accountId, tokenID);
+                setIsAssociated(associated);
+
+                console.log("isAssociated", associated)
+            }
+        };
+        checkIfWhiteListed();
+    }, [evmAddress]);
+
     
-    const paddedSerial = String(serialNumber).padStart(3, '0');
+    const calcNo = serialNumber + 1 < maxAvaliable ? serialNumber + 1 : maxAvaliable
+    const paddedSerial = String(calcNo).padStart(3, '0');
 
     return (
         <div className="min-h-screen bg-[#02050E] text-slate-200 font-sans relative overflow-hidden">
@@ -20,33 +128,33 @@ const PioneerCouncilPass = () => {
             <Header />
 
             <main className="relative z-10 pt-32 pb-20 container-main">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 ">
                     
                     {/* Left Column: 3D Asset Viewer Placeholder */}
                     <div className="relative flex flex-col items-center">
                         
                         {/* 3D Asset Container Placeholder */}
-                        <div className="w-full max-w-[500px] h-[600px] bg-[#050A15] border border-white/[0.05] rounded-[16px] shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex items-center justify-center relative overflow-hidden group">
+                        <div className="w-full max-w-[500px] h-[600px] bg-[#050A15] border border-white/[0.05] rounded-[16px] shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex  justify-center relative overflow-hidden group">
                             
                             {/* Subtle Ambient Glow inside container */}
                             <div className="absolute inset-0 flex justify-center items-center opacity-30 pointer-events-none z-0">
                                 <div className="w-[300px] h-[300px] bg-cyan-500/20 rounded-full blur-[80px]"></div>
-                            </div>
+                            </div> 
                             
                             {/* The Placeholder Graphic / Text */}
-                            <div className="z-10 flex flex-col items-center text-center space-y-4 px-8">
-                                <div className="w-16 h-16 rounded-full border border-cyan-500/20 bg-cyan-500/5 flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(34,211,238,0.1)] group-hover:border-cyan-500/40 transition-colors duration-700">
-                                    <Landmark size={24} className="text-cyan-400/50" />
-                                </div>
-                                <span className="font-mono text-cyan-400/60 text-[10px] tracking-[0.3em] uppercase">
-                                    [ Premium Interactive Pass Port ]
-                                </span>
-                                <span className="font-mono text-slate-500 text-[10px] tracking-[0.2em] uppercase">
-                                    3D Render Engine Offline
-                                </span>
-                                <div className="mt-8 px-4 py-1.5 border border-white/[0.05] bg-[#02050E] rounded-md font-mono text-cyan-400 font-black text-xs tracking-[0.4em] shadow-inner">
-                                    #{paddedSerial}
-                                </div>
+                            <div className="z-10 flex flex-col  text-center px-8">
+                           
+                                {/* <img className=' w-96 h-96' src={`/pioneer_image/pioneer${serialNumber}.jpeg`} alt="" /> */}
+
+                                <video
+                                width={320}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                src={`/videos/pioneer_video${serialNumber + 1 < maxAvaliable ? serialNumber + 1 : maxAvaliable}.mp4`}
+                                />
+
                             </div>
 
                             {/* Corner Accents for the 'Vault' feel */}
@@ -54,7 +162,36 @@ const PioneerCouncilPass = () => {
                             <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-white/10"></div>
                             <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-white/10"></div>
                             <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-white/10"></div>
+                       
+                       
                         </div>
+
+
+                                <div className="mt-8 px-4 py-1.5 border border-white/[0.05] bg-[#02050E] rounded-md font-mono text-cyan-400 font-black text-xs tracking-[0.4em] shadow-inner">
+                                    #{paddedSerial}
+                                </div>
+
+                                {evmAddress ?
+                                <>
+                                    {isWhitelisted == 1 ?
+                                        <p>You are eligiable to mint</p> 
+                                        : isWhitelisted == 2 ? 
+                                        <p>You have already minted.</p>
+                                            : 
+                                        <p>You are not whitelisted</p>
+                                    }
+
+                                    <button 
+                                     onClick={handleMint}
+                                        disabled={isWhitelisted != 1}
+                                        className={` ${isWhitelisted == 1 ? 'bg-blue-600 hover:bg-blue-500' : 'bg-gray-600 cursor-not-allowed'} text-white text-lg font-bold py-4 px-10 rounded-[16px] transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105`}
+                                    >
+
+                                        { claiming ? 'Minting...' : isAssociated ? 'Mint' : 'Associate Token'}
+                                    </button>
+                                </> : 
+                                <div className='text-info'>Connect wallet to mint</div>
+                            }
 
                         {/* Bottom Text Block */}
                         <div className="mt-16 text-center max-w-lg z-10">
@@ -71,13 +208,11 @@ const PioneerCouncilPass = () => {
                     <div className="space-y-8">
                         {/* Header Titles */}
                         <div className="space-y-4 text-center lg:text-left">
-{/*                             <p className="text-xs md:text-sm font-black tracking-[0.3em] text-slate-500 uppercase">
+                           <p className="text-xs md:text-sm font-black tracking-[0.3em] text-slate-500 uppercase">
                                 NOT GIVEN. EARNED.<br />
-                                NOT FOR SALE. FOREVER.
-                            </p> */}
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white uppercase">
-                                PIONEER <br />
-                                <span className="text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.2)]">COUNCIL</span>
+                            </p> 
+                            <h1 className="text-2xl md:text-5xl font-black tracking-tight leading-[1.1] text-white uppercase">
+                                PIONEER <span className="text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.2)]">COUNCIL</span> Relic
                             </h1>
                             <div className="flex items-center justify-center lg:justify-start gap-4 pt-6">
                                 <div className="h-px bg-white/[0.05] w-16"></div>
@@ -112,9 +247,9 @@ const PioneerCouncilPass = () => {
 
                             <div className="space-y-8">
                                 {[
-                                    { icon: Landmark, title: "PIONEER STATUS", desc: "Recognized unequivocally as one of the first 200 architects of HedraFi." },
-                                    { icon: Eye, title: "EXCLUSIVE ACCESS", desc: "Priority gateway to future yields, private drops, and closed council rooms." },
-                                    { icon: Lock, title: "NON-TRANSFERABLE SOUL", desc: "Cryptographically bound to your identity. Your honor. Your legacy." }
+                                    { icon: Medal, title: "PIONEER STATUS", desc: "Recognized unequivocally as one of the first 215 architects of HedraFi." },
+                                    { icon: IdCard, title: "EXCLUSIVE ACCESS", desc: "Priority gateway to future yields, private drops, and closed council rooms." },
+                                    // { icon: Lock, title: "NON-TRANSFERABLE SOUL", desc: "Cryptographically bound to your identity. Your honor. Your legacy." }
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-6 items-start group">
                                         <div className="w-12 h-12 rounded-full bg-[#02050E] border border-white/[0.05] flex items-center justify-center shrink-0 group-hover:border-cyan-500/30 transition-colors">
@@ -130,11 +265,11 @@ const PioneerCouncilPass = () => {
                         </div>
 
                         {/* Footer Grid */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-white/[0.05]">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-6 border-t border-white/[0.05]">
                             {[
-                                { icon: Landmark, top: "200", mid: "PIONEERS", bot: "STRICT CAP" },
+                                { icon: Landmark, top: "215", mid: "PIONEERS", bot: "STRICT CAP" },
                                 { icon: LinkIcon, top: "ON-CHAIN", mid: "", bot: "VERIFIABLE" },
-                                { icon: Infinity, top: "SOULBOUND", mid: "", bot: "NON-TRADEABLE" },
+                                // { icon: Infinity, top: "SOULBOUND", mid: "", bot: "NON-TRADEABLE" },
                                 { icon: Flame, top: "BUILT ON", mid: "", bot: "HEDERA L1" }
                             ].map((spec, i) => (
                                 <div key={i} className="text-center flex flex-col items-center p-6 bg-[#050A15] border border-white/[0.02] rounded-[16px] hover:border-cyan-500/10 transition-colors">
@@ -150,45 +285,6 @@ const PioneerCouncilPass = () => {
                 </div>
             </main>
 
-            {/* Developer / Batch Engine Toggle */}
-{/*             <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
-                {showDevTools && (
-                    <div className="bg-[#02050E] border border-cyan-500/20 p-4 rounded-[12px] shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl w-64 animate-reveal">
-                        <div className="text-[9px] text-cyan-400 uppercase tracking-[0.2em] font-black mb-4 flex items-center justify-between">
-                            Batch Engine <Settings size={10} />
-                        </div>
-                        <div className="flex items-center justify-between gap-3 mb-4 bg-[#050A15] p-2 rounded-md border border-white/[0.05]">
-                            <button 
-                                onClick={() => setSerialNumber(prev => Math.max(1, prev - 1))}
-                                className="w-8 h-8 flex items-center justify-center bg-white/[0.02] hover:bg-white/[0.05] rounded-[6px] text-slate-400 transition-colors"
-                            >
-                                -
-                            </button>
-                            <span className="font-mono text-xs font-black text-cyan-400 tracking-[0.2em]">#{paddedSerial}</span>
-                            <button 
-                                onClick={() => setSerialNumber(prev => Math.min(200, prev + 1))}
-                                className="w-8 h-8 flex items-center justify-center bg-white/[0.02] hover:bg-white/[0.05] rounded-[6px] text-slate-400 transition-colors"
-                            >
-                                +
-                            </button>
-                        </div>
-                        <button 
-                            onClick={() => setSerialNumber(prev => Math.min(200, prev + 10))}
-                            className="w-full py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 text-[9px] uppercase font-black tracking-[0.2em] rounded-[6px] border border-cyan-500/20 transition-all"
-                        >
-                            Queue Next 10
-                        </button>
-                    </div>
-                )}
-                
-                <button 
-                    onClick={() => setShowDevTools(!showDevTools)}
-                    className="w-10 h-10 bg-[#050A15] border border-white/[0.05] hover:border-cyan-500/30 text-slate-500 hover:text-cyan-400 rounded-full flex items-center justify-center shadow-2xl transition-all"
-                    title="Toggle Developer Engine"
-                >
-                    <Settings size={16} />
-                </button>
-            </div> */}
 
             <Footer />
         </div>

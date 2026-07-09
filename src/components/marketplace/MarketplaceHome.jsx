@@ -6,11 +6,18 @@ import { Search, SlidersHorizontal, LayoutGrid, ArrowRight } from 'lucide-react'
 import MarketplaceCountdown from './MarketplaceCountdown';
 import AssetCard from '../shared/AssetCard';
 
+// const nftAssets = [
+//   { id: 5, name: 'Cosmic Dragon #042', price: '150 ℏ', volume: '12K', image: 'https://images.unsplash.com/photo-1634979148467-ed5b07449553?w=800', collection: 'Cosmic Dragons' },
+//   { id: 6, name: 'Cyberpunk Skyline', price: '450 ℏ', volume: '89K', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800', collection: 'Neon Nights' },
+//   { id: 7, name: 'Ethereal Landscape', price: '25 ℏ', volume: '1.2K', image: 'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800', collection: 'Abstract Minds' },
+//   { id: 8, name: 'Neon Genesis', price: '88 ℏ', volume: '5K', image: 'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=800', collection: 'Genesis Core' }
+// ];
+
 const nftAssets = [
-  { id: 5, name: 'Cosmic Dragon #042', price: '150 ℏ', volume: '12K', image: 'https://images.unsplash.com/photo-1634979148467-ed5b07449553?w=800', collection: 'Cosmic Dragons' },
-  { id: 6, name: 'Cyberpunk Skyline', price: '450 ℏ', volume: '89K', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800', collection: 'Neon Nights' },
-  { id: 7, name: 'Ethereal Landscape', price: '25 ℏ', volume: '1.2K', image: 'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800', collection: 'Abstract Minds' },
-  { id: 8, name: 'Neon Genesis', price: '88 ℏ', volume: '5K', image: 'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=800', collection: 'Genesis Core' }
+  // { id: 5, name: 'Cosmic Dragon #042', price: '150 ℏ', volume: '12K', image: 'https://images.unsplash.com/photo-1634979148467-ed5b07449553?w=800', collection: 'Cosmic Dragons' },
+  // { id: 6, name: 'Cyberpunk Skyline', price: '450 ℏ', volume: '89K', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800', collection: 'Neon Nights' },
+  // { id: 7, name: 'Ethereal Landscape', price: '25 ℏ', volume: '1.2K', image: 'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800', collection: 'Abstract Minds' },
+  // { id: 8, name: 'Neon Genesis', price: '88 ℏ', volume: '5K', image: 'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=800', collection: 'Genesis Core' }
 ];
 
 const MarketplaceHome = () => {

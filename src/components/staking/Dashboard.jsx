@@ -42,7 +42,7 @@ const Dashboard = () => {
       <main className="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Discord Join Banner */}
-          <div className="mb-10 animate-fade-in">
+          {/* <div className="mb-10 animate-fade-in">
              <a 
                href="https://discord.gg/cDjN62RJKC" 
                target="_blank" 
@@ -64,7 +64,7 @@ const Dashboard = () => {
                    Get Involved <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
                 </div>
              </a>
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-10 md:gap-14">
             

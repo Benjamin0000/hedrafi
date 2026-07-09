@@ -73,7 +73,7 @@ const Homepage = () => {
                         <img 
                            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop" 
                            alt="Institutional Asset" 
-                           className="w-full h-full object-cover rounded-[12px] opacity-60 mix-blend-overlay group-hover:scale-105 transition-transform duration-1000 grayscale group-hover:grayscale-0"
+                           className=" blur-sm w-full h-full object-cover rounded-[12px] opacity-60 mix-blend-overlay group-hover:scale-105 transition-transform duration-1000 grayscale group-hover:grayscale-0"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#02050E] via-[#02050E]/60 to-transparent"></div>
                         

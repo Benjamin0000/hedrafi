@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutGrid, ShoppingCart, Coins, TrendingUp } from 'lucide-react';
+import { Menu, X, LayoutGrid, ShoppingCart, Coins, TrendingUp, Medal } from 'lucide-react';
 import logo from "../../assets/hedrafinew.png";
 import WalletButton from './WalletButton';
 
@@ -18,8 +18,9 @@ const Header = () => {
     const navLinks = [
         { name: 'Studio', path: '/studio', icon: LayoutGrid },
         { name: 'NFT Marketplace', path: '/marketplace', icon: ShoppingCart },
-        { name: 'Assets', path: '/assets', icon: TrendingUp },
-        { name: 'Pioneer Pass', path: '/pioneer-pass', icon: Coins },
+        // { name: 'Assets', path: '/assets', icon: TrendingUp },
+         { name: 'Staking', path: '/staking', icon: Coins },
+        { name: 'Pioneer Pass', path: '/pioneer-pass', icon: Medal },
     ];
 
     const isActive = (path) => location.pathname === path;

@@ -1,38 +1,66 @@
-// import {
-//   Client,
-//   PrivateKey,
-//   AccountId, 
-//   ContractId, 
-//   TokenCreateTransaction,
-//   TokenType,
-//   TokenSupplyType
-// } from "@hashgraph/sdk";
-// import dotenv from "dotenv";
-// dotenv.config({ path: '.env.local' });  
+import {
+  Client,
+  PrivateKey,
+  AccountId, 
+  ContractId, 
+  TokenCreateTransaction,
+  TokenType,
+  TokenSupplyType,
+  TokenUpdateTransaction, 
+  TokenId
+} from "@hashgraph/sdk";
+import dotenv from "dotenv";
+dotenv.config({ path: '.env.local' });  
 
-// const client = Client.forTestnet();
+const client = Client.forTestnet();
 
-// const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
-// const operatorKey = PrivateKey.fromStringECDSA(process.env.HEDERA_OPERATOR_KEY);
-// const marketPlaceContract = ContractId.fromString(process.env.REACT_APP_MARKETPLACE_CONTRACT); 
+const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
+const operatorKey = PrivateKey.fromStringECDSA(process.env.HEDERA_OPERATOR_KEY);
+const marketPlaceContract = ContractId.fromString(process.env.REACT_APP_MARKETPLACE_CONTRACT); 
+client.setOperator(operatorId, operatorKey);
 
-// client.setOperator(operatorId, operatorKey);
+// // The Token ID you created
+// const tokenId = TokenId.fromString("0.0.9484226");
 
-// const tx = await new TokenCreateTransaction()
-//   .setTokenName("Hedrafi Store Front")
-//   .setTokenSymbol("HSF")
-//   .setTreasuryAccountId(operatorId)
-//   .setTokenType(TokenType.NonFungibleUnique)
-//   .setSupplyType(TokenSupplyType.Finite)
-//   .setMaxSupply(2**63-1)
-//   .setSupplyKey(marketPlaceContract)
-//   .freezeWith(client)
-//   .sign(operatorKey);
+// // Your contract's Account ID (ContractId can be converted to AccountId)
+// const contractAccountId = marketPlaceContract; 
 
-// const submit = await tx.execute(client);
+// const tx = await new TokenUpdateTransaction()
+//   .setTokenId(tokenId)
+//   .setTreasuryAccountId(contractAccountId)
+//   .freezeWith(client);
+
+// // IMPORTANT: This must be signed by the CURRENT Treasury key (the operator) 
+// // AND the NEW Treasury key (the contract, or the account controlling it).
+// const signTx = await tx.sign(operatorKey);
+// const submit = await signTx.execute(client);
 // const receipt = await submit.getReceipt(client);
 
-// console.log("Token ID:", receipt.tokenId.toString());
+// console.log("Treasury update status:", receipt.status.toString());
+
+const tx = await new TokenCreateTransaction()
+  .setTokenName("HedraFi Genesis Council")
+  .setTokenSymbol("HGC")
+  .setTreasuryAccountId(marketPlaceContract)
+  .setTokenType(TokenType.NonFungibleUnique)
+  .setSupplyType(TokenSupplyType.Finite)
+  .setMaxSupply(215)
+  // Marketplace contract can mint
+  .setSupplyKey(marketPlaceContract)
+  // Set the admin key to your own key so you have control
+  .setAdminKey(operatorKey.publicKey)
+  // Ability to update royalties later
+  .setFeeScheduleKey(operatorKey.publicKey)
+  .freezeWith(client)
+  .sign(operatorKey);
+
+const submit = await tx.execute(client);
+const receipt = await submit.getReceipt(client);
+
+console.log("Token ID:", receipt.tokenId.toString());
+
+
+
 
 
 // import {
@@ -72,73 +100,73 @@
 
 
 
-import {
-  Client,
-  PrivateKey,
-  AccountId,
-  ContractId,
-  AccountAllowanceApproveTransaction,
-  TokenCreateTransaction,
-  TokenId,
-  NftId,
-  TransactionId,
-  Hbar,
-  TokenType,
-  TokenSupplyType
-} from "@hashgraph/sdk";
+// import {
+//   Client,
+//   PrivateKey,
+//   AccountId,
+//   ContractId,
+//   AccountAllowanceApproveTransaction,
+//   TokenCreateTransaction,
+//   TokenId,
+//   NftId,
+//   TransactionId,
+//   Hbar,
+//   TokenType,
+//   TokenSupplyType
+// } from "@hashgraph/sdk";
 
-import dotenv from "dotenv";
-dotenv.config({ path: '.env.local' });  
+// import dotenv from "dotenv";
+// dotenv.config({ path: '.env.local' });  
 
-const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
-const operatorKey = PrivateKey.fromStringECDSA(process.env.HEDERA_OPERATOR_KEY);
-const marketPlaceContract = ContractId.fromString(process.env.REACT_APP_MARKETPLACE_CONTRACT); 
+// const operatorId = AccountId.fromString(process.env.HEDERA_OPERATOR_ID);
+// const operatorKey = PrivateKey.fromStringECDSA(process.env.HEDERA_OPERATOR_KEY);
+// const marketPlaceContract = ContractId.fromString(process.env.REACT_APP_MARKETPLACE_CONTRACT); 
 
-const client = Client.forMainnet();
-client.setOperator(operatorId, operatorKey);
-
-
-
-async function createHRTToken() {
-    // 1. Configure the client with your operator details
-    // const operatorId = process.env.OPERATOR_ID;
-    // const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
-    // const client = Client.forMainnet().setOperator(operatorId, operatorKey);
-
-    console.log("Creating HRT Token...");
-
-    // 2. Define the supply (1 Billion * 10^8 decimals)
-    // Note: 1,000,000,000.00000000
-    const initialSupply = 100000000000000000n; 
-
-    // 3. Create the transaction
-    const transaction = new TokenCreateTransaction()
-        .setTokenName("HedraFi Reward Token")
-        .setTokenSymbol("HRT")
-        .setTokenType(TokenType.FungibleCommon)
-        .setDecimals(8)
-        .setInitialSupply(initialSupply)
-        .setTreasuryAccountId(operatorId)
-        .setSupplyType(TokenSupplyType.Finite)
-        .setMaxSupply(initialSupply)
-        // Admin key allows you to update/delete. If omitted, token is immutable.
-        .setAdminKey(operatorKey) 
-        .freezeWith(client);
-
-    // 4. Sign and submit
-    const signTx = await transaction.sign(operatorKey);
-    const txResponse = await signTx.execute(client);
-
-    // 5. Get the receipt to see the Token ID
-    const receipt = await txResponse.getReceipt(client);
-    const tokenId = receipt.tokenId;
-
-    console.log(`✅ HRT Token Created! Token ID: ${tokenId}`);
-}
+// const client = Client.forMainnet();
+// client.setOperator(operatorId, operatorKey);
 
 
-const result = await createHRTToken(); 
-console.log(result); 
+
+// async function createHRTToken() {
+//     // 1. Configure the client with your operator details
+//     // const operatorId = process.env.OPERATOR_ID;
+//     // const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
+//     // const client = Client.forMainnet().setOperator(operatorId, operatorKey);
+
+//     console.log("Creating HRT Token...");
+
+//     // 2. Define the supply (1 Billion * 10^8 decimals)
+//     // Note: 1,000,000,000.00000000
+//     const initialSupply = 100000000000000000n; 
+
+//     // 3. Create the transaction
+//     const transaction = new TokenCreateTransaction()
+//         .setTokenName("HedraFi Reward Token")
+//         .setTokenSymbol("HRT")
+//         .setTokenType(TokenType.FungibleCommon)
+//         .setDecimals(8)
+//         .setInitialSupply(initialSupply)
+//         .setTreasuryAccountId(operatorId)
+//         .setSupplyType(TokenSupplyType.Finite)
+//         .setMaxSupply(initialSupply)
+//         // Admin key allows you to update/delete. If omitted, token is immutable.
+//         .setAdminKey(operatorKey) 
+//         .freezeWith(client);
+
+//     // 4. Sign and submit
+//     const signTx = await transaction.sign(operatorKey);
+//     const txResponse = await signTx.execute(client);
+
+//     // 5. Get the receipt to see the Token ID
+//     const receipt = await txResponse.getReceipt(client);
+//     const tokenId = receipt.tokenId;
+
+//     console.log(`✅ HRT Token Created! Token ID: ${tokenId}`);
+// }
+
+
+// const result = await createHRTToken(); 
+// console.log(result); 
 
 
 // const nftId = new NftId(TokenId.fromString("0.0.8015487"), 1); // Replace 123 with your serial
