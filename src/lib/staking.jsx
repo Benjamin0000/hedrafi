@@ -5,7 +5,8 @@ import { ContractId, TokenId } from '@hashgraph/sdk';
 
 const CONTRACT_ID = process.env.REACT_APP_STAKING_ADDRESS_EVM; 
 const REWARD_TOKEN_ID = process.env.REACT_APP_REWARD_TOKEN;
-const RPC_URL = process.env.REACT_APP_RPC || "https://mainnet.hashio.io/api";
+// const RPC_URL = process.env.REACT_APP_RPC || "https://mainnet.hashio.io/api";
+const RPC_URL = "https://mainnet.hashio.io/api";
 
 // Safe EVM address conversion
 export const getEvmAddress = (id) => {
@@ -20,7 +21,7 @@ export const getEvmAddress = (id) => {
 
 const rewardTokenAddress = getEvmAddress(REWARD_TOKEN_ID);
 
-const provider = new ethers.JsonRpcProvider(RPC_URL);
+export const provider = new ethers.JsonRpcProvider(RPC_URL);
 
 export const stakingContract = CONTRACT_ID 
     ? new ethers.Contract(CONTRACT_ID, CONTRACT_ABI, provider)

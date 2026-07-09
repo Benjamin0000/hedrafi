@@ -9,7 +9,7 @@ import { checkTokenAssociation } from '../../helpers';
 import { ContractId } from "@hashgraph/sdk";
 import { useWallet, useWriteContract, useAccountId, useAssociateTokens, useReadContract, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
-import { pioneerCouncil } from '../../lib/staking'
+import { pioneerCouncil , provider} from '../../lib/staking'
 
 const PioneerCouncilPass = () => {
     const { isConnected } = useWallet(HWCConnector);
@@ -47,13 +47,12 @@ const PioneerCouncilPass = () => {
 
     const getSerialNumber = async () => {
         try {
-            const number = await pioneerCouncil.minted()
+            const number = await pioneerCouncil.minted();
             return Number(number);
         } catch (e) {
-            console.error(e)
+            console.error("Full Error Details:", e);
         }
     }
-
 
     const handleMint = async () => {
         if (!isConnected) return toast.error('Connect your wallet first');
@@ -94,6 +93,7 @@ const PioneerCouncilPass = () => {
     useEffect(() => {
         const fetchSerialNumber = async () => {
             const number = await getSerialNumber();
+            console.log("Serial Number", number)
             setSerialNumber(number);
         };
         fetchSerialNumber();
