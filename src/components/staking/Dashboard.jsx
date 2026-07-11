@@ -1,23 +1,106 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import WalletInfo from "./WalletInfo";
 import StakePanel from "./StakePanel";
 import StakingStats from "./StakingStats";
 import WhyStakeGrid from "./WhyStakeGrid";
-import SecuritySection from "./SecuritySection";
-import EcosystemBenefits from "./EcosystemBenefits";
+// import SecuritySection from "./SecuritySection";
+// import EcosystemBenefits from "./EcosystemBenefits";
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
+import { useWallet, useAccountId} from '@buidlerlabs/hashgraph-react-wallets';
+
 
 const Dashboard = () => {
+  const { isConnected } = useWallet(HWCConnector);
+  const { data: accountId } = useAccountId({ autoFetch: isConnected });
+  const [stakers, setStakers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingPosition, setLoadingPosition] = useState(false);
+  const [userPosition, setUserPosition] = useState(null);
 
-  useEffect(() => {
-    // Handle hash scroll on mount
-    if (window.location.hash === '#stake-form') {
-      setTimeout(() => {
-        scrollToForm();
-      }, 500); // Small delay to ensure render
-    }
-  }, []);
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const Loader = () => {
+      return (
+         <div className="flex items-center justify-center py-10">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+         </div>
+      );
+  }
+
+  const Loader2 = () =>{
+      return (
+         <div className="flex items-center justify-center space-x-2 py-4">
+            <div className="h-2 w-2 animate-bounce rounded-full bg-blue-500 [animation-delay:-0.3s]"></div>
+            <div className="h-2 w-2 animate-bounce rounded-full bg-blue-600 [animation-delay:-0.15s]"></div>
+            <div className="h-2 w-2 animate-bounce rounded-full bg-blue-700"></div>
+         </div>
+      )
+  }
+
+   const fetchStakers = async () => {
+
+      if(accountId && userPosition === null){
+         setLoadingPosition(true);
+      }
+
+      try {
+
+         const url = accountId
+            ? `${API_URL}/api/stakers?account_id=${accountId}`
+            : `${API_URL}/api/stakers`;
+
+
+         const response = await axios.get(url);
+
+         const data = response.data;
+
+         setStakers(data.stakers);
+
+
+         if(accountId && data.me?.position){
+            setUserPosition(data.me.position);
+         } else {
+            setUserPosition(null);
+         }
+
+
+      } catch(error) {
+
+         toast.error(
+            "Failed to fetch stakers. Please refresh the page or try again later."
+         );
+
+      } finally {
+
+         setLoading(false);
+         setLoadingPosition(false);
+
+      }
+   };
+
+
+
+   useEffect(() => {
+
+      fetchStakers();
+
+      const interval = setInterval(() => {
+         fetchStakers();
+      }, 5000);
+
+
+      return () => clearInterval(interval);
+
+   }, [accountId]);
+
+
 
   const scrollToForm = () => {
     const element = document.getElementById("stake-form");
@@ -41,65 +124,130 @@ const Dashboard = () => {
 
       <main className="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Discord Join Banner */}
-          {/* <div className="mb-10 animate-fade-in">
-             <a 
-               href="https://discord.gg/cDjN62RJKC" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               className="group flex flex-col sm:flex-row items-center justify-between gap-4 p-4 md:px-8 rounded-[16px] bg-indigo-600/5 hover:bg-indigo-600/10 border border-indigo-500/10 hover:border-indigo-500/30 transition-all duration-500 shadow-xl"
-             >
-                <div className="flex items-center gap-4">
-                   <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:scale-110 transition-transform">
-                      <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="white">
-                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.77,16.15,77.7,77.7,0,0,0,7.31-11.86A69,69,0,0,1,28.68,78.1a48.09,48.09,0,0,0,4.06-3.14c18.71,8.59,39,8.59,57.4,0a48.53,48.53,0,0,0,4.06,3.14,69.1,69.1,0,0,1-11.78,6.4,77.74,77.74,0,0,0,7.31,11.86,105.56,105.56,0,0,0,32.8-16.14C131,51.13,124.16,27.52,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5.09-12.73,11.45-12.73S54.18,46,54,53,49,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.09-12.73,11.44-12.73S96.23,46,96.05,53,91,65.69,84.69,65.69Z"/>
-                      </svg>
-                   </div>
-                   <div className="text-left">
-                      <p className="text-sm md:text-md font-bold text-white tracking-tight">Join our Discord for real-time updates and support!</p>
-                      <p className="text-[10px] uppercase tracking-widest text-indigo-400 font-black">Community & Support Governance</p>
-                   </div>
-                </div>
-                <div className="flex items-center gap-2 text-indigo-400 font-black text-[10px] uppercase tracking-[0.2em] group-hover:text-white transition-colors">
-                   Get Involved <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
-                </div>
-             </a>
-          </div> */}
-
           <div className="flex flex-col gap-10 md:gap-14">
             
             {/* HERO SECTION - REPLICATING IMAGE 1 */}
-            <div className="glass-card rounded-[16px] border border-white/[0.05] shadow-2xl p-8 md:p-12 lg:p-16 relative overflow-hidden group w-full bg-[#0A1128]/40">
-               {/* Ambient Glow inside card */}
-               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] -mr-40 -mt-40 pointer-events-none"></div>
 
-               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 relative z-10">
-                  {/* Hero Content */}
-                  <div className="lg:col-span-12 space-y-8 flex flex-col items-center text-center">
-                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20">
-                        <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
-                        <span className="text-[10px] font-black tracking-[0.2em] uppercase text-cyan-100">Premium Staking Infrastructure</span>
-                     </div>
-                     
-                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white max-w-4xl">
-                        Stake & Earn $HRT
-                     </h1>
-                     
-                     <p className="text-slate-300 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
-                        Secure your assets within the HedraFi protocol. Monitor multi-layered yield streams and participate in ecosystem governance through a 100% non-custodial interface.
-                     </p>
+<div className="glass-card relative w-full overflow-hidden rounded-2xl border border-white/[0.05] bg-[#0A1128]/40 p-6 md:p-8 shadow-2xl">
 
-                     <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
-                        <button 
-                          onClick={scrollToForm}
-                          className="bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold py-4 px-10 rounded-[16px] transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105"
-                        >
-                           Start Staking Now
-                        </button>
-                     </div>
-                  </div>
+   {/* Ambient Glow */}
+   <div className="pointer-events-none absolute -right-40 -top-40 h-[400px] w-[400px] bg-blue-500/5 blur-[120px]" />
+
+   <div className="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-12 ">
+
+      {/* Hero Content */}
+      <div className="lg:col-span-7 space-y-5">
+         <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5">
+         
+            <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
+
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-100">
+               Premium Staking Infrastructure
+            </span>
+         </div>
+         <br />
+            <br />
+         <h1 className="max-w-3xl text-4xl font-black leading-tight text-white md:text-5xl">
+            Stake & Earn $HRT
+         </h1>
+
+
+         <p className="max-w-xl text-base leading-7 text-slate-300 md:text-lg">
+            Secure your assets within the HedraFi protocol. Monitor
+            multi-layered yield streams and participate in ecosystem
+            governance through a 100% non-custodial interface.
+         </p>
+
+
+         <button
+            onClick={scrollToForm}
+            className="rounded-2xl bg-blue-600 px-8 py-3 text-base font-bold text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all hover:scale-105 hover:bg-blue-500"
+         >
+            Start Staking Now
+         </button>
+
+      </div>
+
+
+      {/* Leaderboard Preview */}
+      {/* Leaderboard Preview */}
+<div className="lg:col-span-5">
+
+   <div className="rounded-2xl border border-white/[0.08] bg-black/20 p-5 backdrop-blur-xl">
+
+   <div className="mb-5 flex items-center justify-between">
+      <div>
+         <h3 className="text-lg font-bold text-white">
+            🏆 Top Stakers
+         </h3>
+
+         <p className="text-sm text-slate-400">
+            Current staking leaderboard
+         </p>
+      </div>
+
+      <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-right">
+         <p className="text-[10px] uppercase tracking-widest text-cyan-300">
+            Your Position
+         </p>
+
+         <p className="text-xl font-black text-white">
+            {
+               userPosition !== null ? 
+               '#'+userPosition : loadingPosition ? <Loader2/> : <small style={{fontSize: '10px'}}>connect wallet</small>
+            }
+         </p>
+
+         {/* <p className="text-xs text-cyan-200">
+            Top 8%
+         </p> */}
+      </div>
+   </div>
+
+
+      {/* Scrollable Leaderboard */}
+      <div className="max-h-[280px] space-y-3 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+
+         { loading ? <Loader />
+            :
+         stakers.map((user, index) => (
+
+            <div
+               key={index}
+               className="flex items-center justify-between rounded-xl border border-white/[0.05] bg-white/[0.02] px-4 py-3 transition hover:bg-white/[0.05]"
+            >
+
+               <div className="flex items-center gap-3">
+
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/[0.05] text-xs font-bold text-slate-300">
+                     {index + 1}
+                  </span>
+
+
+                  <span className="text-sm font-semibold text-white">
+                     {user.account_id}
+                  </span>
                </div>
+
+
+               <span className="text-sm font-bold text-cyan-300">
+                  {(user.balance / 100000000).toLocaleString(undefined, {
+                     minimumFractionDigits: 2,
+                     maximumFractionDigits: 2,
+                  })} ℏ
+               </span>
             </div>
+         ))}
+
+      </div>
+
+   </div>
+
+</div>
+
+   </div>
+
+</div>
 
             {/* SECTION 2: Layout - Stats on Top */}
             <div className="w-full">
@@ -127,14 +275,14 @@ const Dashboard = () => {
             </div>
 
             {/* SECTION 5: Security Section */}
-            <div className="pt-12 w-full max-w-7xl mx-auto border-t border-white/10">
+            {/* <div className="pt-12 w-full max-w-7xl mx-auto border-t border-white/10">
                <SecuritySection />
-            </div>
+            </div> */}
 
             {/* SECTION 6: Ecosystem Benefits */}
-            <div className="pt-12 border-t border-white/10 w-full max-w-7xl mx-auto">
+            {/* <div className="pt-12 border-t border-white/10 w-full max-w-7xl mx-auto">
                <EcosystemBenefits />
-            </div>
+            </div> */}
             
           </div>
         </div>
