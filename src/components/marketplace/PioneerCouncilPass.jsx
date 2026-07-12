@@ -26,7 +26,7 @@ const PioneerCouncilPass = () => {
     const tokenID = "0.0.10631447";
     const contractID = "0.0.10631442"; 
     const EVM_CONTRACT_ADDRESS = "0x6211780f8b48b95cd3ab229bf522465c989ff444";
-    const maxAvaliable = 6; 
+    const maxAvaliable = 24; 
 
     const videos = {
         11:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeifsfld7jop7xn27tyk54fvrjw6vbwexuupn23qwbdkvtlkbvct4s4",
