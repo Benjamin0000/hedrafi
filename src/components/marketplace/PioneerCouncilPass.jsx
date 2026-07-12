@@ -15,7 +15,7 @@ const PioneerCouncilPass = () => {
     const { isConnected } = useWallet(HWCConnector);
     const { data: accountId } = useAccountId({ autoFetch: isConnected });
     const { data: evmAddress } = useEvmAddress({ autoFetch: isConnected });
-    const [serialNumber, setSerialNumber] = useState(0);
+    const [serialNumber, setSerialNumber] = useState(10);
     const [isWhitelisted, setIsWhitelisted] = useState(0);
     const [isAssociated, setIsAssociated] = useState(true);
     const [claiming, setClaiming] = useState(false);
