@@ -28,6 +28,12 @@ const PioneerCouncilPass = () => {
     const EVM_CONTRACT_ADDRESS = "0x6211780f8b48b95cd3ab229bf522465c989ff444";
     const maxAvaliable = 6; 
 
+    const videos = {
+        11:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeifsfld7jop7xn27tyk54fvrjw6vbwexuupn23qwbdkvtlkbvct4s4",
+        12:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidh6fyz3rmrohdp75p4hhhqbbcflnmr7ojplscguovpxq4ilfr6d4",
+        13:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeih6n23s3ps3vwdvv74wo2jx3uoriz24rnwzgpnex643q5sqkoi5pu"
+    }; 
+
 
 
     const isWhiteListed = async ()=>{
@@ -152,7 +158,7 @@ const PioneerCouncilPass = () => {
                                 loop
                                 muted
                                 playsInline
-                                src={`/videos/pioneer_video${serialNumber + 1 < maxAvaliable ? serialNumber + 1 : maxAvaliable}.mp4`}
+                                src={`${videos[serialNumber+1]}`}
                                 />
 
                             </div>
