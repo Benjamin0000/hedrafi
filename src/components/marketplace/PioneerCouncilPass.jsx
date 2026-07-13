@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
-import { Eye, Lock, Star, Landmark, Link as LinkIcon, Infinity, Flame, Settings, IdCard } from 'lucide-react';
+import { Star, Landmark, Link as LinkIcon, Flame, IdCard } from 'lucide-react';
 import { Medal } from 'lucide-react';
 import { toast } from 'react-toastify';
-import ABI from '../../ABIs/pioneerMintingABI.json';
+import ABI from '../../ABIs/pioneerMintingABI.json'
 import { checkTokenAssociation } from '../../helpers';
-import { ContractId } from "@hashgraph/sdk";
 import { useWallet, useWriteContract, useAccountId, useAssociateTokens, useReadContract, useEvmAddress } from '@buidlerlabs/hashgraph-react-wallets';
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
-import { pioneerCouncil , provider} from '../../lib/staking'
+import { pioneerCouncil } from '../../lib/staking'
 
 const PioneerCouncilPass = () => {
     const { isConnected } = useWallet(HWCConnector);
@@ -21,7 +20,7 @@ const PioneerCouncilPass = () => {
     const [claiming, setClaiming] = useState(false);
     const { readContract } = useReadContract();
     const { writeContract } = useWriteContract();
-     const { associateTokens } = useAssociateTokens({ connector: HWCConnector });
+    const { associateTokens } = useAssociateTokens({ connector: HWCConnector });
 
     const tokenID = "0.0.10631447";
     const contractID = "0.0.10631442"; 
@@ -31,7 +30,18 @@ const PioneerCouncilPass = () => {
     const videos = {
         11:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeifsfld7jop7xn27tyk54fvrjw6vbwexuupn23qwbdkvtlkbvct4s4",
         12:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidh6fyz3rmrohdp75p4hhhqbbcflnmr7ojplscguovpxq4ilfr6d4",
-        13:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeih6n23s3ps3vwdvv74wo2jx3uoriz24rnwzgpnex643q5sqkoi5pu"
+        13:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeih6n23s3ps3vwdvv74wo2jx3uoriz24rnwzgpnex643q5sqkoi5pu",
+        14:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeighorrd6jsrfvhubaodeicszcrseyc2z7z5quqm336kfir5jomhoe",
+        15:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeigkowcscijvi6igmi3cyzeg2p4makrwz3r7d63twg6sbc6dr3jbzm",
+        16:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidlm3utttovrgohcgrhndptpi5bg5reoirdg5uanmbj5hscdza3sq",
+        17:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibmgbywr2xercdzz3j73pjsoowg75tbtcdxdpbdgtguoj5omeskzq",
+        18:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeianars2uhrde4iwcjro3c26kcygko3vtor6ulm3ggojg2splngjs4",
+        19:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidlgztysuevgspdudwvqnmuvpxarl5dfzupigpfzmggi5yerfi7xi",
+        20:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeiazfo73ylttj7xno7thirn64x7tzbeqgjtznakf27hk6dxuggzksm",
+        21:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibf3524xheicjyacitx26bvbeunt6o5b2lfczqc5clleiz5zd5nca",
+        22:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeia3ksw3ak7pdgwbfthdfsfx7szb54ydgdi5irokotxs4m3pqypqk4",
+        23:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidpb6kbx7xszsiiuhy5mndszsih32eiud7vws7dxyicqqc5lzrgcy",
+        24:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeihs5xad4hlhyhplcu442lljhaodjz5dxcfgjo3wk3zure2jdms2ee"
     }; 
 
 
