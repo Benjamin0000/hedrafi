@@ -168,7 +168,7 @@ const PioneerCouncilPass = () => {
                                 loop
                                 muted
                                 playsInline
-                                src={`${videos[serialNumber+1]}`}
+                                src={`${videos[ serialNumber + 1 < maxAvaliable ? serialNumber + 1 : maxAvaliable ]}`}
                                 />
 
                             </div>
