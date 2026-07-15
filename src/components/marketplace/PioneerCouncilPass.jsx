@@ -25,23 +25,36 @@ const PioneerCouncilPass = () => {
     const tokenID = "0.0.10631447";
     const contractID = "0.0.10631442"; 
     const EVM_CONTRACT_ADDRESS = "0x6211780f8b48b95cd3ab229bf522465c989ff444";
-    const maxAvaliable = 24; 
+    const maxAvaliable = 50; 
 
     const videos = {
-        11:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeifsfld7jop7xn27tyk54fvrjw6vbwexuupn23qwbdkvtlkbvct4s4",
-        12:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidh6fyz3rmrohdp75p4hhhqbbcflnmr7ojplscguovpxq4ilfr6d4",
-        13:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeih6n23s3ps3vwdvv74wo2jx3uoriz24rnwzgpnex643q5sqkoi5pu",
-        14:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeighorrd6jsrfvhubaodeicszcrseyc2z7z5quqm336kfir5jomhoe",
-        15:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeigkowcscijvi6igmi3cyzeg2p4makrwz3r7d63twg6sbc6dr3jbzm",
-        16:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidlm3utttovrgohcgrhndptpi5bg5reoirdg5uanmbj5hscdza3sq",
-        17:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibmgbywr2xercdzz3j73pjsoowg75tbtcdxdpbdgtguoj5omeskzq",
-        18:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeianars2uhrde4iwcjro3c26kcygko3vtor6ulm3ggojg2splngjs4",
-        19:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidlgztysuevgspdudwvqnmuvpxarl5dfzupigpfzmggi5yerfi7xi",
-        20:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeiazfo73ylttj7xno7thirn64x7tzbeqgjtznakf27hk6dxuggzksm",
-        21:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibf3524xheicjyacitx26bvbeunt6o5b2lfczqc5clleiz5zd5nca",
-        22:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeia3ksw3ak7pdgwbfthdfsfx7szb54ydgdi5irokotxs4m3pqypqk4",
-        23:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeidpb6kbx7xszsiiuhy5mndszsih32eiud7vws7dxyicqqc5lzrgcy",
-        24:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeihs5xad4hlhyhplcu442lljhaodjz5dxcfgjo3wk3zure2jdms2ee"
+        24:"https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeihs5xad4hlhyhplcu442lljhaodjz5dxcfgjo3wk3zure2jdms2ee",
+        25: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibyriiwlrem76wgteeuissogfitxro36ugm5ditrpdijhdejrfvce", 
+        26: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeie6xm54dpmugy6erhy5vwwr5nrqsjfehuop2sbiyrrhj5mphjb3om",
+        27: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeiadutwtedws4xzg4wf4e6224z36fsceciqu37ju43azsheqqyjqo4", 
+        28: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeieft7cqekillh42br4siyjcwkn3ffg5agosbm42xbgpprhypihqyy",
+        29: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeifq5vmvkqdl4rbngcup5ixsx2iufiwivy6b5mf34zsupw3crqfupu",
+        30: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibqyksotsmr4v4hhft5yajk4za4cgpcdcs5xhdi24ykluqedegbrq",
+        31: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibyroqir4kimrqf6ml6lv4bs5tusl7yj2btxf3fctvmjkkg5lww4e",
+        32: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeif2t5zqsg5o4pkaah3bbjjyngxvkbcxicbt6g7gn5yc5b3jlc56g4",
+        33: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeid5epwvupemnif7hteiz52apwc5nsdwcc6m6ek5mfflcygmhtees4",
+        34: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeiaadsxysbvpasdilsc5rdy2t2yagh6uh5l6wowaxoeugxixraybnu",
+        35: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeihqorrvdd7smh2rahmtmtxpqwhjrip4leyvw2xy65olwhkdb7wiye",
+        36: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeiftmpgudthxqloii2jygpyoj4gtldhucis4otsgia7ik24ht6shhe",
+        37: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibtbntj3iq6x4meubb4lya4oz6bz42b4jgnbxnmcwv3rih4vxulwe",
+        38: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeicnygytissq7dqto7mxnspdlneqw4i4itbl6wyso36mmvt4kids4a",
+        39: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeigzerqubgmtuwpu4rj2d3ja54bpynfe2sv5nuqs4tsa6bu34bv6vu",
+        40: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeid7m2a3iqq3vl63k6yrr36gexd66kkq27l66iy5jv4c3m3ka33dpy",
+        41: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibz54g2ca5dosw4io2f7pllzsyzokbqzx26r5vmcndzyrtaoxyud4",
+        42: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibmqezlfvvakec5wiz5awxyjkheesln2rtqu7utxbp65yuiiegd5e",
+        43: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeigunfxcxa4m43byodojpubdf4ryxnv5t7kypibxlohpzxsdp3clqm", 
+        44: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeifnb7w43j3e22mexwrlqynuui5frpmawv5eppoj3zr2oqat557jci",
+        45: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeiamvdbah36sui3wvrzkqngnbncifjdordrv5ry36jusgegwbydmfq",
+        46: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeiddqepnplpps52jl2q4ldpgurkgbncewrtpjafyjadbrpq3as6q4m",
+        47: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeibdjpesqeep4cycepjb377zcxyh2xmjuwutduzr5z3fifxjscij7e",
+        48: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeib5ar4x5kwybfbdsvx5usr6bpfj5stmuugo36hseuohqdsmtbb65q",
+        49: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeickg4djglrfwpwlkkoslmdflfgjv33dgyht2pyaloozidbowcv554",
+        50: "https://salmon-innovative-cat-855.mypinata.cloud/ipfs/bafybeieslviudaygwda3f35v2fvngjycsvfvmnnxzgfzhoklxatedppnne"
     }; 
 
 
