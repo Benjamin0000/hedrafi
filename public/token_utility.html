@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HedraFi Official Token | M4 Utility & Economic Architecture</title>
+<link rel="shortcut icon" href="hedrafinew.png" />
+<meta name="description"
+content="HedraFi official token utility, marketplace functionality, token economics, distribution and vesting architecture.">
+
+<style>
+:root {
+    --bg: #070b14;
+    --bg-soft: #0b1120;
+    --panel: #0e1626;
+    --panel-light: #121d31;
+    --border: #22304a;
+    --text: #f1f5ff;
+    --muted: #aab6ca;
+    --blue: #6ea8ff;
+    --purple: #927cff;
+    --green: #58d6a5;
+    --max: 1120px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background:
+        radial-gradient(circle at 85% 0%, rgba(110,168,255,.14), transparent 30%),
+        radial-gradient(circle at 15% 0%, rgba(146,124,255,.10), transparent 30%),
+        linear-gradient(180deg, #070b14 0%, #09101d 50%, #070b14 100%);
+    color: var(--text);
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    line-height: 1.7;
+}
+
+a {
+    color: var(--blue);
+    text-decoration: none;
+}
+
+.container {
+    width: min(var(--max), calc(100% - 40px));
+    margin: auto;
+}
+
+.hero {
+    padding: 82px 0 64px;
+    border-bottom: 1px solid var(--border);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 13px;
+    border: 1px solid #304665;
+    border-radius: 999px;
+    background: rgba(14, 25, 43, .8);
+    color: #d1def3;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+h1 {
+    max-width: 950px;
+    margin: 22px 0 20px;
+    font-size: clamp(40px, 7vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -.055em;
+}
+
+.hero-description {
+    max-width: 880px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 19px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 36px;
+}
+
+.stat {
+    padding: 21px;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    background: rgba(14, 22, 38, .82);
+}
+
+.stat strong {
+    display: block;
+    font-size: 26px;
+    letter-spacing: -.03em;
+}
+
+.stat span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+main {
+    padding: 62px 0;
+}
+
+section {
+    margin-bottom: 58px;
+}
+
+h2 {
+    margin: 0 0 17px;
+    font-size: 31px;
+    line-height: 1.15;
+    letter-spacing: -.03em;
+}
+
+h3 {
+    margin: 0 0 9px;
+    font-size: 19px;
+}
+
+p {
+    color: #cbd4e4;
+}
+
+.lead {
+    color: #dce5f3;
+    font-size: 17px;
+}
+
+.highlight {
+    margin-top: 24px;
+    padding: 25px;
+    border: 1px solid #355681;
+    border-radius: 19px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(48, 84, 137, .25),
+            rgba(14, 22, 38, .9)
+        );
+}
+
+.highlight strong {
+    color: #fff;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.card {
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: linear-gradient(145deg, var(--panel), var(--panel-light));
+}
+
+.card p {
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+.icon {
+    display: inline-flex;
+    margin-bottom: 14px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    background: #16243a;
+    color: #bdd4ff;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 26px 0;
+}
+
+.step {
+    padding: 12px 15px;
+    border: 1px solid #2c405f;
+    border-radius: 11px;
+    background: #101b2e;
+    font-weight: 700;
+}
+
+.arrow {
+    color: #7183a2;
+    font-size: 20px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+}
+
+table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+    background: var(--panel);
+}
+
+th,
+td {
+    padding: 15px 17px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+th {
+    background: var(--panel-light);
+    color: #b7c5db;
+    font-size: 12px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+td {
+    color: #d5deec;
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+.total td {
+    font-weight: 800;
+    color: #fff;
+}
+
+.note {
+    margin-top: 14px;
+    color: #8f9db4;
+    font-size: 13px;
+}
+
+.timeline {
+    display: grid;
+    gap: 14px;
+}
+
+.timeline-item {
+    padding: 21px 23px;
+    border-left: 3px solid var(--blue);
+    border-radius: 0 14px 14px 0;
+    background: #0d1728;
+}
+
+.timeline-item strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.callout {
+    padding: 22px;
+    border: 1px solid #315071;
+    border-radius: 15px;
+    background: #0c1727;
+}
+
+ul {
+    padding-left: 22px;
+    color: #cbd4e4;
+}
+
+li {
+    margin: 8px 0;
+}
+
+footer {
+    padding: 34px 0 48px;
+    border-top: 1px solid var(--border);
+    color: #8997ad;
+    font-size: 13px;
+}
+
+@media (max-width: 850px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 540px) {
+    .container {
+        width: min(var(--max), calc(100% - 30px));
+    }
+
+    .hero {
+        padding: 55px 0 45px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat strong {
+        font-size: 21px;
+    }
+
+    .flow {
+        display: block;
+    }
+
+    .step {
+        display: inline-block;
+        margin: 4px 0;
+    }
+
+    .arrow {
+        display: inline-block;
+        margin: 0 4px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="hero">
+<div class="container">
+
+    <span class="badge">
+        HedraFi · M4 · Official Token Utility Documentation
+    </span>
+
+    <h1>
+        The Economic Layer of the HedraFi Ecosystem
+    </h1>
+
+    <p class="hero-description">
+        The official HedraFi token is designed to connect marketplace utility,
+        creator participation, community growth and long-term ecosystem development
+        through a unified on-chain economic layer.
+    </p>
+
+    <div class="stats">
+
+        <div class="stat">
+            <strong>1,000,000,000</strong>
+            <span>Maximum token supply</span>
+        </div>
+
+        <div class="stat">
+            <strong>$0.001</strong>
+            <span>Initial economic reference price</span>
+        </div>
+
+        <div class="stat">
+            <strong>$1M</strong>
+            <span>Reference fully diluted valuation</span>
+        </div>
+
+        <div class="stat">
+            <strong>400+</strong>
+            <span>Existing community</span>
+        </div>
+
+    </div>
+
+</div>
+</header>
+
+
+<main>
+
+<div class="container">
+
+<section>
+
+    <h2>Executive Overview</h2>
+
+    <p class="lead">
+        HedraFi has already established a live token economy on Hedera MainNet
+        through its HBAR staking and HRT reward mechanism. More than
+        <strong>145,546,422 HRT</strong> has been distributed to participating users
+        through real on-chain activity.
+    </p>
+
+    <p>
+        The next stage of HedraFi's evolution is the introduction of its official
+        ecosystem token as the economic layer connecting the marketplace,
+        creators, users and future HedraFi services.
+    </p>
+
+    <p>
+        Marketplace utility provides the token's initial direct use case. Users and
+        creators will use the token to access premium marketplace functionality,
+        including collection promotion, verified storefronts and enhanced storefront
+        presentation.
+    </p>
+
+    <div class="highlight">
+        <strong>Core principle:</strong>
+        The token is designed around real product utility. Its initial demand is
+        connected directly to marketplace participation rather than depending solely
+        on secondary-market speculation.
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>Marketplace Utility</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <span class="icon">Creator Growth</span>
+            <h3>Featured Collections</h3>
+            <p>
+                Creators can spend the official HedraFi token to promote eligible
+                NFT collections and obtain enhanced visibility within the marketplace.
+            </p>
+        </div>
+
+        <div class="card">
+            <span class="icon">Trust</span>
+            <h3>Verified Storefront</h3>
+            <p>
+                Store owners can use the token to access the verified storefront
+                feature and display a verification badge on their marketplace presence.
+            </p>
+        </div>
+
+        <div class="card">
+            <span class="icon">Premium Media</span>
+            <h3>Video Storefront Banner</h3>
+            <p>
+                Store owners can spend the token to unlock premium video banner
+                functionality and create richer storefront experiences.
+            </p>
+        </div>
+
+        <div class="card">
+            <span class="icon">Premium Media</span>
+            <h3>GIF Storefront Banner</h3>
+            <p>
+                Store owners can use the token to add an animated GIF banner to
+                their storefront.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>How the Token Is Used</h2>
+
+    <p>
+        The intended interaction is simple and directly connected to marketplace
+        functionality. A user selects a premium feature, reviews the required
+        token amount, approves the transaction and receives the selected feature
+        after successful payment.
+    </p>
+
+    <div class="flow">
+
+        <span class="step">Acquire Token</span>
+        <span class="arrow">→</span>
+
+        <span class="step">Connect Wallet</span>
+        <span class="arrow">→</span>
+
+        <span class="step">Select Feature</span>
+        <span class="arrow">→</span>
+
+        <span class="step">Approve &amp; Pay</span>
+        <span class="arrow">→</span>
+
+        <span class="step">Feature Activated</span>
+
+    </div>
+
+    <div class="callout">
+        <strong>Example:</strong>
+        A creator who wants additional visibility can select a collection,
+        choose the featured placement option, pay the required amount of the
+        HedraFi token and receive the promotional placement.
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>Token Economics</h2>
+
+    <p>
+        The official HedraFi token has a maximum supply of
+        <strong>1,000,000,000 tokens</strong>. The supply is allocated across
+        ecosystem growth, community participation, staking, treasury operations,
+        contributors and future liquidity.
+    </p>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Allocation</th>
+                    <th>Percentage</th>
+                    <th>Token Amount</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Ecosystem &amp; Creator Growth</td>
+                    <td>30%</td>
+                    <td>300,000,000</td>
+                    <td>
+                        Creator incentives, marketplace growth,
+                        partnerships, campaigns and ecosystem development.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Community &amp; User Adoption</td>
+                    <td>20%</td>
+                    <td>200,000,000</td>
+                    <td>
+                        Early users, referrals, community campaigns,
+                        adoption programs and marketplace participation.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Staking &amp; Participation</td>
+                    <td>15%</td>
+                    <td>150,000,000</td>
+                    <td>
+                        Long-term participation rewards and future
+                        staking-related mechanisms.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Treasury / DAO Reserve</td>
+                    <td>15%</td>
+                    <td>150,000,000</td>
+                    <td>
+                        Long-term development, infrastructure, grants,
+                        partnerships and strategic ecosystem requirements.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Team &amp; Contributors</td>
+                    <td>10%</td>
+                    <td>100,000,000</td>
+                    <td>
+                        Founder, team and contributor allocation subject
+                        to long-term vesting.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Liquidity Provision</td>
+                    <td>10%</td>
+                    <td>100,000,000</td>
+                    <td>
+                        Reserved for future decentralized liquidity
+                        and market infrastructure.
+                    </td>
+                </tr>
+
+                <tr class="total">
+                    <td>Total</td>
+                    <td>100%</td>
+                    <td>1,000,000,000</td>
+                    <td>Official HedraFi token supply</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>Initial Economic Reference Price</h2>
+
+    <p class="lead">
+        HedraFi uses an initial economic reference price of
+        <strong>$0.001 per token</strong> for initial economic modeling and
+        marketplace utility pricing.
+    </p>
+
+    <p>
+        At a maximum supply of 1,000,000,000 tokens, a $0.001 reference price
+        corresponds to an approximately <strong>$1,000,000 fully diluted
+        valuation (FDV)</strong>.
+    </p>
+
+    <p class="note">
+        The reference price is an initial economic and utility-pricing reference.
+        It is not presented as a guaranteed market price, future valuation or
+        investment return.
+    </p>
+
+</section>
+
+
+<section>
+
+    <h2>Staking Reward Migration &amp; Vesting</h2>
+
+    <p>
+        HedraFi's existing staking program has already distributed
+        <strong>145,546,422 HRT</strong> to participating users. As the ecosystem
+        transitions toward the official HedraFi token, eligible staking-related
+        allocations are designed to enter circulation through a controlled
+        vesting mechanism.
+    </p>
+
+    <div class="timeline">
+
+        <div class="timeline-item">
+            <strong>6-Month Cliff</strong>
+            Eligible staking-reward allocations remain locked during the
+            initial six-month cliff period.
+        </div>
+
+        <div class="timeline-item">
+            <strong>24-Month Vesting</strong>
+            Following the cliff, eligible staking-reward allocations vest
+            progressively over a 24-month period.
+        </div>
+
+        <div class="timeline-item">
+            <strong>Purpose</strong>
+            The structure is intended to align token circulation with the
+            development of genuine marketplace utility and ecosystem demand.
+        </div>
+
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>Team &amp; Contributor Vesting</h2>
+
+    <p>
+        The team and contributor allocation is subject to a longer vesting
+        schedule to align contributor incentives with the long-term development
+        of HedraFi.
+    </p>
+
+    <div class="timeline">
+
+        <div class="timeline-item">
+            <strong>12-Month Cliff</strong>
+            No team or contributor allocation is intended to unlock during
+            the initial twelve-month cliff.
+        </div>
+
+        <div class="timeline-item">
+            <strong>36-Month Linear Vesting</strong>
+            Following the cliff, the allocation is intended to vest gradually
+            over 36 months.
+        </div>
+
+        <div class="timeline-item">
+            <strong>48-Month Total Schedule</strong>
+            The full team/contributor schedule therefore spans four years
+            from the beginning of the vesting program.
+        </div>
+
+    </div>
+
+    <p class="note">
+        This long-term structure is intended to align the interests of the
+        development team and contributors with sustained ecosystem growth.
+    </p>
+
+</section>
+
+
+<section>
+
+    <h2>Why Marketplace Utility Comes First</h2>
+
+    <p>
+        HedraFi is intentionally establishing direct product utility before
+        unrestricted secondary-market liquidity. This allows token demand to
+        develop from actual marketplace usage while the ecosystem expands.
+    </p>
+
+    <ul>
+
+        <li>
+            Creators have a reason to acquire and spend the token.
+        </li>
+
+        <li>
+            Store owners have a reason to use the token for premium functionality.
+        </li>
+
+        <li>
+            Marketplace activity creates recurring utility rather than
+            one-time token distribution.
+        </li>
+
+        <li>
+            Controlled vesting reduces the risk of premature unrestricted
+            circulation.
+        </li>
+
+        <li>
+            Future liquidity can be introduced against a marketplace with
+            established users, functionality and economic activity.
+        </li>
+
+    </ul>
+
+</section>
+
+
+<section>
+
+    <h2>Existing Ecosystem Foundation</h2>
+
+    <p>
+        The official token economy builds on HedraFi's existing MainNet
+        participation rather than beginning from zero.
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>145,546,422 HRT Distributed</h3>
+            <p>
+                Existing HBAR staking activity has already resulted in more
+                than 145 million HRT being distributed to participating users.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>400+ Community Members</h3>
+            <p>
+                HedraFi has an established community positioned to participate
+                in the marketplace as new utility features are activated.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>Economic Roadmap</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>01 · Activate Utility</h3>
+            <p>
+                Introduce the official token into marketplace features including
+                collection promotion, verification and premium storefront media.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>02 · Grow Marketplace Demand</h3>
+            <p>
+                Expand creator participation, storefront activity and recurring
+                demand for premium marketplace services.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>03 · Establish Sustainable Circulation</h3>
+            <p>
+                Use vesting and controlled distribution to align token supply
+                with the growth of the HedraFi economy.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>04 · Expand Liquidity</h3>
+            <p>
+                Progress toward broader secondary-market liquidity as marketplace
+                activity and token utility mature.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section>
+
+    <h2>Conclusion</h2>
+
+    <p class="lead">
+        The official HedraFi token is designed as the economic layer of the
+        HedraFi ecosystem, with marketplace utility providing immediate practical
+        functionality for creators and store owners.
+    </p>
+
+    <p>
+        By connecting token usage to real marketplace services, maintaining
+        controlled circulation through vesting, and building on an existing
+        MainNet community and staking economy, HedraFi is establishing a path
+        toward sustainable ecosystem growth and deeper token utility.
+    </p>
+
+    <div class="highlight">
+        <strong>
+            HedraFi's objective is not simply to launch another token.
+            It is to make the token an integral part of how creators,
+            users and the marketplace participate in the HedraFi ecosystem.
+        </strong>
+    </div>
+
+</section>
+
+</div>
+</main>
+
+
+<footer>
+<div class="container">
+
+    HedraFi · Official Token Utility &amp; Economic Architecture · M4
+
+    <br><br>
+
+    <span>
+        This documentation describes the HedraFi token's intended utility,
+        distribution and economic architecture.
+    </span>
+
+</div>
+</footer>
+
+</body>
+</html>
