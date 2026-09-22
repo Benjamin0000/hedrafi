@@ -174,3 +174,36 @@ input[type="number"] {
     100% { transform: rotateY(15deg); }
   }
 }
+
+
+.animated-gradient-text {
+    background: linear-gradient(
+        90deg,
+        #60a5fa,
+        #818cf8,
+        #a78bfa,
+        #34d399,
+        #10b981,
+        #60a5fa
+    );
+    background-size: 400% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-flow 6s ease infinite;
+}
+
+@keyframes gradient-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LayoutGrid, ShoppingCart, Coins, TrendingUp, Medal } from 'lucide-react';
+import { Menu, X, LayoutGrid, ShoppingCart, Coins, Medal, TrendingUp } from 'lucide-react';
 import logo from "../../assets/hedrafinew.png";
 import WalletButton from './WalletButton';
+import AuthModal from './AuthModal';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,9 +17,9 @@ const Header = () => {
     }, []);
 
     const navLinks = [
-        { name: 'Studio', path: '/studio', icon: LayoutGrid },
         { name: 'NFT Marketplace', path: '/marketplace', icon: ShoppingCart },
-        // { name: 'Assets', path: '/assets', icon: TrendingUp },
+        // { name: 'Store', path: '/store', icon: LayoutGrid },
+        { name: 'RWA', path: '/rwa', icon: TrendingUp },
          { name: 'Staking', path: '/staking', icon: Coins },
         { name: 'Pioneer Pass', path: '/pioneer-pass', icon: Medal },
     ];
@@ -26,6 +27,7 @@ const Header = () => {
     const isActive = (path) => location.pathname === path;
 
     return (
+        <>
         <header className={`fixed top-0 z-[100] w-full transition-all duration-300 px-4 pt-4 ${scrolled ? 'translate-y-0' : 'translate-y-0'}`}>
             <div className={`max-w-7xl mx-auto backdrop-blur-xl rounded-[16px] px-6 py-3 flex justify-between items-center transition-all duration-500 border-white/10 ${
                 scrolled ? 'bg-white/5 shadow-[0_0_50px_rgba(0,0,0,0.3)] scale-[0.98]' : 'bg-white/[0.02] border-white/5'
@@ -51,9 +53,7 @@ const Header = () => {
                         >
                             <link.icon size={16} className={`transition-transform duration-300 group-hover:scale-110 ${isActive(link.path) ? 'text-cyber-blue' : 'text-gray-600 group-hover:text-gray-400'}`} />
                             {link.name}
-                            {isActive(link.path) && (
-                                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyber-blue shadow-[0_0_10px_#00F0FF]"></span>
-                            )}
+                            
                         </Link>
                     ))}
                 </nav>
@@ -106,6 +106,8 @@ const Header = () => {
                 </div>
             </div>
         </header>
+        <AuthModal/>
+        </>
     )
 }
 

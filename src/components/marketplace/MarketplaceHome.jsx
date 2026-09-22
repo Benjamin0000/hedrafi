@@ -1,150 +1,475 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Header from "../shared/Header";
-import Footer from "../shared/Footer";
-import { Search, SlidersHorizontal, LayoutGrid, ArrowRight } from 'lucide-react';
-import MarketplaceCountdown from './MarketplaceCountdown';
-import AssetCard from '../shared/AssetCard';
+// import { useEffect, useMemo, useState } from 'react';
+// import { Link } from 'react-router-dom';
+// import Footer from "../shared/Footer";
+// import AssetCard from '../shared/AssetCard';
+// import MarketplaceSidebar from '../shared/MarketplaceSidebar';
+// import MobileTopBar from '../shared/MobileTopBar';
+// import CreatorsPanel from '../shared/CreatorsPanel';
+// import StatsPanel from '../shared/StatsPanel';
+// import AmbientBackground from '../shared/AmbientBackground';
 
-// const nftAssets = [
-//   { id: 5, name: 'Cosmic Dragon #042', price: '150 ℏ', volume: '12K', image: 'https://images.unsplash.com/photo-1634979148467-ed5b07449553?w=800', collection: 'Cosmic Dragons' },
-//   { id: 6, name: 'Cyberpunk Skyline', price: '450 ℏ', volume: '89K', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800', collection: 'Neon Nights' },
-//   { id: 7, name: 'Ethereal Landscape', price: '25 ℏ', volume: '1.2K', image: 'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800', collection: 'Abstract Minds' },
-//   { id: 8, name: 'Neon Genesis', price: '88 ℏ', volume: '5K', image: 'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=800', collection: 'Genesis Core' }
+// import {
+//     Search,
+//     ChevronDown
+// } from 'lucide-react';
+
+
+// /* =========================================================
+//    DEMO DATA
+// ========================================================= */
+
+// const featuredCreators = [
+//     {
+//         id: 1,
+//         name: 'Nova Studios',
+//         username: '@novastudios',
+//         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300',
+//         items: 24,
+//         verified: true
+//     },
+//     {
+//         id: 2,
+//         name: 'Genesis Labs',
+//         username: '@genesislabs',
+//         avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300',
+//         items: 18,
+//         verified: true
+//     },
+//     {
+//         id: 3,
+//         name: 'Digital Archive',
+//         username: '@digitalarchive',
+//         avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300',
+//         items: 31,
+//         verified: true
+//     },
+//     {
+//         id: 4,
+//         name: 'Pixel Studio',
+//         username: '@pixelstudio',
+//         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+//         items: 12,
+//         verified: true
+//     }
 // ];
 
-const nftAssets = [
-  // { id: 5, name: 'Cosmic Dragon #042', price: '150 ℏ', volume: '12K', image: 'https://images.unsplash.com/photo-1634979148467-ed5b07449553?w=800', collection: 'Cosmic Dragons' },
-  // { id: 6, name: 'Cyberpunk Skyline', price: '450 ℏ', volume: '89K', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800', collection: 'Neon Nights' },
-  // { id: 7, name: 'Ethereal Landscape', price: '25 ℏ', volume: '1.2K', image: 'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800', collection: 'Abstract Minds' },
-  // { id: 8, name: 'Neon Genesis', price: '88 ℏ', volume: '5K', image: 'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=800', collection: 'Genesis Core' }
-];
+
+// const marketplaceStats = [
+//     { label: 'Total Volume', value: '$62.18M' },
+//     { label: 'Number of NFTs', value: '26,140' },
+//     { label: 'Return of NFTs', value: '32.89%' },
+//     { label: 'Avg. Sale Price', value: '186 ℏ' }
+// ];
+
+
+// const walletInfo = {
+//     address: '0.0.4829173',
+//     hbarBalance: '1,240.55',
+//     hdfiBalance: '8,420.00'
+// };
+
+
+// const nftAssets = [
+//     {
+//         id: 1,
+//         name: 'Cosmic Dragon #042',
+//         price: '150 ℏ',
+//         image: 'https://images.unsplash.com/photo-1634979148467-ed5b07449553?w=900',
+//         collection: 'Cosmic Dragons',
+//         creator: 'Nova Studios',
+//         verified: true,
+//         category: 'Art',
+//         trending: true
+//     },
+//     {
+//         id: 2,
+//         name: 'Neon Genesis #088',
+//         price: '88 ℏ',
+//         image: 'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=900',
+//         collection: 'Genesis Core',
+//         creator: 'Genesis Labs',
+//         verified: true,
+//         category: 'Gaming'
+//     },
+//     {
+//         id: 3,
+//         name: 'Ethereal Horizon',
+//         price: '245 ℏ',
+//         image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900',
+//         collection: 'Abstract Minds',
+//         creator: 'Digital Archive',
+//         verified: true,
+//         category: 'Art',
+//         featured: true
+//     },
+//     {
+//         id: 4,
+//         name: 'Neon Relic #21',
+//         price: '72 ℏ',
+//         image: 'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=900',
+//         collection: 'Neo Relics',
+//         creator: 'Artifact Labs',
+//         verified: true,
+//         category: 'Collectibles',
+//         trending: true
+//     },
+//     {
+//         id: 5,
+//         name: 'Cyberpunk Skyline',
+//         price: '450 ℏ',
+//         image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900',
+//         collection: 'Neon Nights',
+//         creator: 'Cyber Labs',
+//         verified: true,
+//         category: 'Art'
+//     },
+//     {
+//         id: 6,
+//         name: 'Genesis Core #104',
+//         price: '120 ℏ',
+//         image: 'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=900',
+//         collection: 'Genesis Core',
+//         creator: 'Genesis Labs',
+//         verified: true,
+//         category: 'Gaming',
+//         trending: true
+//     },
+//     {
+//         id: 7,
+//         name: 'Digital Memory #07',
+//         price: '64 ℏ',
+//         image: 'https://images.unsplash.com/photo-1634979148467-ed5b07449553?w=900',
+//         collection: 'Digital Memories',
+//         creator: 'Digital Archive',
+//         verified: true,
+//         category: 'Collectibles'
+//     },
+//     {
+//         id: 8,
+//         name: 'Abstract Form #19',
+//         price: '95 ℏ',
+//         image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900',
+//         collection: 'Abstract Minds',
+//         creator: 'Pixel Studio',
+//         verified: true,
+//         category: 'Art'
+//     }
+// ];
+
+
+// const categories = [
+//     'All',
+//     'Art',
+//     'Collectibles',
+//     'Gaming',
+//     'Music'
+// ];
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// const MarketplaceHome = () => {
+
+//     const [searchQuery, setSearchQuery] = useState('');
+//     const [activeCategory, setActiveCategory] = useState('All');
+//     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+
+//     /* =====================================================
+//        STARTUP LOADER
+//     ===================================================== */
+
+//     useEffect(() => {
+
+//         const loader = document.getElementById("startup-loader");
+
+//         if (loader) {
+//             loader.style.display = "none";
+//         }
+
+//     }, []);
+
+
+//     /* =====================================================
+//        LOCK BODY SCROLL WHEN MOBILE DRAWER IS OPEN
+//     ===================================================== */
+
+//     useEffect(() => {
+
+//         document.body.style.overflow = sidebarOpen ? 'hidden' : '';
+
+//         return () => {
+//             document.body.style.overflow = '';
+//         };
+
+//     }, [sidebarOpen]);
+
+
+//     /* =====================================================
+//        FILTER NFTs
+//     ===================================================== */
+
+//     const filteredAssets = useMemo(() => {
+
+//         const query = searchQuery.trim().toLowerCase();
+
+//         return nftAssets.filter((asset) => {
+
+//             const matchesCategory =
+//                 activeCategory === 'All' ||
+//                 asset.category === activeCategory;
+
+//             const matchesSearch =
+//                 !query ||
+//                 asset.name.toLowerCase().includes(query) ||
+//                 asset.collection.toLowerCase().includes(query) ||
+//                 asset.creator.toLowerCase().includes(query);
+
+//             return matchesCategory && matchesSearch;
+
+//         });
+
+//     }, [searchQuery, activeCategory]);
+
+
+//     return (
+
+//         <div className="relative min-h-screen bg-[#030712] text-slate-200 font-sans">
+
+
+//             {/* =====================================================
+//                 AMBIENT BACKGROUND
+//             ===================================================== */}
+
+//             <AmbientBackground />
+
+
+//             {/* =====================================================
+//                 MOBILE TOP BAR (replaces <Header/> on small screens)
+//             ===================================================== */}
+
+//             <MobileTopBar onMenuClick={() => setSidebarOpen(true)} />
+
+
+//             {/* =====================================================
+//                 BODY — sidebar / gallery / right column
+//             ===================================================== */}
+
+//             <div className="relative z-10 flex items-start">
+
+
+//                 {/* =========================================
+//                     SIDEBAR (desktop sticky column + mobile drawer)
+//                 ========================================= */}
+
+//                 <MarketplaceSidebar
+//                     isOpen={sidebarOpen}
+//                     onClose={() => setSidebarOpen(false)}
+//                     wallet={walletInfo}
+//                     onDisconnect={() => {}}
+//                 />
+
+
+//                 {/* =========================================
+//                     CENTER: GALLERY
+//                 ========================================= */}
+
+//                 <main className="flex-1 min-w-0">
+
+
+//                     {/* Sticky toolbar — pinned under the mobile top bar on
+//                         small screens, pinned to the viewport top on desktop */}
+
+//                     <div className="sticky top-14 lg:top-0 z-20 bg-[#030712]/90 backdrop-blur-md border-b border-white/[0.05] px-4 sm:px-6 lg:px-8 py-4">
+
+//                         <div className="flex flex-wrap items-center justify-between gap-3">
+
+//                             <h1 className="text-xl md:text-2xl font-black tracking-tight text-white">
+//                                 NFT Gallery
+//                             </h1>
+
+
+//                             <div className="flex items-center gap-2 flex-1 sm:flex-none sm:min-w-[420px]">
+
+
+//                                 {/* Search */}
+
+//                                 <div className="flex-1 flex items-center gap-2 bg-[#050A15] border border-white/[0.07] rounded-xl px-3.5 py-2.5">
+
+//                                     <Search size={15} className="text-slate-600 shrink-0" />
+
+//                                     <input
+//                                         type="text"
+//                                         value={searchQuery}
+//                                         onChange={(e) => setSearchQuery(e.target.value)}
+//                                         placeholder="Search"
+//                                         className="flex-1 min-w-0 bg-transparent outline-none text-xs text-white placeholder:text-slate-600"
+//                                     />
+
+//                                 </div>
+
+
+//                                 {/* Category select */}
+
+//                                 <div className="relative shrink-0">
+
+//                                     <select
+//                                         value={activeCategory}
+//                                         onChange={(e) => setActiveCategory(e.target.value)}
+//                                         className="appearance-none bg-[#050A15] border border-white/[0.07] rounded-xl pl-3.5 pr-8 py-2.5 text-[11px] font-bold text-slate-300 outline-none cursor-pointer hover:border-emerald-500/25 transition-colors"
+//                                     >
+
+//                                         {categories.map((category) => (
+//                                             <option key={category} value={category}>
+//                                                 {category === 'All' ? 'All tabs' : category}
+//                                             </option>
+//                                         ))}
+
+//                                     </select>
+
+
+//                                     <ChevronDown
+//                                         size={13}
+//                                         className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-600"
+//                                     />
+
+//                                 </div>
+
+//                             </div>
+
+//                         </div>
+
+//                     </div>
+
+
+//                     <div className="px-4 sm:px-6 lg:px-8 py-6">
+
+
+//                         {/* =====================================
+//                             MOBILE / TABLET — creators + stats
+//                             surfaced inline instead of hidden
+//                         ===================================== */}
+
+//                         {/* <div className="xl:hidden flex gap-4 overflow-x-auto pb-2 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-col scrollbar-hide">
+
+//                             <CreatorsPanel creators={featuredCreators} />
+
+//                             <StatsPanel stats={marketplaceStats} />
+
+//                         </div> */}
+
+
+//                         {/* Empty state */}
+
+//                         {filteredAssets.length === 0 ? (
+
+//                             <div className="py-20 rounded-2xl border border-white/[0.05] bg-[#050A15] text-center">
+
+//                                 <div className="w-12 h-12 mx-auto rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-slate-600">
+//                                     <Search size={20} />
+//                                 </div>
+
+//                                 <h3 className="text-lg font-black text-white mt-4">
+//                                     No NFTs found
+//                                 </h3>
+
+//                                 <p className="text-sm text-slate-600 mt-2">
+//                                     Try another search or category.
+//                                 </p>
+
+//                                 <button
+//                                     type="button"
+//                                     onClick={() => {
+//                                         setSearchQuery('');
+//                                         setActiveCategory('All');
+//                                     }}
+//                                     className="mt-5 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-black uppercase tracking-[0.16em] text-emerald-300 hover:bg-emerald-500/15 transition-colors"
+//                                 >
+//                                     Clear filters
+//                                 </button>
+
+//                             </div>
+
+//                         ) : (
+
+//                             <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-5">
+
+//                                 {filteredAssets.map((asset) => (
+
+//                                     <Link
+//                                         to={`/marketplace/nft/${asset.id}`}
+//                                         key={asset.id}
+//                                         className="block h-full"
+//                                     >
+
+//                                         <AssetCard asset={asset} type="nft" />
+
+//                                     </Link>
+
+//                                 ))}
+
+//                             </div>
+
+//                         )}
+
+//                     </div>
+
+
+//                     {/* <Footer /> */}
+
+//                 </main>
+
+
+//                 {/* =========================================
+//                     RIGHT: CREATORS + STATS (desktop only)
+//                 ========================================= */}
+
+//                 <div className="hidden xl:flex flex-col gap-5 w-80 shrink-0 sticky top-6 self-start py-6 pr-6">
+
+//                     <CreatorsPanel creators={featuredCreators} />
+
+//                     <StatsPanel stats={marketplaceStats} />
+
+//                 </div>
+
+//             </div>
+
+//         </div>
+//     );
+// };
+
+
+// export default MarketplaceHome;
+
+
+
+import { useState, useMemo } from 'react';
+import MarketplaceSidebar from "../shared/MarketplaceSidebar";
+import MobileTopBar from "../shared/MobileTopBar";
+import AmbientBackground from "../shared/AmbientBackground";
+import FuturisticCountdownSmall, { getTarget28th } from "../shared/FuturisticCountdownSmall";
 
 const MarketplaceHome = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const categories = ['All', 'PFP', 'Art', 'Gaming', 'Virtual Worlds', 'Music'];
-
-  useEffect(() => {
-    const loader = document.getElementById("startup-loader");
-    if (loader) loader.style.display = "none";
-  }, []);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const target = useMemo(() => getTarget28th(), []);
 
   return (
-    <div className="relative min-h-screen bg-[#02050E] overflow-hidden text-slate-200 font-sans">
-      {/* Dark Mode Background Accents */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-cyan-600/5 rounded-full blur-[150px] mix-blend-screen"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen"></div>
+    <div className="relative min-h-screen bg-[#030712] text-slate-200">
+      <AmbientBackground />
+      <MobileTopBar onMenuClick={() => setSidebarOpen(true)} />
+      <div className="relative z-10 flex items-start">
+        <MarketplaceSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onDisconnect={() => {}} />
+        <main className="flex-1 min-w-0 min-h-screen flex items-center justify-center px-4">
+          <div className="text-center">
+            <p className="text- font-black tracking-[0.3em] text-slate-600 uppercase mb-4">Explore</p>
+            <FuturisticCountdownSmall targetDate={target} />
+            <p className="text- text-slate-600 mt-4">Marketplace is locked until launch</p>
+          </div>
+        </main>
       </div>
-
-      <Header />
-
-      <main className="relative z-10 w-full pt-20">
-        {/* Marketplace Hero */}
-        <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-b border-white/[0.05]">
-          <div className="container-main flex flex-col items-center text-center space-y-12">
-            <div className="space-y-6 max-w-4xl animate-reveal">
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.1] text-white">
-                Trade Premium <br />
-                <span className="text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.3)]">
-                   Digital Collectibles
-                </span>
-              </h1>
-            </div>
-
-            {/* Futuristic Search */}
-            <div className="w-full max-w-3xl space-y-8 animate-reveal" style={{animationDelay: '0.1s'}}>
-               <div className="bg-[#050A15]/80 p-2 rounded-[16px] border border-white/[0.05] relative group shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] focus-within:border-cyan-500/30 transition-colors">
-                  <div className="absolute inset-0 rounded-[16px] blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 bg-cyan-500/10"></div>
-                  <div className="relative flex items-center">
-                     <div className="pl-6 text-slate-500">
-                       <Search size={24} />
-                     </div>
-                     <input
-                       type="text"
-                       value={searchQuery}
-                       onChange={(e) => setSearchQuery(e.target.value)}
-                       placeholder="Search collections, artists, or attributes..."
-                       className="w-full bg-transparent p-5 text-white outline-none font-bold placeholder:text-slate-600 text-lg"
-                     />
-                     <div className="pr-2 hidden md:block">
-                        <button className="bg-[#02050E] border border-white/[0.05] hover:border-cyan-500/30 text-slate-300 hover:text-cyan-400 px-8 py-4 rounded-[12px] font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center gap-2">
-                           <SlidersHorizontal size={14} /> Filters
-                        </button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-
-            {/* Category Chips */}
-            <div className="flex flex-wrap justify-center gap-3 animate-reveal" style={{animationDelay: '0.2s'}}>
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSearchQuery(cat === 'All' ? '' : cat)}
-                  className={`px-6 py-2 rounded-[8px] font-black uppercase tracking-[0.2em] text-[11px] transition-all duration-300 ${
-                      searchQuery === cat || (cat === 'All' && searchQuery === '')
-                      ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.15)]'
-                      : 'bg-[#050A15] border border-white/[0.05] text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Asset Grid Section */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8">
-          <div className="container-main space-y-12 animate-reveal" style={{animationDelay: '0.3s'}}>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-b border-white/[0.05] pb-8">
-               <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-[16px] flex items-center justify-center border bg-cyan-500/10 border-cyan-500/20 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
-                     <LayoutGrid size={24} />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-black text-white tracking-tight">Trending Collections</h2>
-                    <p className="text-slate-500 font-medium text-lg mt-1">Curated digital assets hitting the chain.</p>
-                  </div>
-               </div>
-               <button 
-                  onClick={() => { setSearchQuery(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="text-xs font-black text-slate-300 uppercase tracking-[0.2em] hover:text-cyan-400 transition-colors flex items-center gap-2 bg-[#050A15] border border-white/[0.05] px-6 py-3 rounded-[8px] hover:border-cyan-500/30"
-               >
-                  View All <ArrowRight size={14} />
-               </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {nftAssets.map((asset) => (
-                <Link to={`/marketplace/collection/${asset.id}`} key={asset.id} className="block h-full">
-                    <AssetCard asset={asset} type="nft" />
-                </Link>
-              ))}
-            </div>
-
-            <div className="w-full flex flex-col items-center justify-center pt-32 text-center space-y-10 border-t border-white/[0.05] mt-24">
-              <div className="space-y-4 max-w-2xl px-6">
-                <h3 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none">
-                  Global Trading <span className="text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.3)]">Initializing</span>
-                </h3>
-                <p className="text-slate-400 text-lg font-medium leading-relaxed">
-                  Full secondary marketplace capabilities are unlocking shortly.
-                </p>
-              </div>
-
-              <div className="py-6 w-full">
-                 <MarketplaceCountdown />
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
     </div>
   );
 };
-
 export default MarketplaceHome;

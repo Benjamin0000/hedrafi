@@ -6,13 +6,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import  WalletProvider from './WalletProvider';
 import { ToastContainer } from 'react-toastify';
+import { AuthProvider } from './context/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
     <WalletProvider>
-      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
-      <App />
+      <AuthProvider>
+        <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+        <App />
+      </AuthProvider>
     </WalletProvider>
   </React.StrictMode>
 );

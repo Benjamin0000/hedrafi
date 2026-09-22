@@ -1,5 +1,3 @@
-// src/WalletProvider.jsx
-
 import { HWBridgeProvider } from "@buidlerlabs/hashgraph-react-wallets";
 import { HWCConnector } from "@buidlerlabs/hashgraph-react-wallets/connectors";
 import {
@@ -12,7 +10,7 @@ import DAppLogo from "./assets/hedrafinew.png";
 const metadata = {
   name: "HedraFi",
   description:
-    "Hedera yield farming dHedrafi | Staking & NFT platform on hederaApp",
+    "Hedera yield farming Hedrafi | Staking & NFT platform on hedera",
   icons: [DAppLogo],
   url: window.location.href,
 };
@@ -22,15 +20,15 @@ const WalletProvider = ({ children }) => {
 
   // Error logging if projectId is missing
   if (!projectId) {
-    console.warn(
-      "Warning: REACT_APP_WC_PROJECT_ID is not set. Please add it to your .env file.",
-    );
+      console.warn(
+        "Warning: REACT_APP_WC_PROJECT_ID is not set. Please add it to your .env file.",
+      );
   }
 
   return (
     <HWBridgeProvider
       metadata={metadata}
-      projectId={projectId || "fallback-project-id"}
+      projectId={projectId}
       connectors={[HWCConnector]}
       chains={[HederaMainnet]}
     >

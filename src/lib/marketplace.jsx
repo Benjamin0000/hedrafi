@@ -2,9 +2,24 @@
 
 import { toast } from 'react-toastify';
 import axios from "axios";
+import { useState } from 'react';
 
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+
+export function convertIpfsToPinata(ipfsUri) {
+  if (!ipfsUri) return "";
+
+  if (ipfsUri.startsWith("ipfs://")) {
+    const cid = ipfsUri.replace("ipfs://", "");
+    return `${IPFS_GATEWAYS[0]}${cid}`;
+  }
+
+  return ipfsUri;
+}
+
+
 //this function is for testing purposes
 export async function finalizeMint(txHash, metadataUrl) {
   // Persist to Laravel
@@ -60,18 +75,7 @@ export async function finalizeBuy(id, buyer){
     }, 2000)
 }
 
-export function convertIpfsToPinata(ipfsUri) {
-  if (!ipfsUri) return "";
-  
-  // Check if the link starts with ipfs://
-  if (ipfsUri.startsWith("ipfs://")) {
-    // Extract the CID and append it to the Pinata gateway
-    return ipfsUri.replace("ipfs://", "https://ipfs.io/ipfs/");
-  }
-  
-  // If it's already an HTTP link or just a CID, return as is or handle accordingly
-  return ipfsUri;
-}
+
 
 
 
@@ -140,3 +144,115 @@ export function evmContractToHederaId(evmAddress) {
   const num = BigInt('0x' + clean).toString(10);
   return `0.0.${num}`;
 }
+
+
+
+
+
+
+
+const IPFS_GATEWAYS = [
+  "https://gateway.pinata.cloud/ipfs/",
+  "https://ipfs.io/ipfs/",
+  "https://cloudflare-ipfs.com/ipfs/",
+  "https://dweb.link/ipfs/",
+];
+
+/**
+ * Extract the CID/path from an IPFS URI.
+ */
+function getIpfsPath(ipfsUri) {
+  if (!ipfsUri) return "";
+
+  if (ipfsUri.startsWith("ipfs://")) {
+    return ipfsUri.replace("ipfs://", "");
+  }
+
+  return ipfsUri;
+}
+
+/**
+ * Convert an IPFS URI to a gateway URL.
+ *
+ * Example:
+ * ipfs://QmExample
+ * -> https://ipfs.io/ipfs/QmExample
+ */
+export function convertIpfsToGateway(ipfsUri) {
+  if (!ipfsUri) return "";
+
+  // Already a normal HTTP/HTTPS URL
+  if (
+    ipfsUri.startsWith("http://") ||
+    ipfsUri.startsWith("https://")
+  ) {
+    return ipfsUri;
+  }
+
+  const ipfsPath = getIpfsPath(ipfsUri);
+
+  return `${IPFS_GATEWAYS[0]}${ipfsPath}`;
+}
+
+/**
+ * Get all available gateway URLs for an IPFS URI.
+ *
+ * These can be tried one after another if a gateway fails.
+ */
+export function getIpfsGatewayUrls(ipfsUri) {
+  if (!ipfsUri) return [];
+
+  // If it's already an HTTP/HTTPS URL,
+  // use it first before trying the IPFS gateways.
+  if (
+    ipfsUri.startsWith("http://") ||
+    ipfsUri.startsWith("https://")
+  ) {
+    const ipfsPath = getIpfsPath(ipfsUri);
+
+    return [
+      ipfsUri,
+      ...IPFS_GATEWAYS.map(
+        (gateway) => `${gateway}${ipfsPath}`
+      ),
+    ];
+  }
+
+  const ipfsPath = getIpfsPath(ipfsUri);
+
+  return IPFS_GATEWAYS.map(
+    (gateway) => `${gateway}${ipfsPath}`
+  );
+}
+
+
+export  function IpfsImage({
+  src,
+  alt = "",
+  ...props
+}) {
+  const gateways = getIpfsGatewayUrls(src);
+  const [gatewayIndex, setGatewayIndex] = useState(0);
+
+  if (!gateways.length) {
+    return null;
+  }
+
+  const handleError = () => {
+    if (gatewayIndex < gateways.length - 1) {
+      setGatewayIndex((index) => index + 1);
+    }
+  };
+
+  return (
+    <img
+      src={gateways[gatewayIndex]}
+      alt={alt}
+      onError={handleError}
+      {...props}
+    />
+  );
+}
+
+
+

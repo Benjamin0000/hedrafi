@@ -1,7 +1,6 @@
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
 import { Link } from "react-router-dom";
-import { Discord } from "../shared/Icons";
 
 const PartnerPage = () => {
   return (

@@ -8,7 +8,12 @@ import {
   Hbar
 } from "@hashgraph/sdk";
 import { useState, useEffect } from 'react';
-import { convertIpfsToPinata, evmContractToHederaId, evmToHederaAccount, finalizeBuy } from "../../lib/marketplace"
+import { 
+  convertIpfsToPinata, 
+  evmContractToHederaId, 
+  evmToHederaAccount, 
+  finalizeBuy 
+} from "../../lib/marketplace"
 import marketplaceABI from "../../ABIs/marketplaceABI.json";
 import { 
   useWriteContract, 
@@ -21,7 +26,20 @@ import {
 import { HWCConnector } from '@buidlerlabs/hashgraph-react-wallets/connectors';
 import { checkTokenAssociation } from '../../helpers';
 import { toast } from 'react-toastify';
-import { ArrowLeft, FileText, Sparkles, ShieldCheck, Activity, Info, Layers, Tag, Wallet, CheckCircle, Building2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight, 
+  FileText, 
+  Sparkles, 
+  ShieldCheck, 
+  Activity, 
+  Info, 
+  Layers, 
+  Tag, 
+  Wallet, 
+  CheckCircle, 
+  Building2 
+} from 'lucide-react';
 
 const marketplaceContract = process.env.REACT_APP_MARKETPLACE_CONTRACT; 
 const API_URL = process.env.REACT_APP_API_URL; 

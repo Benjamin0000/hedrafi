@@ -3,1201 +3,608 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>HedraFi | Bonding Curve Validation Report</title>
-<link rel="shortcut icon" href="hedrafinew.png" />
-    <meta name="description"
-        content="HedraFi Bonding Curve Validation Report documenting Testnet buy and sell execution and the planned marketplace activation.">
-
+    <title>HedraFi | M4 Mainnet Bonding Curve Validation</title>
+    <link rel="shortcut icon" href="hedrafinew.png" />
     <style>
         :root {
-            --bg: #070b14;
-            --bg2: #0b1120;
-            --card: #0e1728;
-            --card2: #111d31;
-            --border: #243552;
-            --text: #f3f6fc;
-            --muted: #a9b6ca;
-            --blue: #6ea8ff;
-            --purple: #927cff;
-            --green: #55d6a4;
-            --orange: #f2b66d;
+            --bg:#070b14; --bg2:#0b1120; --card:#0e1728; --card2:#111d31;
+            --border:#243552; --text:#f3f6fc; --muted:#a9b6ca;
+            --blue:#6ea8ff; --green:#55d6a4; --orange:#f2b66d;
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { box-sizing:border-box }
+        html { scroll-behavior:smooth }
         body {
-            margin: 0;
+            margin:0;
             background:
-                radial-gradient(
-                    circle at 85% 0%,
-                    rgba(110, 168, 255, 0.14),
-                    transparent 32%
-                ),
-                radial-gradient(
-                    circle at 10% 10%,
-                    rgba(146, 124, 255, 0.10),
-                    transparent 30%
-                ),
-                linear-gradient(
-                    180deg,
-                    var(--bg) 0%,
-                    var(--bg2) 50%,
-                    var(--bg) 100%
-                );
-            color: var(--text);
-            font-family:
-                Inter,
-                ui-sans-serif,
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
-            line-height: 1.7;
+                radial-gradient(circle at 85% 0%, rgba(110,168,255,.14), transparent 32%),
+                radial-gradient(circle at 10% 10%, rgba(146,124,255,.10), transparent 30%),
+                linear-gradient(180deg,var(--bg),var(--bg2));
+            color:var(--text);
+            font-family:Inter,system-ui,sans-serif;
+            line-height:1.7;
         }
-
-        a {
-            color: var(--blue);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .container {
-            width: min(1100px, calc(100% - 40px));
-            margin: auto;
-        }
-
-        .hero {
-            padding: 80px 0 60px;
-            border-bottom: 1px solid var(--border);
-        }
-
+        a { color:var(--blue); text-decoration:none }
+        a:hover { text-decoration:underline }
+        .container { width:min(1100px,calc(100% - 40px)); margin:auto }
+        .hero { padding:70px 0 50px; border-bottom:1px solid var(--border) }
         .badge {
-            display: inline-flex;
-            padding: 7px 13px;
-            border: 1px solid #304766;
-            border-radius: 999px;
-            background: rgba(13, 25, 44, 0.85);
-            color: #c9d9ef;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: .08em;
-            text-transform: uppercase;
+            display:inline-flex; padding:7px 13px; border:1px solid #304766;
+            border-radius:999px; background:rgba(13,25,44,.85);
+            color:#c9d9ef; font-size:11px; font-weight:800;
+            letter-spacing:.08em; text-transform:uppercase;
         }
-
-        h1 {
-            max-width: 900px;
-            margin: 22px 0 18px;
-            font-size: clamp(42px, 7vw, 70px);
-            line-height: 1.02;
-            letter-spacing: -.055em;
-        }
-
-        .hero p {
-            max-width: 850px;
-            margin: 0;
-            color: var(--muted);
-            font-size: 19px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-top: 35px;
-        }
-
-        .stat {
-            padding: 21px;
-            border: 1px solid var(--border);
-            border-radius: 17px;
-            background: rgba(14, 23, 40, .82);
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 24px;
-            line-height: 1.2;
-        }
-
-        .stat span {
-            display: block;
-            margin-top: 5px;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        main {
-            padding: 60px 0;
-        }
-
-        section {
-            margin-bottom: 58px;
-        }
-
-        h2 {
-            margin: 0 0 17px;
-            font-size: 31px;
-            line-height: 1.15;
-            letter-spacing: -.03em;
-        }
-
-        h3 {
-            margin: 0 0 9px;
-            font-size: 19px;
-        }
-
-        p {
-            color: #ccd5e4;
-        }
-
-        .lead {
-            color: #e0e7f2;
-            font-size: 17px;
-        }
-
+        h1 { max-width:900px; margin:18px 0 14px; font-size:clamp(36px,6vw,56px); line-height:1.02; letter-spacing:-.05em }
+        .hero p { max-width:850px; margin:0; color:var(--muted); font-size:15px }
+        .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:28px }
+        .stat { padding:18px; border:1px solid var(--border); border-radius:14px; background:rgba(14,23,40,.82) }
+        .stat strong { display:block; font-size:17px }
+        .stat span { display:block; margin-top:4px; color:var(--muted); font-size:11px }
+        main { padding:50px 0 }
+        section { margin-bottom:50px }
+        h2 { margin:0 0 14px; font-size:24px; letter-spacing:-.02em }
+        h3 { margin:0 0 8px; font-size:15px }
+        p { color:#ccd5e4; font-size:13.5px }
+        .lead { color:#e0e7f2; font-size:14.5px }
         .highlight {
-            margin-top: 25px;
-            padding: 25px;
-            border: 1px solid #355783;
-            border-radius: 18px;
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(49, 86, 137, .24),
-                    rgba(14, 23, 40, .9)
-                );
+            margin-top:20px; padding:20px; border:1px solid #355783;
+            border-radius:14px;
+            background:linear-gradient(135deg,rgba(49,86,137,.24),rgba(14,23,40,.9))
         }
-
-        .highlight strong {
-            color: #ffffff;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
+        .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px }
         .card {
-            padding: 25px;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            background: linear-gradient(
-                145deg,
-                var(--card),
-                var(--card2)
-            );
+            padding:20px; border:1px solid var(--border); border-radius:14px;
+            background:linear-gradient(145deg,var(--card),var(--card2))
         }
-
-        .card p {
-            margin-bottom: 0;
-            font-size: 15px;
-        }
-
+        .card p { font-size:12.5px }
         .tag {
-            display: inline-flex;
-            margin-bottom: 13px;
-            padding: 6px 10px;
-            border-radius: 8px;
-            background: #17263e;
-            color: #bed3f5;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .06em;
-            text-transform: uppercase;
+            display:inline-flex; margin-bottom:10px; padding:5px 9px; border-radius:7px;
+            background:#17263e; color:#bed3f5; font-size:10px;
+            font-weight:800; letter-spacing:.06em; text-transform:uppercase;
         }
-
         .formula {
-            margin: 22px 0;
-            padding: 21px;
-            overflow-x: auto;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            background: #080f1d;
-            color: #d9e5f7;
-            font-family: "SFMono-Regular", Consolas, monospace;
-            font-size: 14px;
+            margin:16px 0; padding:16px; overflow-x:auto; border:1px solid var(--border);
+            border-radius:10px; background:#080f1d; color:#d9e5f7;
+            font-family:SFMono-Regular,Consolas,monospace; font-size:11.5px;
         }
-
-        .flow {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 9px;
-            margin: 26px 0;
-        }
-
-        .step {
-            padding: 12px 15px;
-            border: 1px solid #2d4160;
-            border-radius: 11px;
-            background: #101b2d;
-            font-weight: 700;
-        }
-
-        .arrow {
-            color: #70829e;
-            font-size: 20px;
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-            border: 1px solid var(--border);
-            border-radius: 17px;
-        }
-
-        table {
-            width: 100%;
-            min-width: 680px;
-            border-collapse: collapse;
-            background: var(--card);
-        }
-
-        th,
-        td {
-            padding: 15px 17px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        th {
-            background: var(--card2);
-            color: #b9c7db;
-            font-size: 11px;
-            letter-spacing: .07em;
-            text-transform: uppercase;
-        }
-
-        td {
-            color: #d5deec;
-        }
-
-        tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .pass {
-            color: var(--green);
-            font-weight: 800;
-        }
-
-        .planned {
-            color: var(--orange);
-            font-weight: 800;
-        }
-
-        .evidence {
-            display: grid;
-            gap: 14px;
-        }
-
+        .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:12px }
+        table { width:100%; min-width:750px; border-collapse:collapse; background:var(--card) }
+        th,td { padding:12px 14px; border-bottom:1px solid var(--border); text-align:left; font-size:12px }
+        th { background:var(--card2); color:#b9c7db; font-size:10px; letter-spacing:.07em; text-transform:uppercase }
+        .pass { color:var(--green); font-weight:800 }
+        .mono { font-family:SFMono-Regular,Consolas,monospace; font-size:11px; color:#a9b6ca; word-break:break-all }
+        .evidence { display:grid; gap:12px }
         .evidence-item {
-            padding: 20px 22px;
-            border-left: 3px solid var(--blue);
-            border-radius: 0 14px 14px 0;
-            background: #0c1626;
+            padding:16px 18px; border-left:3px solid var(--blue);
+            border-radius:0 10px 10px 0; background:#0c1626; font-size:13px
         }
-
-        .evidence-item strong {
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .timeline {
-            display: grid;
-            gap: 14px;
-        }
-
-        .timeline-item {
-            padding: 21px 23px;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            background: #0d1728;
-        }
-
-        .timeline-date {
-            display: inline-block;
-            margin-bottom: 6px;
-            color: var(--blue);
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-        }
-
-        ul {
-            padding-left: 22px;
-            color: #ccd5e4;
-        }
-
-        li {
-            margin: 8px 0;
-        }
-
         .notice {
-            padding: 21px;
-            border: 1px solid #4a3d28;
-            border-radius: 15px;
-            background: rgba(49, 39, 24, .35);
+            padding:16px 18px; margin-top:16px; border:1px solid #5a492d;
+            border-radius:12px; background:rgba(80,60,30,.18); color:#e8d7bb;
+            font-size:12.5px;
         }
-
-        .notice strong {
-            color: #f3c27e;
-        }
-
-        footer {
-            padding: 35px 0 50px;
-            border-top: 1px solid var(--border);
-            color: #8795ab;
-            font-size: 13px;
-        }
-
-        @media (max-width: 850px) {
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 540px) {
-            .container {
-                width: min(1100px, calc(100% - 30px));
-            }
-
-            .hero {
-                padding: 55px 0 45px;
-            }
-
-            .stats {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .stat strong {
-                font-size: 20px;
-            }
-
-            .flow {
-                display: block;
-            }
-
-            .step {
-                display: inline-block;
-                margin: 4px 0;
-            }
-
-            .arrow {
-                display: inline-block;
-                margin: 0 4px;
-            }
-        }
+        footer { padding:30px 0 40px; border-top:1px solid var(--border); color:#8795ab; font-size:11px }
+        @media(max-width:850px) { .stats,.grid { grid-template-columns:1fr } }
     </style>
 </head>
 
 <body>
 
 <header class="hero">
-
     <div class="container">
+        <span class="badge">HedraFi · M4 · Mainnet Bonding Curve Validation</span>
 
-        <span class="badge">
-            HedraFi · M4 · Bonding Curve Validation
-        </span>
-
-        <h1>
-            Bonding Curve Validation Report
-        </h1>
+        <h1>Bonding Curve Mainnet Validation Report</h1>
 
         <p>
-            Technical validation of the HedraFi bonding-curve mechanism,
-            including on-chain Testnet purchase and redemption execution
-            and the planned integration of the mechanism into the HedraFi
-            marketplace economy.
+            Technical validation of HedraFi's buy-only bonding curve on
+            <strong>Hedera Mainnet</strong>. The curve provides deterministic
+            HBAR-denominated pricing for HDFI acquisition and distributes
+            HDFI from pre-funded HTS inventory to buyers through verified
+            Mainnet transactions.
         </p>
 
         <div class="stats">
-
             <div class="stat">
-                <strong>Hedera Testnet</strong>
-                <span>Validation environment</span>
+                <strong>Hedera Mainnet</strong>
+                <span>Validation Network</span>
             </div>
-
             <div class="stat">
-                <strong>100 HRT</strong>
-                <span>Validated purchase amount</span>
+                <strong>0.0.10881448</strong>
+                <span>Bonding Curve Contract ID</span>
             </div>
-
             <div class="stat">
-                <strong>100 HRT</strong>
-                <span>Validated redemption amount</span>
+                <strong>0.0.10881443</strong>
+                <span>HDFI Token ID · 8 decimals</span>
             </div>
-
             <div class="stat">
-                <strong>14 Sep 2026</strong>
-                <span>Planned marketplace activation</span>
+                <strong>Buy-Only Curve</strong>
+                <span>Primary acquisition · no curve redemption</span>
             </div>
-
         </div>
-
     </div>
-
 </header>
 
-
 <main>
-
 <div class="container">
 
-
 <section>
-
-    <h2>1. Executive Summary</h2>
+    <h2>1. M4 Objective · Mainnet Buy-Side Activation</h2>
 
     <p class="lead">
-        HedraFi has implemented a bonding-curve mechanism designed to provide
-        deterministic HBAR-denominated token pricing and a programmatic
-        purchase and redemption mechanism.
-    </p>
-
-    <p>
-        The bonding curve has been deployed and exercised on Hedera Testnet.
-        Controlled on-chain transactions were executed to validate both
-        primary paths of the mechanism: purchasing HRT using HBAR and
-        selling HRT back through the curve for HBAR.
-    </p>
-
-    <p>
-        A 100 HRT purchase was successfully executed, followed by a
-        100 HRT redemption transaction. Both transactions were confirmed
-        on Hedera Testnet.
-    </p>
-
-    <div class="highlight">
-
-        <strong>
-            Validation result: PASS
-        </strong>
-
-        <br>
-
-        The tested purchase and redemption paths executed successfully,
-        providing verifiable on-chain evidence that the implemented
-        bonding-curve mechanism is operational.
-        
-    </div>
-
-</section>
-
-
-<section>
-
-    <h2>2. Bonding Curve Design</h2>
-
-    <p>
-        The HedraFi bonding curve uses a linear pricing model in which the
-        token price is determined by the current number of tokens issued
-        through the curve.
+        <strong>Objective:</strong> Demonstrate that HedraFi's bonding curve is
+        deployed and operational on Hedera Mainnet, correctly calculates HBAR
+        pricing for HDFI, and successfully executes permissionless primary
+        purchases through Hedera Token Service with verifiable on-chain evidence.
     </p>
 
     <div class="grid">
-
         <div class="card">
-
-            <span class="tag">Base Configuration</span>
-
-            <h3>Base Price</h3>
-
+            <span class="tag">Validated</span>
+            <h3>Mainnet Buy Validation</h3>
             <p>
-                The curve is initialized with a base price of
-                <strong>1,250,000 tinybars</strong>.
+                Bonding curve contract 0.0.10881448 is deployed on Hedera Mainnet.
+                HDFI token 0.0.10881443 is associated with the contract and is
+                transferred to buyers through the HTS precompile after successful
+                purchases.
             </p>
-
         </div>
 
         <div class="card">
-
-            <span class="tag">Price Progression</span>
-
-            <h3>Slope</h3>
-
+            <span class="tag">Design Disclosure</span>
+            <h3>Buy-Only Primary Curve</h3>
             <p>
-                The configured slope is
-                <strong>100 tinybars per token increment</strong>.
+                The current curve intentionally provides a buy-only primary
+                acquisition path. It does not contain a sell or redemption
+                function. Secondary trading is intended to be handled separately
+                through future DEX liquidity, including SaucerSwap.
             </p>
-
         </div>
-
-        <div class="card">
-
-            <span class="tag">Supply Control</span>
-
-            <h3>Maximum Curve Supply</h3>
-
-            <p>
-                The curve has a configured maximum supply of
-                <strong>100,000,000 HRT</strong>.
-            </p>
-
-        </div>
-
-        <div class="card">
-
-            <span class="tag">Settlement</span>
-
-            <h3>Hedera Token Service</h3>
-
-            <p>
-                HRT transfers are executed using Hedera Token Service
-                functionality through the Hedera HTS precompile.
-            </p>
-
-        </div>
-
     </div>
-
 </section>
 
-
 <section>
+    <h2>2. Contract Identification · Hedera Mainnet</h2>
 
-    <h2>3. Pricing Mechanism</h2>
+    <div class="card">
+        <span class="tag">Mainnet Deployment</span>
 
-    <p>
-        The bonding curve calculates the price of each token position based
-        on the number of tokens already issued through the curve.
-    </p>
+        <div class="formula">
+Bonding Curve Contract ID: 0.0.10881448
+<br>
+HDFI Token ID: 0.0.10881443
+<br>
+Token Decimals: 8
+<br>
+Network: Hedera Mainnet
+<br>
+Pricing Currency: HBAR / tinybar
+<br>
+Mechanism: Linear Buy-Only Bonding Curve
+<br>
+Curve Allocation: 100,000,000 HDFI
+<br>
+HTS Precompile: 0x0000000000000000000000000000000000000167
+        </div>
 
-    <div class="formula">
+        <p>
+            The bonding curve uses the Hedera Token Service precompile for HDFI
+            transfers. HTS response codes are checked and successful transfers
+            require response code 22.
+        </p>
 
-        Price(i) = BASE_PRICE + (SLOPE × (totalMinted + i))
-
-        <br><br>
-
-        Total Purchase Cost = Σ Price(i)
-
-    </div>
-
-    <p>
-        As tokens are purchased through the curve, the tracked curve position
-        increases and subsequent purchases are priced according to the next
-        positions on the curve.
-    </p>
-
-    <p>
-        When tokens are sold, the contract calculates the corresponding
-        redemption value by traversing the curve in reverse.
-    </p>
-
-    <div class="formula">
-
-        Price(i) = BASE_PRICE + (SLOPE × (totalMinted - 1 - i))
-
-        <br><br>
-
-        Total Redemption = Σ Price(i)
-
-    </div>
-
-</section>
-
-
-<section>
-
-    <h2>4. Hedera Integration</h2>
-
-    <p>
-        The bonding curve integrates with Hedera Token Service through the
-        Hedera EVM HTS precompile.
-    </p>
-
-    <div class="formula">
-
-        Hedera Token Service Precompile
-
-        <br><br>
-
-        0x0000000000000000000000000000000000000167
-
-    </div>
-
-    <p>
-        The contract uses HTS functionality to transfer HRT during purchases
-        and to execute the token side of the redemption transaction.
-    </p>
-
-    <p>
-        The sale mechanism uses an atomic HTS crypto-transfer operation,
-        allowing the HRT transfer and HBAR settlement to be executed as
-        part of the same transaction.
-    </p>
-
-</section>
-
-
-<section>
-
-    <h2>5. Purchase Validation</h2>
-
-    <div class="evidence">
-
-        <div class="evidence-item">
-
-            <strong>
-                Testnet Purchase — 100 HRT
-            </strong>
-
-            <span>
-                A controlled purchase of 100 HRT was successfully executed
-                through the bonding curve.
-            </span>
-
-            <br><br>
-
-            <a
-                href="https://hashscan.io/testnet/transaction/1788822367.836434104"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                View Purchase Transaction on HashScan →
+        <p>
+            <strong>Contract:</strong>
+            <a href="https://hashscan.io/mainnet/contract/0.0.10881448" target="_blank" rel="noopener">
+                View bonding curve on HashScan
             </a>
+        </p>
 
-        </div>
-
-    </div>
-
-    <h3 style="margin-top: 25px;">
-        Validation Result
-    </h3>
-
-    <p class="pass">
-        PASS — Purchase transaction successfully confirmed on Hedera Testnet.
-    </p>
-
-    <p>
-        The transaction demonstrates that the bonding curve can accept HBAR,
-        calculate the required purchase cost and execute the HRT transfer
-        to the purchasing account through HTS.
-    </p>
-
-</section>
-
-
-<section>
-
-    <h2>6. Sale / Redemption Validation</h2>
-
-    <div class="evidence">
-
-        <div class="evidence-item">
-
-            <strong>
-                Testnet Redemption — 100 HRT
-            </strong>
-
-            <span>
-                A controlled redemption of 100 HRT was successfully executed
-                through the bonding curve.
-            </span>
-
-            <br><br>
-
-            <a
-                href="https://hashscan.io/testnet/transaction/1788822669.023411659"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                View Redemption Transaction on HashScan →
+        <p>
+            <strong>Token:</strong>
+            <a href="https://hashscan.io/mainnet/token/0.0.10881443" target="_blank" rel="noopener">
+                View HDFI on HashScan
             </a>
-
-        </div>
-
+        </p>
     </div>
-
-    <h3 style="margin-top: 25px;">
-        Validation Result
-    </h3>
-
-    <p class="pass">
-        PASS — Redemption transaction successfully confirmed on Hedera Testnet.
-    </p>
-
-    <p>
-        The transaction demonstrates that HRT can be returned to the bonding
-        curve and that the corresponding HBAR redemption mechanism can execute
-        successfully.
-    </p>
-
 </section>
 
-
 <section>
-
-    <h2>7. End-to-End Validation</h2>
+    <h2>3. Bonding Curve Pricing Model</h2>
 
     <p>
-        The tested transaction sequence validates both sides of the bonding
-        curve's intended economic flow.
+        The curve uses a linear price progression based on the amount of HDFI
+        already sold through the curve. HDFI uses 8 decimal places, and all
+        contract <code>amount</code> values are represented in base units.
     </p>
 
-    <div class="flow">
+    <div class="formula">
+1 HDFI = 100,000,000 base units
 
-        <span class="step">HBAR</span>
+BASE_PRICE = 1,250,000 tinybar per whole HDFI
+            = 0.0125 HBAR per HDFI
 
-        <span class="arrow">→</span>
+PRICE_SLOPE = 100 tinybar per additional whole HDFI
 
-        <span class="step">Bonding Curve</span>
+startPrice =
+    basePrice + (priceSlope × totalMinted / 10^8)
 
-        <span class="arrow">→</span>
+endPrice =
+    basePrice + (priceSlope × (totalMinted + amount) / 10^8)
 
-        <span class="step">100 HRT</span>
+averagePrice =
+    (startPrice + endPrice) / 2
 
-        <span class="arrow">→</span>
+totalCost =
+    (averagePrice × amount) / 10^8
 
-        <span class="step">HRT Redemption</span>
-
-        <span class="arrow">→</span>
-
-        <span class="step">HBAR</span>
-
+Maximum curve allocation =
+    100,000,000 HDFI
     </div>
+
+    <p>
+        Because the curve is buy-only, <code>totalMinted</code> only increases.
+        As more HDFI is acquired through the curve, the calculated price
+        progresses upward according to the configured slope.
+    </p>
+
+    <div class="notice">
+        <strong>Pricing administration:</strong>
+        The contract owner can update the base price and slope through the
+        <code>setPriceParams</code> administrative function. The deployed
+        contract therefore uses owner-controlled curve parameters rather than
+        an immutable pricing schedule.
+    </div>
+</section>
+
+<section>
+    <h2>4. Mainnet Transaction Validation · Buy-Side Activity</h2>
+
+    <p class="lead">
+        Three controlled Mainnet purchases were executed successfully.
+        Each transaction provides on-chain evidence of an HBAR payment to the
+        curve contract followed by an HTS HDFI transfer to the buyer.
+    </p>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
-
                 <tr>
-                    <th>Validation Test</th>
-                    <th>Expected Behaviour</th>
+                    <th>Transaction</th>
+                    <th>Buyer</th>
+                    <th>HBAR Paid</th>
+                    <th>HDFI Received</th>
                     <th>Result</th>
                 </tr>
-
             </thead>
 
             <tbody>
-
                 <tr>
-                    <td>Purchase execution</td>
-                    <td>Accept HBAR and process token purchase</td>
+                    <td>
+                        <a href="https://hashscan.io/mainnet/transaction/1790059514.230655104" target="_blank" rel="noopener">
+                            1790059514.230655104
+                        </a>
+                        <br>
+                        <span class="mono">0.0.10299295 → 0.0.10881448</span>
+                    </td>
+                    <td>0.0.10299295</td>
+                    <td>
+                        1,119,050 tinybar
+                        <br>
+                        <strong>0.0111905 ℏ</strong>
+                    </td>
+                    <td>
+                        100,000,000 base units
+                        <br>
+                        <strong>1 HDFI</strong>
+                    </td>
                     <td class="pass">PASS</td>
                 </tr>
 
                 <tr>
-                    <td>HRT distribution</td>
-                    <td>Transfer HRT to purchaser through HTS</td>
+                    <td>
+                        <a href="https://hashscan.io/mainnet/transaction/1790063196.716639942" target="_blank" rel="noopener">
+                            1790063196.716639942
+                        </a>
+                        <br>
+                        <span class="mono">0.0.10299295 → 0.0.10881448</span>
+                    </td>
+                    <td>0.0.10299295</td>
+                    <td>
+                        100,394,674 tinybar
+                        <br>
+                        <strong>1.00394674 ℏ</strong>
+                    </td>
+                    <td>
+                        8,935,352,723 base units
+                        <br>
+                        <strong>89.35352723 HDFI</strong>
+                    </td>
                     <td class="pass">PASS</td>
                 </tr>
 
                 <tr>
-                    <td>Purchase event</td>
-                    <td>Emit TokensPurchased event</td>
+                    <td>
+                        <a href="https://hashscan.io/mainnet/transaction/1790063740.560455104" target="_blank" rel="noopener">
+                            1790063740.560455104
+                        </a>
+                        <br>
+                        <span class="mono">0.0.10300243 → 0.0.10881448</span>
+                    </td>
+                    <td>0.0.10300243</td>
+                    <td>
+                        509,800,236 tinybar
+                        <br>
+                        <strong>5.09800236 ℏ</strong>
+                    </td>
+                    <td>
+                        44,322,901,199 base units
+                        <br>
+                        <strong>443.22901199 HDFI</strong>
+                    </td>
                     <td class="pass">PASS</td>
                 </tr>
-
-                <tr>
-                    <td>Redemption execution</td>
-                    <td>Accept HRT and calculate redemption</td>
-                    <td class="pass">PASS</td>
-                </tr>
-
-                <tr>
-                    <td>HBAR settlement</td>
-                    <td>Return calculated HBAR to seller</td>
-                    <td class="pass">PASS</td>
-                </tr>
-
-                <tr>
-                    <td>Atomic HTS transfer</td>
-                    <td>Execute HRT/HBAR settlement through HTS</td>
-                    <td class="pass">PASS</td>
-                </tr>
-
-                <tr>
-                    <td>Sale event</td>
-                    <td>Emit TokensSold event</td>
-                    <td class="pass">PASS</td>
-                </tr>
-
-                <tr>
-                    <td>Curve state</td>
-                    <td>Update tracked curve supply after transactions</td>
-                    <td class="pass">PASS</td>
-                </tr>
-
             </tbody>
-
         </table>
-
     </div>
 
+    <div style="margin-top:16px" class="grid">
+
+        <div class="card">
+            <span class="tag">Evidence · Buy #1</span>
+            <h3>1 HDFI Purchase</h3>
+            <p>
+                Parent contract call succeeded and the child token transfer
+                delivered 100,000,000 base units (1 HDFI) to account 0.0.10299295.
+                The curve contract received 1,119,050 tinybar.
+            </p>
+            <p class="mono">
+                <a href="https://hashscan.io/mainnet/transaction/1790059514.230655104" target="_blank" rel="noopener">
+                    HashScan transaction
+                </a>
+            </p>
+        </div>
+
+        <div class="card">
+            <span class="tag">Evidence · Buy #2</span>
+            <h3>89.35352723 HDFI Purchase</h3>
+            <p>
+                The same buyer completed a second purchase. The curve processed
+                8,935,352,723 base units and received 1.00394674 HBAR.
+            </p>
+            <p class="mono">
+                <a href="https://hashscan.io/mainnet/transaction/1790063196.716639942" target="_blank" rel="noopener">
+                    HashScan transaction
+                </a>
+            </p>
+        </div>
+
+        <div class="card">
+            <span class="tag">Evidence · Buy #3</span>
+            <h3>443.22901199 HDFI Purchase · Second Wallet</h3>
+            <p>
+                Account 0.0.10300243 successfully purchased 443.22901199 HDFI
+                for 5.09800236 HBAR, demonstrating permissionless access from
+                another Mainnet wallet.
+            </p>
+            <p class="mono">
+                <a href="https://hashscan.io/mainnet/transaction/1790063740.560455104" target="_blank" rel="noopener">
+                    HashScan transaction
+                </a>
+            </p>
+        </div>
+
+        <div class="card">
+            <span class="tag">Aggregate Evidence</span>
+            <h3>Validated Buy-Side Activity</h3>
+            <p>
+                Approximately <strong>6.11313960 HBAR</strong> was paid across
+                the three documented purchases, resulting in
+                <strong>533.58253922 HDFI</strong> transferred from the curve's
+                pre-funded HTS inventory to buyers.
+            </p>
+        </div>
+
+    </div>
 </section>
 
-
 <section>
-
-    <h2>8. Security &amp; Validation Controls</h2>
-
-    <p>
-        The implementation includes validation checks intended to prevent
-        invalid curve operations and protect the contract's state.
-    </p>
+    <h2>5. Contract Controls</h2>
 
     <ul>
-
         <li>
-            Maximum curve supply is enforced during purchases.
+            <strong>Curve allocation limit:</strong>
+            purchases cannot exceed the configured 100,000,000 HDFI curve allocation.
         </li>
 
         <li>
-            Purchases require sufficient HBAR to satisfy the calculated
-            curve cost.
+            <strong>Payment validation:</strong>
+            the contract requires the supplied HBAR to meet or exceed the calculated purchase cost.
         </li>
 
         <li>
-            Redemptions cannot exceed the current curve supply.
+            <strong>HTS transfer validation:</strong>
+            HDFI transfers require HTS response code 22.
         </li>
 
         <li>
-            Redemptions require sufficient HBAR reserves.
+            <strong>Reentrancy protection:</strong>
+            purchase and administrative withdrawal paths use OpenZeppelin's
+            <code>ReentrancyGuard</code> where applicable.
         </li>
 
         <li>
-            Hedera Token Service response codes are checked after token
-            transfer operations.
+            <strong>Administrative access:</strong>
+            price configuration and token/HBAR withdrawals are restricted to the
+            contract owner.
         </li>
 
         <li>
-            Administrative functions are restricted to the configured
-            administrator.
+            <strong>Buy-only design:</strong>
+            there is no curve-level HDFI redemption or sell function.
         </li>
 
         <li>
-            Token association is handled through Hedera Token Service.
+            <strong>HTS association:</strong>
+            the contract provides an owner-only association function so it can
+            hold the HDFI inventory required for purchases.
         </li>
-
     </ul>
-
 </section>
 
-
 <section>
-
-    <h2>9. HedraFi Existing Economic Activity</h2>
-
-    <p>
-        The bonding curve validation builds on an existing HedraFi participation
-        economy rather than starting from zero.
-    </p>
+    <h2>6. Treasury and Secondary Liquidity Design</h2>
 
     <div class="grid">
 
         <div class="card">
-
-            <span class="tag">Existing On-Chain Activity</span>
-
-            <h3>145,546,422 HRT Distributed</h3>
-
+            <span class="tag">Primary Market</span>
+            <h3>Bonding Curve</h3>
             <p>
-                HedraFi's HBAR staking mechanism has already distributed more
-                than 145 million HRT to participating users.
+                The bonding curve is the primary HBAR → HDFI acquisition mechanism.
+                Buyers purchase HDFI directly from the curve contract's pre-funded
+                HTS inventory at a dynamically calculated price.
             </p>
-
         </div>
 
         <div class="card">
-
-            <span class="tag">Community</span>
-
-            <h3>400+ Users</h3>
-
+            <span class="tag">Secondary Market</span>
+            <h3>Future DEX Liquidity</h3>
             <p>
-                HedraFi has an established community positioned to participate
-                in the next stage of marketplace utility and ecosystem growth.
+                The bonding curve does not itself provide secondary-market
+                liquidity. The contract includes administrative withdrawal
+                functions so HDFI and accumulated HBAR can be moved to treasury
+                or future liquidity infrastructure, including a SaucerSwap pool.
             </p>
-
         </div>
 
     </div>
 
+    <div class="notice">
+        <strong>Important distinction:</strong>
+        HBAR held by the bonding curve contract is not represented in this report
+        as DEX liquidity. No claim of an active SaucerSwap liquidity pool is made
+        by this validation report.
+    </div>
 </section>
 
-
 <section>
-
-    <h2>10. Marketplace Integration</h2>
-
-    <p class="lead">
-        The bonding curve is being developed as part of HedraFi's broader
-        token-economic infrastructure and will operate alongside the
-        marketplace utility layer.
-    </p>
-
-    <p>
-        HedraFi's marketplace introduces direct utility for the official
-        ecosystem token through premium creator and storefront functionality.
-    </p>
+    <h2>7. Existing HedraFi Utility</h2>
 
     <div class="grid">
 
         <div class="card">
+            <span class="tag">Existing Activity</span>
+            <h3>HDFI Distribution</h3>
+            <p>
+                HedraFi has an existing on-chain token distribution history through
+                its staking ecosystem. The bonding curve adds a direct HBAR-to-HDFI
+                acquisition path on Mainnet.
+            </p>
+        </div>
 
+        <div class="card">
             <span class="tag">Marketplace Utility</span>
-
-            <h3>Featured Collections</h3>
-
+            <h3>HDFI Utility</h3>
             <p>
-                Creators can use the official HedraFi token to promote eligible
-                collections and obtain enhanced marketplace visibility.
+                HDFI is intended to support marketplace utility including featured
+                collections, verified storefront functionality, and video/GIF
+                storefront banners as the marketplace utility layer is activated.
             </p>
-
-        </div>
-
-        <div class="card">
-
-            <span class="tag">Marketplace Utility</span>
-
-            <h3>Verified Storefronts</h3>
-
-            <p>
-                Store owners can use the token to access verified storefront
-                functionality.
-            </p>
-
-        </div>
-
-        <div class="card">
-
-            <span class="tag">Premium Storefront</span>
-
-            <h3>Video Banners</h3>
-
-            <p>
-                Premium storefront video functionality will provide creators
-                with enhanced visual presentation options.
-            </p>
-
-        </div>
-
-        <div class="card">
-
-            <span class="tag">Premium Storefront</span>
-
-            <h3>GIF Banners</h3>
-
-            <p>
-                Store owners will be able to use the token for enhanced
-                animated storefront presentation.
-            </p>
-
         </div>
 
     </div>
-
 </section>
 
-
 <section>
-
-    <h2>11. Planned Marketplace Activation</h2>
-
-    <div class="timeline">
-
-        <div class="timeline-item">
-
-            <span class="timeline-date">
-                14 September 2026 · Planned
-            </span>
-
-            <h3>HedraFi Marketplace Launch</h3>
-
-            <p>
-                HedraFi plans to activate the marketplace alongside the
-                production token utility layer. The bonding-curve mechanism
-                validated through Testnet testing will form part of the
-                broader token infrastructure being prepared for this stage.
-            </p>
-
-        </div>
-
-        <div class="timeline-item">
-
-            <span class="timeline-date">
-                Production Integration
-            </span>
-
-            <h3>Token Utility Activation</h3>
-
-            <p>
-                Marketplace functionality will provide direct practical
-                utility for the official HedraFi token through creator
-                promotion, verification and premium storefront functionality.
-            </p>
-
-        </div>
-
-        <div class="timeline-item">
-
-            <span class="timeline-date">
-                Future Expansion
-            </span>
-
-            <h3>Liquidity &amp; Ecosystem Growth</h3>
-
-            <p>
-                As marketplace activity develops, HedraFi intends to expand
-                its liquidity and broader token-economic infrastructure.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<section>
-
-    <h2>12. Validation Conclusion</h2>
-
-    <p class="lead">
-        The HedraFi bonding curve has been successfully exercised on Hedera
-        Testnet through real on-chain purchase and redemption transactions.
-    </p>
-
-    <p>
-        The validated transactions demonstrate that the implemented mechanism
-        can process the two fundamental economic paths of the curve: acquiring
-        HRT with HBAR and redeeming HRT through the curve for HBAR.
-    </p>
-
-    <p>
-        The validation provides a working technical foundation for continued
-        integration of the bonding-curve mechanism into HedraFi's broader
-        token economy and marketplace infrastructure.
-    </p>
+    <h2>8. Validation Summary</h2>
 
     <div class="highlight">
-
-        <strong>
-            Validation Status: PASS
-        </strong>
-
+        <strong>Mainnet Bonding Curve Status: Buy-Side Functionality Validated</strong>
         <br><br>
 
-        The bonding curve has been deployed and successfully exercised on
-        Hedera Testnet. The validated mechanism is being prepared for
-        integration with HedraFi's marketplace and official token economy.
-
+        ✓ Bonding curve contract 0.0.10881448 deployed on Hedera Mainnet
+        <br>
+        ✓ HDFI token 0.0.10881443 identified with 8 decimal places
+        <br>
+        ✓ Buy-only primary acquisition mechanism operational
+        <br>
+        ✓ Three successful Mainnet purchase transactions documented
+        <br>
+        ✓ Two separate buyer accounts represented in the documented transactions
+        <br>
+        ✓ HBAR payments received by the bonding curve contract
+        <br>
+        ✓ HDFI transferred through the HTS precompile to buyers
+        <br>
+        ✓ Curve pricing progresses according to configured price parameters
+        <br>
+        ✓ No claim is made that the curve itself provides secondary-market liquidity
+        <br>
+        ✓ No curve-level sell/redemption function is claimed
     </div>
 
+    <p>
+        This report is intended to provide transparent technical evidence of the
+        deployed Mainnet bonding curve and its successfully executed buy-side
+        transactions. It does not represent the buy-only curve as a DEX liquidity
+        pool or as a redemption mechanism.
+    </p>
 </section>
 
-
 <section>
-
-    <h2>13. On-Chain Evidence</h2>
+    <h2>9. On-Chain Evidence · Hedera Mainnet</h2>
 
     <div class="evidence">
 
         <div class="evidence-item">
-
-            <strong>
-                HRT Purchase — 100 Tokens
-            </strong>
-
-            <a
-                href="https://hashscan.io/testnet/transaction/1788822367.836434104"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                https://hashscan.io/testnet/transaction/1788822367.836434104
+            <strong>Bonding Curve Contract</strong><br>
+            <a href="https://hashscan.io/mainnet/contract/0.0.10881448" target="_blank" rel="noopener">
+                https://hashscan.io/mainnet/contract/0.0.10881448
             </a>
-
         </div>
 
         <div class="evidence-item">
-
-            <strong>
-                HRT Sale — 100 Tokens
-            </strong>
-
-            <a
-                href="https://hashscan.io/testnet/transaction/1788822669.023411659"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                https://hashscan.io/testnet/transaction/1788822669.023411659
+            <strong>HDFI Token</strong><br>
+            <a href="https://hashscan.io/mainnet/token/0.0.10881443" target="_blank" rel="noopener">
+                https://hashscan.io/mainnet/token/0.0.10881443
             </a>
+        </div>
 
+        <div class="evidence-item">
+            <strong>Buy #1</strong><br>
+            <a href="https://hashscan.io/mainnet/transaction/1790059514.230655104" target="_blank" rel="noopener">
+                https://hashscan.io/mainnet/transaction/1790059514.230655104
+            </a>
+        </div>
+
+        <div class="evidence-item">
+            <strong>Buy #2</strong><br>
+            <a href="https://hashscan.io/mainnet/transaction/1790063196.716639942" target="_blank" rel="noopener">
+                https://hashscan.io/mainnet/transaction/1790063196.716639942
+            </a>
+        </div>
+
+        <div class="evidence-item">
+            <strong>Buy #3</strong><br>
+            <a href="https://hashscan.io/mainnet/transaction/1790063740.560455104" target="_blank" rel="noopener">
+                https://hashscan.io/mainnet/transaction/1790063740.560455104
+            </a>
         </div>
 
     </div>
-
 </section>
-
-
-<section>
-
-    <h2>14. Validation Environment Disclosure</h2>
-
-    <div class="notice">
-
-        <strong>
-            Testnet Validation
-        </strong>
-
-        <p>
-            The transactions documented in this report were executed on
-            Hedera Testnet for technical validation purposes. They are not
-            represented as Mainnet trading or Mainnet liquidity activity.
-        </p>
-
-        <p>
-            The purpose of this validation is to demonstrate that the
-            bonding-curve implementation can execute its intended purchase
-            and redemption flows before production integration.
-        </p>
-
-    </div>
-
-</section>
-
 
 </div>
-
 </main>
 
-
 <footer>
-
     <div class="container">
-
-        <strong>HedraFi</strong><br>
-
-        Bonding Curve Validation Report · M4
-
-        <br><br>
-
-        This document describes technical validation of the HedraFi
-        bonding-curve mechanism and its intended integration into the
-        HedraFi ecosystem.
-
+        <strong>HedraFi</strong> · M4 Mainnet Bonding Curve Validation
+        · Contract 0.0.10881448 · HDFI 0.0.10881443
+        <br>
+        All documented transactions are Hedera Mainnet transactions.
+        Buy-only primary curve · no curve-level sell/redemption path.
     </div>
-
 </footer>
 
 </body>

@@ -153,7 +153,7 @@ const StakePanel = () => {
   };
 
   useEffect(() => {
-    let interval;
+    let interval; 
     if (accountId && isConnected && evmAddress) {
       fetchUserData();
       interval = setInterval(() => fetchUserData(), 10000);

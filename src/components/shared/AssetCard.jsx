@@ -1,75 +1,298 @@
-import { Link } from 'react-router-dom';
-import { Building2, Image as ImageIcon, TrendingUp, ShieldCheck } from 'lucide-react';
+import {
+    Heart,
+    BadgeCheck,
+    ArrowUpRight,
+    Crown,
+    Flame
+} from 'lucide-react';
 
-const AssetCard = ({ asset, type }) => {
-  // type is 'rwa' or 'nft'
-  return (
-    <div className="bg-[#050A15] border border-white/[0.05] rounded-[16px] p-4 group cursor-pointer hover:-translate-y-2 hover:shadow-[0_20px_50px_-15px_rgba(34,211,238,0.2)] transition-all duration-500 hover:border-cyan-500/30">
-        {/* Image / Visual */}
-        <div className="relative aspect-square rounded-[16px] overflow-hidden mb-5">
-            <img src={asset.image} alt={asset.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            
-            {/* Badges */}
-            <div className="absolute top-4 left-4 flex gap-2 z-10">
-                {type === 'rwa' ? (
-                    <span className="badge-rwa flex items-center gap-1 backdrop-blur-md bg-black/40">
-                        <Building2 size={12} /> RWA
-                    </span>
-                ) : (
-                    <span className="badge-nft flex items-center gap-1 backdrop-blur-md bg-black/40">
-                        <ImageIcon size={12} /> Digital
-                    </span>
-                )}
-            </div>
-        </div>
 
-        {/* Info */}
-        <div className="space-y-4 px-2">
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 className="font-black text-xl leading-tight tracking-tight text-white group-hover:text-cyan-400 transition-colors">{asset.name}</h3>
-                    {asset.collection && <p className="text-slate-400 text-sm font-medium mt-1">{asset.collection}</p>}
+const AssetCard = ({ asset, type = 'nft' }) => {
+
+    const isFeatured = asset.featured;
+    const isTrending = asset.trending;
+
+    return (
+
+        <div
+            className="
+                group relative h-full
+                rounded-[20px]
+                bg-[#050A15]
+                border border-white/[0.07]
+                overflow-hidden
+                transition-all duration-500
+                hover:-translate-y-1
+                hover:border-emerald-500/25
+                hover:shadow-[0_25px_60px_-25px_rgba(16,185,129,0.18)]
+            "
+        >
+
+
+            {/* =====================================================
+                IMAGE
+            ===================================================== */}
+
+            <div className="relative aspect-square overflow-hidden bg-[#030712]">
+
+
+                <img
+                    src={asset.image}
+                    alt={asset.name}
+                    className="
+                        w-full h-full
+                        object-cover
+                        transition-transform duration-700
+                        group-hover:scale-[1.04]
+                    "
+                />
+
+
+                {/* Bottom gradient */}
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050A15]/80 via-transparent to-transparent pointer-events-none" />
+
+
+                {/* =================================================
+                    TOP BADGES
+                ================================================= */}
+
+                <div className="absolute top-3 left-3 flex items-center gap-1.5">
+
+
+                    {isFeatured && (
+
+                        <span
+                            className="
+                                inline-flex items-center gap-1.5
+                                px-2.5 py-1.5
+                                rounded-lg
+                                bg-black/45
+                                backdrop-blur-md
+                                border border-emerald-500/20
+                                text-[8px]
+                                font-black
+                                uppercase
+                                tracking-[0.14em]
+                                text-emerald-300
+                            "
+                        >
+
+                            <Crown size={10} />
+
+                            Featured
+
+                        </span>
+
+                    )}
+
+
+                    {isTrending && !isFeatured && (
+
+                        <span
+                            className="
+                                inline-flex items-center gap-1.5
+                                px-2.5 py-1.5
+                                rounded-lg
+                                bg-black/45
+                                backdrop-blur-md
+                                border border-white/10
+                                text-[8px]
+                                font-black
+                                uppercase
+                                tracking-[0.14em]
+                                text-slate-300
+                            "
+                        >
+
+                            <Flame size={10} />
+
+                            Trending
+
+                        </span>
+
+                    )}
+
                 </div>
-                {type === 'rwa' && <ShieldCheck size={20} className="text-emerald-400 shrink-0" title="Verified Asset" />}
+
+
+                {/* =================================================
+                    FAVORITE
+                ================================================= */}
+
+                <button
+                    type="button"
+                    onClick={(e) => e.preventDefault()}
+                    className="
+                        absolute top-3 right-3
+                        w-8 h-8
+                        rounded-lg
+                        bg-black/35
+                        backdrop-blur-md
+                        border border-white/10
+                        flex items-center justify-center
+                        text-slate-400
+                        hover:text-white
+                        hover:bg-black/50
+                        transition-all
+                    "
+                    aria-label="Add to favorites"
+                >
+
+                    <Heart size={14} />
+
+                </button>
+
+
+                {/* =================================================
+                    HOVER ACTION
+                ================================================= */}
+
+                <div
+                    className="
+                        absolute
+                        left-3 right-3 bottom-3
+                        translate-y-3
+                        opacity-0
+                        group-hover:translate-y-0
+                        group-hover:opacity-100
+                        transition-all duration-300
+                    "
+                >
+
+                    <div
+                        className="
+                            h-9
+                            rounded-lg
+                            bg-white
+                            text-black
+                            flex items-center justify-center gap-2
+                            text-[9px]
+                            font-black
+                            uppercase
+                            tracking-[0.14em]
+                        "
+                    >
+
+                        View NFT
+
+                        <ArrowUpRight size={13} />
+
+                    </div>
+
+                </div>
+
             </div>
-            
-            {/* Metadata Grid */}
-            <div className="grid grid-cols-2 gap-3 text-sm border-t border-white/10 pt-4">
-                {type === 'rwa' ? (
-                    <>
-                        <div className="flex flex-col">
-                            <span className="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">Location</span>
-                            <span className="font-bold text-slate-200 mt-1">{asset.location || 'Miami, FL'}</span>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">Est. Yield</span>
-                            <span className="font-black text-emerald-400 flex items-center gap-1 mt-1"><TrendingUp size={14}/> {asset.yield || '8.5% APY'}</span>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className="flex flex-col">
-                            <span className="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">Price</span>
-                            <span className="font-bold text-slate-200 mt-1">{asset.price || '150 ℏ'}</span>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">Highest Bid</span>
-                            <span className="font-black text-cyan-400 flex items-center gap-1 mt-1">120 ℏ</span>
-                        </div>
-                    </>
+
+
+            {/* =====================================================
+                CONTENT
+            ===================================================== */}
+
+            <div className="p-4">
+
+
+                {/* Collection */}
+
+                <div className="flex items-center gap-1.5 min-w-0">
+
+                    <p className="text-[10px] text-slate-500 truncate">
+
+                        {asset.collection || 'HedraFi Collection'}
+
+                    </p>
+
+
+                    {asset.verified && (
+
+                        <BadgeCheck
+                            size={12}
+                            className="text-cyan-400 shrink-0"
+                        />
+
+                    )}
+
+                </div>
+
+
+                {/* NFT Name */}
+
+                <h3
+                    className="
+                        text-sm md:text-base
+                        font-black
+                        text-white
+                        mt-1.5
+                        truncate
+                        group-hover:text-emerald-300
+                        transition-colors
+                    "
+                >
+
+                    {asset.name}
+
+                </h3>
+
+
+                {/* Creator */}
+
+                {asset.creator && (
+
+                    <p className="text-[10px] text-slate-600 mt-1 truncate">
+
+                        by {asset.creator}
+
+                    </p>
+
                 )}
+
+
+                {/* =================================================
+                    PRICE
+                ================================================= */}
+
+                <div className="flex items-end justify-between gap-3 mt-4 pt-3 border-t border-white/[0.05]">
+
+
+                    <div>
+
+                        <p className="text-[8px] font-black uppercase tracking-[0.16em] text-slate-600">
+                            Price
+                        </p>
+
+
+                        <p className="text-sm font-black text-white mt-1">
+                            {asset.price || '—'}
+                        </p>
+
+                    </div>
+
+
+                    {asset.volume && (
+
+                        <div className="text-right">
+
+                            <p className="text-[8px] font-black uppercase tracking-[0.16em] text-slate-600">
+                                Volume
+                            </p>
+
+
+                            <p className="text-[10px] font-bold text-slate-400 mt-1">
+                                {asset.volume}
+                            </p>
+
+                        </div>
+
+                    )}
+
+                </div>
+
             </div>
-            
-            {/* Action */}
-            <div className="pt-2">
-               <button className="w-full py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-bold text-sm transition-colors text-white group-hover:border-white/20">
-                  {type === 'rwa' ? 'View Instrument Details' : 'View Asset Details'}
-               </button>
-            </div>
+
         </div>
-    </div>
-  );
+
+    );
 };
+
 
 export default AssetCard;

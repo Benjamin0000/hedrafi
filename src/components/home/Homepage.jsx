@@ -5,7 +5,10 @@ import Footer from "../shared/Footer";
 import logo from '../../assets/hedrafinew.png';
 import { useEffect } from 'react';
 
+
+
 const Homepage = () => {
+
   useEffect(() => {
     const loader = document.getElementById("startup-loader");
     if (loader) loader.style.display = "none";
@@ -46,18 +49,21 @@ const Homepage = () => {
                     Explore Marketplace <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </button>
                 </Link>
-                <Link to="/studio" className="flex-1 sm:flex-none">
+                <Link to="/rwa" className="flex-1 sm:flex-none">
                   <button className="btn-glass w-full sm:w-auto !py-6 !px-12 text-xl">
                     Tokenize Asset
                   </button>
                 </Link>
               </div>
 
+             
+
+
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-10 border-t border-white/5 animate-reveal" style={{animationDelay: '0.4s'}}>
                  <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Infrastructure</div>
                  <div className="flex items-center gap-6 md:gap-8 overflow-hidden grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
                      <span className="text-xl font-black text-white cursor-default select-none tracking-tighter">HEDERA</span>
-                     <span className="text-xl font-black text-white cursor-default select-none tracking-tighter">SAUCERSWAP</span>
+                     {/* <span className="text-xl font-black text-white cursor-default select-none tracking-tighter">SAUCERSWAP</span> */}
                  </div>
               </div>
             </div>
@@ -113,21 +119,10 @@ const Homepage = () => {
           <div className="container-main">
               <div className="text-center mb-16">
                   <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">Explore Markets</h2>
-                  <p className="text-slate-400 text-lg">From digital art to tokenized real estate.</p>
+                  <p className="text-slate-400 text-lg">From digital art to tokenized real world assets.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <Link to="/marketplace" className="group">
-                    <div className="relative glass-card h-[400px] rounded-[16px] p-10 overflow-hidden border-white/10 hover:border-emerald-500/30 transition-all duration-500 flex flex-col justify-end">
-                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 group-hover:opacity-30 transition-all duration-700 mix-blend-luminosity" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/50 to-transparent"></div>
-                        <div className="relative z-10">
-                            <Building2 size={40} className="text-emerald-400 mb-6" />
-                            <h3 className="text-4xl font-black mb-2 text-white">Real-World Assets</h3>
-                            <p className="text-slate-400 font-medium max-w-md">Fractionalized ownership of premium real estate, luxury goods, and yield-generating physical assets.</p>
-                        </div>
-                    </div>
-                  </Link>
 
                   <Link to="/marketplace" className="group">
                     <div className="relative glass-card h-[400px] rounded-[16px] p-10 overflow-hidden border-white/10 hover:border-purple-500/30 transition-all duration-500 flex flex-col justify-end">
@@ -139,6 +134,19 @@ const Homepage = () => {
                         </div>
                     </div>
                   </Link>
+
+                  <Link to="/rwa" className="group">
+                    <div className="relative glass-card h-[400px] rounded-[16px] p-10 overflow-hidden border-white/10 hover:border-emerald-500/30 transition-all duration-500 flex flex-col justify-end">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 group-hover:opacity-30 transition-all duration-700 mix-blend-luminosity" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/50 to-transparent"></div>
+                        <div className="relative z-10">
+                            <Building2 size={40} className="text-emerald-400 mb-6" />
+                            <h3 className="text-4xl font-black mb-2 text-white">Real-World Assets</h3>
+                            <p className="text-slate-400 font-medium max-w-md">Fractionalized ownership of premium real estate, luxury goods, and yield-generating physical assets.</p>
+                        </div>
+                    </div>
+                  </Link>
+
               </div>
           </div>
         </section>

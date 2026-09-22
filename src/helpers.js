@@ -26,3 +26,22 @@ export const checkTokenAssociation = async (accountId, tokenId) => {
         return false; 
     }
 };
+
+
+
+export const checkTokenAllowance = async (ownerAccountId, spenderId, tokenId) => {
+  try {
+    const url = `https://mainnet.mirrornode.hedera.com/api/v1/accounts/${ownerAccountId}/allowances/tokens?spender.id=${spenderId}&token.id=${tokenId}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // data.allowances = [{ amount, owner, spender, token_id }]
+    if (!data.allowances || data.allowances.length === 0) return 0;
+
+    // amount is in tinybars (with decimals)
+    return Number(data.allowances[0].amount) / 1e8; // your $HRT has 8 decimals
+  } catch (e) {
+    console.error("Allowance check failed", e);
+    return 0;
+  }
+};

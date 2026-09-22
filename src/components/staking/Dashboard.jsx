@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import WalletInfo from "./WalletInfo";
 import StakePanel from "./StakePanel";
 import StakingStats from "./StakingStats";
-import WhyStakeGrid from "./WhyStakeGrid";
-// import SecuritySection from "./SecuritySection";
-// import EcosystemBenefits from "./EcosystemBenefits";
+
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
 import axios from "axios";
@@ -268,22 +266,6 @@ const Dashboard = () => {
                   <StakePanel />
                </div>
             </div>
-
-            {/* SECTION 4: Why Stake Grid */}
-            <div className="pt-12 w-full max-w-7xl mx-auto border-t border-white/10">
-               <WhyStakeGrid />
-            </div>
-
-            {/* SECTION 5: Security Section */}
-            {/* <div className="pt-12 w-full max-w-7xl mx-auto border-t border-white/10">
-               <SecuritySection />
-            </div> */}
-
-            {/* SECTION 6: Ecosystem Benefits */}
-            {/* <div className="pt-12 border-t border-white/10 w-full max-w-7xl mx-auto">
-               <EcosystemBenefits />
-            </div> */}
-            
           </div>
         </div>
       </main>
