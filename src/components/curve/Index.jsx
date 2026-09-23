@@ -29,6 +29,42 @@ const BONDING_CURVE_ID = "0.0.10881448";
 const HDFI_TOKEN_ID = "0.0.10881443"; // your mainnet HDFI
 const HBAR_DECIMALS = 8;
 
+
+const useHbarPrice = () => {
+  const [hbarUsd, setHbarUsd] = useState(() => {
+    const cached = localStorage.getItem('hbarUsd');
+    const cachedTime = localStorage.getItem('hbarUsd_time');
+    // use cache if < 5 min old
+    if (cached && cachedTime && Date.now() - Number(cachedTime) < 5 * 60 * 1000) {
+      return Number(cached);
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        // Option A: Direct CoinGecko (free, no key)
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=hedera-hashgraph&vs_currencies=usd');
+        const data = await res.json();
+        const price = data['hedera-hashgraph']?.usd;
+        if (price) {
+          setHbarUsd(price);
+          localStorage.setItem('hbarUsd', price);
+          localStorage.setItem('hbarUsd_time', Date.now().toString());
+        }
+      } catch (e) {
+        console.log('price fetch failed', e);
+      }
+    };
+    fetchPrice();
+    const interval = setInterval(fetchPrice, 60000); // refresh every 60s
+    return () => clearInterval(interval);
+  }, []);
+
+  return hbarUsd;
+};
+
 /* =========================================================
    VALIDATION
    ========================================================= */
@@ -41,18 +77,25 @@ const InputLabel = ({ label, hint }) => (
 const FieldError = ({ message }) =>!message? null : (
     <p className="mt-2 flex items-start gap-1.5 text- font-bold text-red-400"><AlertCircle size={13} className="shrink-0 mt-" />{message}</p>
 );
-const ReviewRow = ({ label, value }) => (
-    <div className="flex items-center justify-between gap-6 p-4 rounded-xl bg-white/[0.015] border border-white/5">
-        <span className="text- font-black uppercase tracking-[0.15em] text-slate-600">{label}</span>
-        <span className="text-sm font-bold text-white text-right">{value}</span>
+
+const ReviewRow = ({ label, value, usdValue }) => (
+  <div className="flex items-center justify-between gap-6 p-4 rounded-xl bg-white/[0.015] border border-white/5">
+    <span className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">{label}</span>
+    <div className="text-right">
+      <span className="text-sm font-bold text-white">{value}</span>
+      {usdValue && <p className="text-[11px] text-slate-500">~{usdValue}</p>}
     </div>
+  </div>
 );
+
+
 const inputClass = (invalid) => `
     w-full h-13 px-4 rounded-xl bg-white/[0.025] border outline-none text-sm text-white placeholder:text-slate-700
     ${invalid? 'border-red-500/50' : 'border-white/10 focus:border-purple-500/40 focus:ring-4 focus:ring-purple-500/5'}
 `;
 
 const BondingCurveBuy = () => {
+    const hbarUsd = useHbarPrice();
     const { data: balanceData } = useBalance();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('amount');
@@ -223,6 +266,8 @@ const BondingCurveBuy = () => {
         { id: 'review', label: 'Review' },
     ];
 
+    const current_usd_price = Number(hbarUsd * pool.price).toFixed(5);
+
     return (
         <div className="relative min-h-screen bg-[#030712] text-slate-200 font-sans">
             <AmbientBackground />
@@ -295,7 +340,12 @@ const BondingCurveBuy = () => {
                                             <div><h2 className="text-xl font-black text-white">Ready to Buy</h2><p className="text-sm text-slate-500 mt-2">This will set hasBoughtFromCurve = true for vesting.</p></div>
                                         </div>
                                         <div className="space-y-3">
-                                            <ReviewRow label="You Pay" value={`${formData.hbarAmount || '0'} HBAR`} />
+                                            <ReviewRow 
+                                                label="You Pay" 
+                                                value={`${formData.hbarAmount || '0'} HBAR`} 
+                                                usdValue={hbarUsd && formData.hbarAmount? `$${(Number(formData.hbarAmount) * hbarUsd).toFixed(2)}` : null}
+
+                                            />
                                             <ReviewRow label="You Get" value={`${quote.tokensOut.toLocaleString()} HDFI`} />
                                             <ReviewRow label="Unlocks Bridge" value="Yes ✅" />
                                         </div>
@@ -317,33 +367,37 @@ const BondingCurveBuy = () => {
 
                                         <div className="space-y-4">
 
-            <div  className="p-3 rounded-[16px] bg-white/[0.03] border border-white/[0.08]">
-              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">
-                Contract address
-              </div>
-              <div className="flex items-center justify-between">
-                <code className="text-md font-mono text-slate-200 truncate">0.0.10881448</code>
-                <div className="flex items-center">
-                  <a 
-                    href="https://hashscan.io/mainnet/contract/0.0.10881448"
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="p-2.5 hover:bg-white/10 rounded-xl transition-colors text-slate-400 hover:text-white"
-                  >
-                    <ExternalLink className="w-5 h-5" />
-                  </a>
-                </div>
-              </div>
-            </div>
-                                            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                                                <div className="flex justify-between items-center"><span className="text- font-black uppercase tracking-widest text-slate-500">HBAR in Pool</span><Activity size={14} className="text-slate-600" /></div>
-                                                <p className="text-2xl font-black text-white mt-2">{pool.hbarBalance.toLocaleString()} <span className="text-sm font-bold text-slate-400">HBAR</span></p>
-                                                <p className="text- text-slate-600 mt-1">Total HBAR deposited</p>
+
+
+                                            <div  className="p-3 rounded-[16px] bg-white/[0.03] border border-white/[0.08]">
+                                                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">
+                                                    Contract address
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <code className="text-md font-mono text-slate-200 truncate">0.0.10881448</code>
+                                                    <div className="flex items-center">
+                                                        <a 
+                                                            href="https://hashscan.io/mainnet/contract/0.0.10881448"
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className="p-2.5 hover:bg-white/10 rounded-xl transition-colors text-slate-400 hover:text-white"
+                                                        >
+                                                            <ExternalLink className="w-5 h-5" />
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
+
+                                            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+  <div className="flex justify-between items-center"><span className="text-[10px] font-black uppercase tracking-widest text-slate-500">HBAR in Pool</span><Activity size={14} className="text-slate-600" /></div>
+  <p className="text-2xl font-black text-white mt-2">{pool.hbarBalance.toLocaleString()} <span className="text-sm font-bold text-slate-400">HBAR</span></p>
+  {/* {hbarUsd && <p className="text-xs text-slate-500 mt-1">~${(pool.hbarBalance * hbarUsd).toLocaleString(undefined, {maximumFractionDigits:2})} locked</p>} */}
+</div>
 
                                             <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
                                                 <div className="flex justify-between items-center"><span className="text- font-black uppercase tracking-widest text-slate-500">HDFI in Pool</span><Coins size={14} className="text-slate-600" /></div>
                                                 <p className="text-2xl font-black text-white mt-2">{pool.hdfiBalance.toLocaleString()} <span className="text-sm font-bold text-emerald-400">HDFI</span></p>
+                                                    {/* <small> ~ ${ (current_usd_price * pool.hdfiBalance).toLocaleString() }</small> */}
                                                 <p className="text- text-slate-600 mt-1">Remaining for sale</p>
                                             </div>
 
@@ -355,6 +409,7 @@ const BondingCurveBuy = () => {
                                                 <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
                                                     <p className="text- font-black uppercase text-slate-600">Current Price</p>
                                                     <p className="text-sm font-black text-white mt-1">{pool.price} <sub>HBAR</sub></p>
+                                                    <small> ~${ (hbarUsd * pool.price).toFixed(6) } per HDFI </small>
                                                 </div>
                                             </div>
                                         </div>
