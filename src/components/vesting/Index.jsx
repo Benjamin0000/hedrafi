@@ -412,7 +412,7 @@ const VestingPage = () => {
                                         </div>
 
                                         <div className="mt-5 p-4 rounded-2xl border border-emerald-500/10 bg-emerald-500/[0.04]">
-                                            <p className="text- leading-relaxed text-slate-400"><span className="text-slate-200 font-bold">How it works:</span> After you buy from bonding curve, bridgeLegacy() locks your old token. Contract sets startTime = now, cliff = 180 days, duration = 18. You call userClaim() monthly to receive 5.55%.</p>
+                                            <p className="text- leading-relaxed text-slate-400"><span className="text-slate-200 font-bold">How it works:</span> After you buy from bonding curve, bridgeLegacy() locks your old token. Contract sets startTime = now, cliff = 180 days, duration = 18 months. You call userClaim() monthly to receive 5.55%.</p>
                                         </div>
                                     </div>
                                 </aside>
