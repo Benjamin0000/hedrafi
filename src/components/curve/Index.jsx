@@ -58,7 +58,7 @@ const useHbarPrice = () => {
       }
     };
     fetchPrice();
-    const interval = setInterval(fetchPrice, 60000); // refresh every 60s
+    const interval = setInterval(fetchPrice, 90000); // refresh every 60s
     return () => clearInterval(interval);
   }, []);
 
