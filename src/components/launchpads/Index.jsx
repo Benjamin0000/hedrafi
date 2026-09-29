@@ -18,7 +18,7 @@ const LaunchpadPage = () => {
           <div className="text-center">
             <p className="text- font-black tracking-[0.3em] text-slate-600 uppercase mb-4">Launchpad</p>
             <FuturisticCountdownSmall targetDate={target} />
-            <p className="text- text-slate-600 mt-4">First drops go live on the 28th • 23:59 UTC</p>
+            <p className="text- text-slate-600 mt-4">First drops go live on Launch</p>
           </div>
         </main>
       </div>

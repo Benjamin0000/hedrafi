@@ -18,7 +18,7 @@ const CollectionsPage = () => {
           <div className="text-center">
             <p className="text- font-black tracking-[0.3em] text-slate-600 uppercase mb-4">Collections</p>
             <FuturisticCountdownSmall targetDate={target} />
-            <p className="text- text-slate-600 mt-4">Curated collections unveiling on the 28th</p>
+            <p className="text- text-slate-600 mt-4">Curated collections unveiling on launch</p>
           </div>
         </main>
       </div>
