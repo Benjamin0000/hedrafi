@@ -24,8 +24,11 @@ const useCountdown = (targetDate) => {
 
 export const getTarget28th = () => {
   const now = new Date();
-  let target = new Date(now.getFullYear(), now.getMonth(), 28, 23, 59, 59);
-  if (now > target) target = new Date(now.getFullYear(), now.getMonth() + 1, 28, 23, 59, 59);
+  // Month is 0-indexed, so 9 represents October
+  let target = new Date(now.getFullYear(), 9, 2, 23, 59, 59);
+  if (now > target) {
+    target = new Date(now.getFullYear() + 1, 9, 2, 23, 59, 59);
+  }
   return target;
 };
 
