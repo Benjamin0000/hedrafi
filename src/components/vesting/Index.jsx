@@ -260,7 +260,9 @@ const VestingPage = () => {
     const cliffProgress = Math.min(100, (elapsedSinceStart / cliffDurationMs) * 100);
 
     // How many months have unlocked AFTER cliff
-    const monthsPassed = isInCliff? 0 : Math.min(18, Math.floor((Date.now() - cliffEnd.getTime()) / (30*24*3600*1000)) + 1);
+    const monthsPassed = vesting && cliffEnd && !isInCliff
+  ? Math.min(18, Math.floor((Date.now() - cliffEnd.getTime()) / (30*24*3600*1000)) + 1)
+  : 0;
 
     // FIXED: progress based on vested (claimable + claimed), not just claimed
     const vested = vesting? vesting.claimed + releasable : 0;
