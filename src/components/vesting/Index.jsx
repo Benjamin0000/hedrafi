@@ -247,8 +247,8 @@ const VestingPage = () => {
             });
         } catch (e) { setIsClaiming(false); }
     };
-
-    // Cliff logic
+ 
+    // Cliff 
     const cliffEnd = vesting? new Date(vesting.startTime + vesting.cliff * 1000) : null;
     const isInCliff = cliffEnd? Date.now() < cliffEnd.getTime() : false;
 
