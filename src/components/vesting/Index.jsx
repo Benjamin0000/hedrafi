@@ -98,6 +98,7 @@ const VestingPage = () => {
             const bought = await curveRPC.hasBoughtFromCurve(user.account_id_evm);
             
             if (v && v.exists) {
+                
                 setVesting({
                     totalAmount: Number(v.totalAmount) / 1e8,
                     claimed: Number(v.claimed) / 1e8,
@@ -250,8 +251,20 @@ const VestingPage = () => {
     // Cliff logic
     const cliffEnd = vesting? new Date(vesting.startTime + vesting.cliff * 1000) : null;
     const isInCliff = cliffEnd? Date.now() < cliffEnd.getTime() : false;
-    const monthsPassed = vesting? Math.min(18, Math.floor((Date.now() - (vesting.startTime + vesting.cliff * 1000)) / (30*24*3600*1000)) + (isInCliff? 0 : 1)) : 0;
-    const progress = vesting? (vesting.claimed / vesting.totalAmount) * 100 : 0;
+
+    // How much time passed since bridge
+    const elapsedSinceStart = vesting? Date.now() - vesting.startTime : 0;
+    const cliffDurationMs = vesting? vesting.cliff * 1000 : 1;
+
+    // Progress of cliff itself (0-100%) - this WILL move every day
+    const cliffProgress = Math.min(100, (elapsedSinceStart / cliffDurationMs) * 100);
+
+    // How many months have unlocked AFTER cliff
+    const monthsPassed = isInCliff? 0 : Math.min(18, Math.floor((Date.now() - cliffEnd.getTime()) / (30*24*3600*1000)) + 1);
+
+    // FIXED: progress based on vested (claimable + claimed), not just claimed
+    const vested = vesting? vesting.claimed + releasable : 0;
+    const progress = vesting && vesting.totalAmount > 0? (vested / vesting.totalAmount) * 100 : 0;
 
     return (
         <div className="relative min-h-screen bg-[#030712] text-slate-200 font-sans">
@@ -340,12 +353,30 @@ const VestingPage = () => {
                                                     <ReviewRow label="Total Vested" value={`${vesting.totalAmount.toLocaleString()} HDFI`} />
                                                     <ReviewRow label="Already Claimed" value={`${vesting.claimed.toLocaleString()} HDFI`} />
                                                     <ReviewRow label="Releasable Now" value={`${releasable.toLocaleString()} HDFI`} />
-                                                    <ReviewRow label="Cliff End" value={cliffEnd?.toLocaleDateString() || '-'} />
+                                                    {/* <ReviewRow label="Cliff End" value={cliffEnd?.toLocaleDateString() || '-'} /> */}
                                                 </div>
 
                                                 <div className="mt-6">
-                                                    <div className="flex justify-between text- mb-2"><span className="text-slate-500">Progress</span><span className="font-black text-white">{progress.toFixed(2)}%</span></div>
-                                                    <div className="w-full h-2 rounded-full bg-white/5 overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-500 to-emerald-400" style={{ width: `${progress}%` }} /></div>
+                                                    <div className="flex justify-between text- mb-2">
+                                                        <span className="text-slate-500">
+                                                            {isInCliff? `Cliff progress - ${cliffProgress.toFixed(2)}%` : `Vested - ${monthsPassed}/18 months`}
+                                                        </span>
+                                                        {/* <span className="font-black text-white">
+                                                            {isInCliff? `${cliffProgress.toFixed(2)}%` : `${progress.toFixed(2)}%`}
+                                                        </span> */}
+                                                    </div>
+                                                    <div className="w-full h-2 rounded-full bg-white/5 overflow-hidden">
+                                                        <div
+                                                            className="h-full bg-gradient-to-r from-blue-500 to-emerald-400 transition-all duration-1000"
+                                                            style={{ width: `${isInCliff? cliffProgress : progress}%` }}
+                                                        />
+                                                    </div>
+                                                    <p className="text- text-slate-600 mt-2">
+                                                        {isInCliff
+                                                        ? `${Math.floor((cliffEnd - Date.now()) / (1000*60*60*24))} days left until first 5.55% unlock`
+                                                            : `${vested.toLocaleString()} / ${vesting.totalAmount.toLocaleString()} HDFI vested`
+                                                        }
+                                                    </p>
                                                 </div>
 
                                                 <button onClick={handleClaim} disabled={releasable <= 0 || isClaiming || isInCliff} className={`mt-6 w-full h-14 rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500 text-white text-sm font-black flex items-center justify-center gap-3 ${releasable <= 0 || isInCliff? 'opacity-40' : ''}`}>
