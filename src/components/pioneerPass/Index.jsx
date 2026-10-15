@@ -139,7 +139,7 @@ const PioneerCouncilPass = () => {
                                         </div>
 
                                         <div className="flex flex-col items-center mt-4 gap-3">
-                                            <span className="px-3 py-1 border border-white/[0.06] bg-[#02050E] rounded-md font-mono text-cyan-400 font-bold text- tracking-[0.3em]">#{paddedSerial} / 050</span>
+                                            <span className="px-3 py-1 border border-white/[0.06] bg-[#02050E] rounded-md font-mono text-cyan-400 font-bold text- tracking-[0.3em]">#{paddedSerial} / 215</span>
 
                                             {evmAddress? (
                                                 <div className="w-full space-y-2">
