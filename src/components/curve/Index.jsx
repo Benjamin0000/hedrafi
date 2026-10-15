@@ -118,7 +118,7 @@ const BondingCurveBuy = () => {
         if (!amount) errors.hbarAmount = 'Enter HBAR amount.';
         else if (Number.isNaN(Number(amount))) errors.hbarAmount = 'Enter a valid number.';
         else if (Number(amount) <= 0) errors.hbarAmount = 'Amount must be > 0.';
-        else if (Number(amount) < 1) errors.hbarAmount = 'Minimum 1 HBAR.';
+        else if (Number(amount) < 50) errors.hbarAmount = 'Minimum 50 HBAR.';
         else if (balanceData?.value < formData.hbarAmount) errors.hbarAmount = 'Insufficient HBAR from your wallet'; 
         return errors;
     };
