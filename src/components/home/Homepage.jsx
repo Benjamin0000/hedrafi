@@ -166,7 +166,7 @@ const Homepage = () => {
                 </div>
                 <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">THE WORLD ON <br /><span className="text-gradient">HEDERA.</span></h2>
                 <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
-                  Join the most sophisticated marketplace. Institutional compliance meets Web3 innovation.
+                  Join the most simple marketplace. Institutional compliance meets Web3 innovation.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-6 justify-center pt-10">
                   <Link to="/marketplace">
