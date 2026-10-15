@@ -216,8 +216,8 @@ const StakePanel = () => {
 
            <div className="space-y-4 pt-2 px-1">
               <button 
-                onClick={handleStake}
-                disabled={staking}
+                
+                disabled={true}
                 className="btn-primary w-full !py-6 text-xl group relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
@@ -227,7 +227,7 @@ const StakePanel = () => {
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       Processing...
                     </>
-                  ) : <><Lock size={20} /> Stake Assets</>}
+                  ) : <><Lock size={20} /> Staking disabled</>}
                 </span>
               </button>
            </div>
