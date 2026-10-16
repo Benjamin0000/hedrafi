@@ -15,9 +15,11 @@ import {
     Wallet, Zap, ShieldCheck, Hourglass, CalendarClock, ExternalLink
 } from 'lucide-react';
 
+
 import MarketplaceSidebar from "../shared/MarketplaceSidebar";
 import MobileTopBar from "../shared/MobileTopBar";
 import AmbientBackground from "../shared/AmbientBackground";
+import VestingLoader from "./VestingLoader";
 import { checkTokenAssociation, checkTokenAllowance } from '../../helpers';
 import vestingABI from '../../ABIs/vestingABI.json';
 import { vestingRPC, curveRPC } from "../../lib/helpers"
@@ -58,6 +60,7 @@ const VestingPage = () => {
     const [vesting, setVesting] = useState(null); // { totalAmount, claimed, startTime, cliff, durationMonths, vType }
     const [releasable, setReleasable] = useState(0);
     const [hasBought, setHasBought] = useState(false);
+    const [isLoadingVesting, setIsLoadingVesting] = useState(true);
     const [isAssociatedHDFI, setIsAssociatedHDFI] = useState(true);
     const [isBridging, setIsBridging] = useState(false);
     const [isClaiming, setIsClaiming] = useState(false);
@@ -112,6 +115,7 @@ const VestingPage = () => {
                 setVesting(null);
             }
             setHasBought(bought);
+            setIsLoadingVesting(false);
         } catch (e) { console.log(e); }
     };
 
@@ -268,6 +272,10 @@ const VestingPage = () => {
     const vested = vesting? vesting.claimed + releasable : 0;
     const progress = vesting && vesting.totalAmount > 0? (vested / vesting.totalAmount) * 100 : 0;
 
+    if(isLoadingVesting) {
+        return <VestingLoader />
+    }
+            
     return (
         <div className="relative min-h-screen bg-[#030712] text-slate-200 font-sans">
             <AmbientBackground />
