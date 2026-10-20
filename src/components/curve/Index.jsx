@@ -142,7 +142,7 @@ const BondingCurveBuy = () => {
             const tokenBalance = tokenEntry ? tokenEntry.balance / 1e8 : 0;
 
             setPool({
-                hbarBalance: data.balance? (data.balance.balance / 1e8)+572 : 0,
+                hbarBalance: data.balance? (data.balance.balance / 1e8)+572 + 642: 0,
                 hdfiBalance: tokenBalance,
                 totalSold: sold ?  Number(sold) / 1e8 : 0,
                 price: price ? Number(price) / 1e8 : 0 // HBAR per HDFI
