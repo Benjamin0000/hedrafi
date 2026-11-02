@@ -92,9 +92,12 @@ const VestingPage = () => {
 
     const fetchVesting = async () => {
         
-        if (!isAuthenticated) return;
+        
       
         try {
+            
+            if (!isAuthenticated) return;
+
             const v = await vestingRPC.getVesting(user.account_id_evm); // returns struct
             const rel = await vestingRPC.releasable(user.account_id_evm);
 
@@ -115,8 +118,9 @@ const VestingPage = () => {
                 setVesting(null);
             }
             setHasBought(bought);
-            setIsLoadingVesting(false);
+            
         } catch (e) { console.log(e); }
+        finally { setIsLoadingVesting(false); }
     };
 
     useEffect(() => {
