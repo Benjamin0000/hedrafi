@@ -24,13 +24,16 @@ const useCountdown = (targetDate) => {
 
 export const getTarget28th = () => {
   const now = new Date();
-  // November is 10 (0-indexed), 6th, 23:00:00 UTC
-  let target = new Date(Date.UTC(now.getUTCFullYear(), 10, 6, 23, 0, 0));
+  // November is 10 (0-indexed), 11th, 23:00:00 UTC - Wednesday Nov 11 in 2026
+  let target = new Date(Date.UTC(now.getUTCFullYear(), 10, 11, 23, 0, 0));
   if (now > target) {
-    target = new Date(Date.UTC(now.getUTCFullYear() + 1, 10, 6, 23, 0, 0));
+    target = new Date(Date.UTC(now.getUTCFullYear() + 1, 10, 11, 23, 0, 0));
   }
   return target;
 };
+
+// Optional alias with a clearer name
+export const getTarget11th = getTarget28th;
 
 const FuturisticCountdownSmall = ({ targetDate }) => {
   const { d, h, m, s, expired } = useCountdown(targetDate);
@@ -53,7 +56,7 @@ const FuturisticCountdownSmall = ({ targetDate }) => {
         <div className="h-7 w-7 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center"><Clock size={12} className="text-cyan-400" /></div>
         <div className="leading-none">
           <div className="text- font-black tracking-[0.25em] text-cyan-300 flex items-center gap-1"><span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse inline-block" />LAUNCH IN</div>
-          <div className="text- font-bold text-slate-400 mt-1">NOV 06, {new Date(targetDate).getUTCFullYear()} 23:00 UTC</div>
+          <div className="text- font-bold text-slate-400 mt-1">WED, NOV 11, {new Date(targetDate).getUTCFullYear()} 23:00 UTC</div>
         </div>
         <div className="h-8 w-px bg-white/5 mx-1" />
         <div className="flex items-center gap-1.5">
